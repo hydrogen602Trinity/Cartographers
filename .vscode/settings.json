@@ -1,4 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "maven.executable.path": "./backend/.mvn/wrapper/maven-wrapper.jar"
 }
