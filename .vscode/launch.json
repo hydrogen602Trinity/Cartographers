@@ -2,14 +2,14 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-BackendApplication<backend>",
+            "name": "Spring Boot-Application<ctmrepository-backend>",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/backend",
             "console": "internalConsole",
-            "mainClass": "com.ctm.repository.backend.BackendApplication",
-            "projectName": "backend",
+            "mainClass": "com.ctmrepository.Application",
+            "projectName": "ctmrepository-backend",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/backend/.env"
         }
     ]
 }
