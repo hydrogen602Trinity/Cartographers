@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -10,7 +9,7 @@ interface IProps {
   map: MCMap
 }
 
-export default function MapCard({map}: IProps) {
+export default function MapCard({ map }: IProps) {
   return (
     <Card sx={{ maxWidth: 345, minWidth: 250 }}>
       <CardActionArea>

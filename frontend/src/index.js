@@ -9,7 +9,7 @@ function NoMatch() {
   let location = useLocation();
 
   return (
-    <div style={{padding: '1em'}}>
+    <div style={{ padding: '1em' }}>
       <h1>404</h1>
       <h3>
         No match for <code>{location.pathname}</code>
@@ -23,8 +23,8 @@ ReactDOM.render(
     <BrowserRouter>
       <SnackbarComponent>
         <Routes>
-          <Route path="/" element={<Main/>}/>
-          <Route path="*" element={<NoMatch />}/>
+          <Route path="/" element={<Main />} />
+          <Route path="*" element={<NoMatch />} />
         </Routes>
       </SnackbarComponent>
     </BrowserRouter>

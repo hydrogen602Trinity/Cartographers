@@ -28,16 +28,17 @@ export function useFetchAPI(path, dependsArray = null) {
         fullPath(path), args);
 
     useEffect(() => {
-        if (error) { 
+        if (error) {
             if (error.status === 401) {
-                dispatchMsg({type: 'error', text: 'Authentication Required'});
+                dispatchMsg({ type: 'error', text: 'Authentication Required' });
                 nav('/');
             }
             else {
-                dispatchMsg({type: 'error', text: error.message})
+                dispatchMsg({ type: 'error', text: error.message })
             }
             // eslint-disable-next-line
-        }}, [error]);
+        }
+    }, [error]);
 
     return [isLoading, data, error];
 }

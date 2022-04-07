@@ -9,18 +9,18 @@ export interface ISnackbarMsg {
 }
 
 
-const SnackbarContext = createContext((msg: ISnackbarMsg) => {});
+const SnackbarContext = createContext((msg: ISnackbarMsg) => { });
 // this will return dispatchMsg with arguments of state
 export const useSnackbar = () => useContext(SnackbarContext);
 
 
-const initialState: ISnackbarMsg = {type: null, text: ''};
+const initialState: ISnackbarMsg = { type: null, text: '' };
 
 function reducer(_: ISnackbarMsg, action: ISnackbarMsg) {
     if (typeof action.text !== 'string') {
         throw new TypeError(`SnackBar: Expected string for text, but got ${action.text}`)
     }
-    const clean = {type: action.type, text: action.text};
+    const clean = { type: action.type, text: action.text };
 
     switch (clean.type) {
         case 'error':
@@ -32,7 +32,7 @@ function reducer(_: ISnackbarMsg, action: ISnackbarMsg) {
         case 'success':
             return clean;
         case null:
-            return {type: null, text: ''};
+            return { type: null, text: '' };
         default:
             throw new TypeError(`SnackBar: Unexpected value for type, got ${clean.type}`);
     }
@@ -68,18 +68,18 @@ export function SnackbarComponent(props: IProps) {
     }
 
     return (
-    <SnackbarContext.Provider value={dispatchMsg}>
-        {props.children}
-        <Snackbar 
-            open={Boolean(state.type)} 
-            autoHideDuration={getAutoHideDuration(state)} 
-            onClose={handleClose}
-            key={state.text} // correct?
-            anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
-            <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity={state.type === null ? undefined : state.type} sx={{ width: '100%' }}>
-                {state.text}
-            </MuiAlert>
-        </Snackbar>
-    </SnackbarContext.Provider>
+        <SnackbarContext.Provider value={dispatchMsg}>
+            {props.children}
+            <Snackbar
+                open={Boolean(state.type)}
+                autoHideDuration={getAutoHideDuration(state)}
+                onClose={handleClose}
+                key={state.text} // correct?
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity={state.type === null ? undefined : state.type} sx={{ width: '100%' }}>
+                    {state.text}
+                </MuiAlert>
+            </Snackbar>
+        </SnackbarContext.Provider>
     );
 }

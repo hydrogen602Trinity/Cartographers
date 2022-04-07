@@ -1,4 +1,4 @@
-import { Box, Pagination } from "@mui/material";
+import { Pagination } from "@mui/material";
 import MapCard from "./components/MapCard";
 import Grid from '@mui/material/Grid';
 import "./main.scss";
@@ -23,13 +23,12 @@ function Main() {
           <MapCard />
         </Stack> */}
         <div className="center">
-          {(isLoading || err) ? 
-            ( (isLoading) ? <div>Loading...</div> : <div>Something went wrong...</div> )
-          :
-            <>
+          {(isLoading || err) ?
+            ((isLoading) ? <div>Loading...</div> : <div>Something went wrong...</div>) :
+            <div>
               <Grid
-                container 
-                spacing={{ xs: 2, md: 3 }} 
+                container
+                spacing={{ xs: 2, md: 3 }}
                 // columns={{ xs: 4, sm: 8, md: 12 }}
                 direction="row"
                 sx={{
@@ -44,8 +43,8 @@ function Main() {
                   </Grid>
                 ))}
               </Grid>
-              <Pagination count={10} sx={{marginTop: '2em'}}></Pagination>
-            </>
+              <Pagination count={10} sx={{ marginTop: '2em' }}></Pagination>
+            </div>
           }
         </div>
       </div>
