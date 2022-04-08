@@ -36,8 +36,8 @@ export function useFetchAPI(path, dependsArray = null) {
             else {
                 dispatchMsg({ type: 'error', text: error.message })
             }
-            // eslint-disable-next-line
         }
+        // eslint-disable-next-line
     }, [error]);
 
     return [isLoading, data, error];
