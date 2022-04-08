@@ -20,10 +20,11 @@ jobs:
 
     - name: Build
       run: |
+        cd frontend
         npm install
-        ./frontend/build_script.sh
+        ./build_script.sh
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
-        git add frontend/docs
+        git add ../docs
 
 
