@@ -14,3 +14,4 @@ cd .. || { exit 1; }
 [ ! -d "docs" ] && mkdir docs
 
 cp -r frontend/build/ docs || { exit 1; }
+
