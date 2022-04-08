@@ -1,7 +1,5 @@
 package com.ctmrepository.repository;
 
-import java.util.List;
-
 import com.ctmrepository.model.MinecraftMap;
 
 import org.springframework.data.jpa.repository.JpaRepository;

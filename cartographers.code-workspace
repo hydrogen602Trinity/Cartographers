@@ -8,6 +8,10 @@
             "name": "Frontend",
             "path": "frontend"
         },
+        {
+            "name": "GitHub",
+            "path": ".github"
+        },
     ],
     "settings": {
         "editor.formatOnSave": true,
