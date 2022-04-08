@@ -16,7 +16,7 @@ interface IProps {
 
 export default function MapCard({ map }: IProps) {
   return (
-    <Card sx={{ maxWidth: '95vw', minWidth: '30vw' }} className="mapCard">
+    <Card sx={{ maxWidth: 'min(95vw, 600px)', minWidth: 'max(30vw, 300px)' }} className="mapCard">
       <CardActionArea>
         <CardMedia
           component="img"
