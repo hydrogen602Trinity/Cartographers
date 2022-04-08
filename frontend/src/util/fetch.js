@@ -50,7 +50,7 @@ export function useFetchAPI(path, dependsArray = null) {
  */
 export function fullPath(path) {
     let protocol = 'http';
-    if (process.env.REACT_USE_HTTPS) {
+    if (process.env.REACT_APP_USE_HTTPS) {
         protocol = 'https';
     }
     return protocol + '://' + process.env.REACT_APP_API + '/api/' + path;
