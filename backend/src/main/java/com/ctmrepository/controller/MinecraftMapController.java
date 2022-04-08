@@ -34,7 +34,7 @@ public class MinecraftMapController {
         return "Greetings from Spring Boot!";
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = { "http://localhost:3000", "https://hydrogen602trinity.github.io/" })
     @GetMapping("/maps/search")
     public ResponseEntity<List<MinecraftMap>> getMapSearch() {
         try {
@@ -46,6 +46,7 @@ public class MinecraftMapController {
 
             return new ResponseEntity<>(maps, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
