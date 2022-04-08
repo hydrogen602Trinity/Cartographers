@@ -1,6 +1,5 @@
 import { Pagination } from "@mui/material";
 import MapCard from "./components/MapCard";
-import Grid from '@mui/material/Grid';
 import "./main.scss";
 import { useAllMaps } from "./util/api";
 
