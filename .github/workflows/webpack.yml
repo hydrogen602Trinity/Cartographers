@@ -20,14 +20,14 @@ jobs:
 
     - name: Build
       run: |
-        echo {{ $env.GITHUB_EVENT_NAME }}
+        echo ${{ env.GITHUB_EVENT_NAME }}
         cd frontend
         npm install
         ./build_script.sh
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
         git add ../docs
-        git commit -m "{{ $env.GITHUB_EVENT_NAME }} Frontend Build"
+        git commit -m "${{ env.GITHUB_EVENT_NAME }} Frontend Build"
         git push
 
 
