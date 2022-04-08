@@ -18,7 +18,7 @@ export function useFetchAPI(path, dependsArray = null) {
     const dispatchMsg = useSnackbar();
     const nav = useNavigate();
     const args = {
-        credentials: 'include',
+        //credentials: 'include',
     };
     if (dependsArray) {
         args.depends = dependsArray;
@@ -49,5 +49,5 @@ export function useFetchAPI(path, dependsArray = null) {
  * @returns path with http and the api path added
  */
 export function fullPath(path) {
-    return 'http://' + process.env.REACT_APP_API + '/' + path;
+    return 'http://' + process.env.REACT_APP_API + '/api/' + path;
 }

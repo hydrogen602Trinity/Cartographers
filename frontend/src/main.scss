@@ -26,5 +26,17 @@
         min-height: 80vh;
         background-color: white;
         border-radius: 0.5em;
+
+        .MuiPagination-ul {
+            justify-content: center;
+        }
+
+        .map-grid {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+        }
     }
 }

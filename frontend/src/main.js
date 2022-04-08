@@ -26,7 +26,7 @@ function Main() {
           {(isLoading || err) ?
             ((isLoading) ? <div>Loading...</div> : <div>Something went wrong...</div>) :
             <div>
-              <Grid
+              {/* <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}
                 // columns={{ xs: 4, sm: 8, md: 12 }}
@@ -35,14 +35,13 @@ function Main() {
                   alignItems: "center",
                   alignContent: "center",
                   justifyContent: "center",
-                }}>
-
+                }}> */}
+              <div className="map-grid">
                 {maps.map((map, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <MapCard map={map} />
-                  </Grid>
+                  <MapCard map={map} />
                 ))}
-              </Grid>
+                {/* </Grid> */}
+              </div>
               <Pagination count={10} sx={{ marginTop: '2em' }}></Pagination>
             </div>
           }
