@@ -56,3 +56,4 @@ export function fullPath(path) {
         return 'http://' + process.env.REACT_APP_DEV_API + '/api/' + path;
     }
 }
+
