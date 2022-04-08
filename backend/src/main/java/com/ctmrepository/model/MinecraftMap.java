@@ -166,6 +166,9 @@ public class MinecraftMap {
         this.mc_version = mc_version;
     }
 
+    public MinecraftMap() {
+    }
+
     public MinecraftMap(String name, long upload_date, String author, String length, int objective_main,
             int objective_bonus, String difficulty, String description_short, long download_count, String type,
             String image_url, String series, String mc_version) {
