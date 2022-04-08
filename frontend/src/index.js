@@ -7,6 +7,7 @@ import Main from './main';
 
 function NoMatch() {
   let location = useLocation();
+  const nav = useNavigate();
 
   return (
     <div style={{ padding: '1em' }}>
@@ -14,6 +15,9 @@ function NoMatch() {
       <h3>
         No match for <code>{location.pathname}</code>
       </h3>
+      <button onClick={() => {
+        nav('/Cartographers');
+      }}>Home</button>
     </div>
   );
 }

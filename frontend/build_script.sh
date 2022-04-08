@@ -10,8 +10,8 @@ npm run build
 
 cd ..
 
-[ -d "docs" ] && rm -r docs
-mkdir docs
+#[ -d "docs" ] && rm -r docs
+[ ! -d "docs" ] && mkdir docs
 
 cp -r frontend/build/ docs
 
