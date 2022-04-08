@@ -38,7 +38,7 @@ function Main() {
                 }}> */}
               <div className="map-grid">
                 {maps.map((map, index) => (
-                  <MapCard map={map} />
+                  <MapCard map={map} key={index} />
                 ))}
                 {/* </Grid> */}
               </div>

@@ -1,0 +1,27 @@
+.mapCard {
+    .info-group {
+        margin-top: 1em;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: flex-start;
+
+        >* {
+            margin-right: 1em;
+        }
+    }
+
+    .info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        .info-text {
+            margin-left: 0.5ex;
+        }
+    }
+}
