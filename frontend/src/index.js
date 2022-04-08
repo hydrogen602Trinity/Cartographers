@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
 import './index.css';
 import Main from './main';
@@ -18,12 +18,23 @@ function NoMatch() {
   );
 }
 
+function Reroute() {
+  const nav = useNavigate();
+
+  useEffect(() => {
+    nav('/Cartographers');
+  });
+
+  return <p>Redirection...</p>
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <SnackbarComponent>
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<Reroute></Reroute>} />
+          <Route path="/Cartographers/" element={<Main />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </SnackbarComponent>

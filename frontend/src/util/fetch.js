@@ -31,7 +31,7 @@ export function useFetchAPI(path, dependsArray = null) {
         if (error) {
             if (error.status === 401) {
                 dispatchMsg({ type: 'error', text: 'Authentication Required' });
-                nav('/');
+                nav('/Cartographers');
             }
             else {
                 dispatchMsg({ type: 'error', text: error.message })
