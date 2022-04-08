@@ -1,0 +1,42 @@
+:root {
+    background-color: #dcdcdc;
+}
+
+.main {
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .maps {
+        // padding: 2em;
+        margin: 3vw;
+        padding: 2vw;
+        min-height: 80vh;
+        background-color: white;
+        border-radius: 0.5em;
+
+        .MuiPagination-ul {
+            justify-content: center;
+        }
+
+        .map-grid {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+        }
+    }
+}
