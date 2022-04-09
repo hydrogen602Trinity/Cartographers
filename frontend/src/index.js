@@ -32,6 +32,8 @@ function Reroute() {
   return <p>Redirection...</p>
 }
 
+console.log('init');
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
