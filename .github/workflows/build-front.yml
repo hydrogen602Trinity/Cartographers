@@ -29,7 +29,7 @@ jobs:
         npm install
         npm run build
         cd ..
-        cp -r frontend/build/ .
+        cp -r frontend/build/* .
         rm -rf frontend backend
 
         git config --local user.email "action@github.com"
@@ -37,7 +37,7 @@ jobs:
 
         git fetch -a
         git checkout do-not-touch-github-page
-        git pull
+        git pull origin
 
         git add -A
         git status
