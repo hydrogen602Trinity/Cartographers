@@ -22,11 +22,10 @@ jobs:
     #     path: frontend/node_modules
     #     key: ${{ hashFiles('frontend/package-lock.json') }}
 
-    - name: Build
+    - name: Deploy with gh-pages
       run: |
-        echo "${{ github.event_name	}}-${{ github.event.head_commit.message }}-npm-build"
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         cd frontend
-        npm install
-        npm run deploy
+        npx gh-pages -d build -u "github-actions-bot <support+actions@github.com>"
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
