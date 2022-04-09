@@ -37,7 +37,7 @@ jobs:
 
         git fetch -a
         git checkout origin/do-not-touch-github-page
-        git pull origin/do-not-touch-github-page
+        git pull origin origin/do-not-touch-github-page
 
         git add -A
 
