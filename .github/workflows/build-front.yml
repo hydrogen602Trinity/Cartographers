@@ -37,13 +37,13 @@ jobs:
 
         git fetch -a
         git stash
+        git add -A
         
         git checkout do-not-touch-github-page
         git pull origin
 
         git stash pop
 
-        git add -A
         git status
 
         [[ -z $(git status | grep "nothing to commit") ]] && (
