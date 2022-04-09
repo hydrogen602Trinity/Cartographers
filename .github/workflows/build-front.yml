@@ -16,11 +16,11 @@ jobs:
       with:
         node-version: 16.x
     
-    - name: Cache
-      uses: actions/cache@v3.0.1
-      with:
-        path: frontend/node_modules/
-        key: ${{ hashFiles('frontend/package-lock.json') }}
+    # - name: Cache
+    #   uses: actions/cache@v3.0.1
+    #   with:
+    #     path: frontend/node_modules
+    #     key: ${{ hashFiles('frontend/package-lock.json') }}
 
     - name: Build
       run: |
@@ -36,8 +36,11 @@ jobs:
         git config --local user.name "github-actions"
 
         git fetch -a
-        git checkout origin/do-not-touch-github-page
-        git pull origin origin/do-not-touch-github-page
+        git checkout do-not-touch-github-page
+
+        git status
+
+        # git pull origin refs/remotes/origin/do-not-touch-github-page
 
         git add -A
 
