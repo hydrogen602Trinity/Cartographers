@@ -35,7 +35,7 @@ jobs:
 
         [[ -z $(git status | grep "nothing to commit") ]] && (
           git commit -m "${{ github.event_nam	}}-${{ github.event.head_commit.message }}-npm-build"
-          git push
+          git push origin HEAD:origin/do-not-touch-github-page
         ) || echo "Nothing to do"
 
 
