@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Cartographers/static/css/main.6b293751.css",
-    "main.js": "/Cartographers/static/js/main.8c230520.js",
+    "main.js": "/Cartographers/static/js/main.8bdcac9c.js",
     "index.html": "/Cartographers/index.html",
     "main.6b293751.css.map": "/Cartographers/static/css/main.6b293751.css.map",
-    "main.8c230520.js.map": "/Cartographers/static/js/main.8c230520.js.map"
+    "main.8bdcac9c.js.map": "/Cartographers/static/js/main.8bdcac9c.js.map"
   },
   "entrypoints": [
     "static/css/main.6b293751.css",
-    "static/js/main.8c230520.js"
+    "static/js/main.8bdcac9c.js"
   ]
 }
