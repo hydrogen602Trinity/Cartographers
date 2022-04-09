@@ -30,8 +30,8 @@ jobs:
         git config --local user.name "github-actions"
 
         git fetch -a
-        git checkout origin/do-not-touch-github-page
-        git pull
+        git checkout HEAD:origin/do-not-touch-github-page
+        git pull origin/do-not-touch-github-page
 
         git add -A
 
