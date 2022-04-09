@@ -23,8 +23,8 @@ jobs:
         npm install
         npm run build
         cd ..
-        cp frontend/build/ .
-        rm -r frontend backend
+        cp -r frontend/build/ .
+        rm -rf frontend backend
 
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
