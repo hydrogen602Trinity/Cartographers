@@ -1,0 +1,40 @@
+name: Deploy Try 2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+
+    - name: Build
+      run: |
+        echo "${{ github.event_name	}}-${{ github.event.head_commit.message }}-npm-build"
+        cd frontend
+        npm install
+        npm run build
+        cd ..
+        cp frontend/build/ .
+        rm -r frontend backend
+
+        git config --local user.email "action@github.com"
+        git config --local user.name "github-actions"
+        git add -A
+
+        git checkout github-pages-do-not-touch
+
+        [[ -z $(git status | grep "nothing to commit") ]] && (
+          git commit -m "${{ github.event_nam	}}-${{ github.event.head_commit.message }}-npm-build"
+          git push
+        ) || echo "Nothing to do"
+
+
