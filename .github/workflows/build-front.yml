@@ -24,8 +24,11 @@ jobs:
 
     - name: Deploy with gh-pages
       run: |
+        echo "https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        pwd
         cd frontend
+        export NODE_DEBUG=gh-pages
         npx gh-pages -d build -u "github-actions-bot <support+actions@github.com>"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
