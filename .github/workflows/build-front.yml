@@ -30,6 +30,7 @@ jobs:
         git config --local user.name "github-actions"
         git add -A
 
+        git fetch -a
         git checkout origin/do-not-touch-github-page
 
         [[ -z $(git status | grep "nothing to commit") ]] && (
