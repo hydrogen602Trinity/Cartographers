@@ -27,23 +27,4 @@ jobs:
         echo "${{ github.event_name	}}-${{ github.event.head_commit.message }}-npm-build"
         cd frontend
         npm install
-        npm run build
-        cd ..
-        cp -r frontend/build/ .
-        rm -rf frontend backend
-
-        git config --local user.email "action@github.com"
-        git config --local user.name "github-actions"
-
-        git fetch -a
-        git checkout origin/do-not-touch-github-page
-        git pull origin origin/do-not-touch-github-page
-
-        git add -A
-
-        [[ -z $(git status | grep "nothing to commit") ]] && (
-          git commit -m "${{ github.event_nam	}}-${{ github.event.head_commit.message }}-npm-build"
-          git push origin HEAD:origin/do-not-touch-github-page
-        ) || echo "Nothing to do"
-
-
+        npm run deploy
