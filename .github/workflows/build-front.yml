@@ -16,11 +16,11 @@ jobs:
       with:
         node-version: 16.x
     
-    - name: Cache
-      uses: actions/cache@v3.0.1
-      with:
-        path: frontend/node_modules/
-        key: ${{ hashFiles('frontend/package-lock.json') }}
+    # - name: Cache
+    #   uses: actions/cache@v3.0.1
+    #   with:
+    #     path: frontend/node_modules
+    #     key: ${{ hashFiles('frontend/package-lock.json') }}
 
     - name: Build
       run: |
