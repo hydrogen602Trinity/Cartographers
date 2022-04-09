@@ -32,7 +32,7 @@ function Reroute() {
   return <p>Redirection...</p>
 }
 
-console.log('init');
+console.log('gh pages are working');
 
 ReactDOM.render(
   <React.StrictMode>
