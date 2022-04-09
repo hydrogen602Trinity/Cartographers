@@ -28,10 +28,12 @@ jobs:
 
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
-        git add -A
 
         git fetch -a
         git checkout origin/do-not-touch-github-page
+        git pull
+
+        git add -A
 
         [[ -z $(git status | grep "nothing to commit") ]] && (
           git commit -m "${{ github.event_nam	}}-${{ github.event.head_commit.message }}-npm-build"
