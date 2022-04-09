@@ -5,6 +5,8 @@ import { useAllMaps } from "./util/api";
 
 
 function Main() {
+  console.log("gh-pages-was-here")
+
   const [isLoading, maps, err] = useAllMaps();
   // console.log(isLoading, maps, err);
 
