@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "command": "npm",
+    "tasks": [
+        {
+            "group": "build",
+            "label": "GitHub Pages Deployment",
+            "type": "shell",
+            "args": [
+                "run",
+                "deploy"
+            ]
+        }
+    ]
+}
