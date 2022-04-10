@@ -1,21 +1,42 @@
+/**
+ * A system for displaying snackbar messages to the user for various things
+ * This system is for the entire site so a message can be dispatched anywhere
+ */
+
 import { createContext, useContext, useReducer, ReactNode } from 'react';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 
 
+/**
+ * This defines how the specify what to dispatch 
+ */
 export interface ISnackbarMsg {
     type: 'error' | 'warning' | 'info' | 'success' | null,
     text: string
 }
 
-
+// note: ignore the lambda function defined here, its just for type inference
 const SnackbarContext = createContext((msg: ISnackbarMsg) => { });
-// this will return dispatchMsg with arguments of state
+
+/**
+ * This will return dispatchMsg with arguments of state.
+ * 
+ * use the useSnackbar hook when wanting to dispatch a snackbar message.
+ */
 export const useSnackbar = () => useContext(SnackbarContext);
 
 
 const initialState: ISnackbarMsg = { type: null, text: '' };
 
+/**
+ * A function used to process new dispatched snackbar messages
+ * DO NOT CALL DIRECTLY. Use `useSnackbar` instead.
+ * 
+ * @param {ISnackbarMsg} _ the last message, is ignored
+ * @param {ISnackbarMsg} action the new message to dispatch
+ * @returns {ISnackbarMsg} the new state
+ */
 function reducer(_: ISnackbarMsg, action: ISnackbarMsg) {
     if (typeof action.text !== 'string') {
         throw new TypeError(`SnackBar: Expected string for text, but got ${action.text}`)
@@ -38,6 +59,11 @@ function reducer(_: ISnackbarMsg, action: ISnackbarMsg) {
     }
 }
 
+/**
+ * Defines how long a message should stay up for
+ * @param {ISnackbarMsg} state the current message
+ * @returns the number of milliseconds, or null to disable auto-hiding
+ */
 function getAutoHideDuration(state: ISnackbarMsg): number | null {
     switch (state.type) {
         case 'error':
@@ -60,6 +86,12 @@ export interface IProps {
     children: ReactNode
 }
 
+/**
+ * The Snackbar system wrapper. Anything that wants to use the system must be a child of
+ * this component, so it must be placed near the root of the component tree.
+ * @param {IProps} props the only prop in children. Only things in children can use this system
+ * @returns {JSX.Element} the view
+ */
 export function SnackbarComponent(props: IProps) {
     const [state, dispatchMsg] = useReducer(reducer, initialState);
 

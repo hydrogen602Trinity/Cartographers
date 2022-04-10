@@ -3,27 +3,23 @@ import MapCard from "./components/MapCard";
 import "./main.scss";
 import { useAllMaps } from "./util/api";
 
-
+/**
+ * View of home page
+ * @returns {JSX.Element} the view
+ */
 function Main() {
-
+  // loads all maps
   const [isLoading, maps, err] = useAllMaps();
-  // console.log(isLoading, maps, err);
 
   return (
     <div className="main">
-      {/* Main {process.env.REACT_APP_API} */}
+      {/* page header */}
       <div className="header center"><h1>CTM Repository</h1></div>
+      {/* body of page */}
       <div className="maps">
-        {/* <Stack 
-          spacing={2}
-          justifyContent="center"
-          alignItems="center">
-          <MapCard />
-          <MapCard />
-          <MapCard />
-        </Stack> */}
         <div className="center">
           {(isLoading || err) ?
+            /* if its still loading or errored, show messages instead */
             ((isLoading) ? <div>Loading...</div> : <div>Something went wrong...</div>) :
             <div>
               {/* <Grid

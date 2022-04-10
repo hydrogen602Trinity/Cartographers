@@ -5,6 +5,10 @@ import { SnackbarComponent } from './components/Snackbar';
 import './index.css';
 import Main from './main';
 
+/**
+ * 404 Page Component
+ * @returns {JSX.Element} the view component
+ */
 function NoMatch() {
   let location = useLocation();
   const nav = useNavigate();
@@ -22,6 +26,10 @@ function NoMatch() {
   );
 }
 
+/**
+ * View that redirects to the home page
+ * @returns {JSX.Element} the view
+ */
 function Reroute() {
   const nav = useNavigate();
 
@@ -34,10 +42,14 @@ function Reroute() {
 
 console.log('gh pages are working');
 
+// Main render function
 ReactDOM.render(
   <React.StrictMode>
+    {/* Route System Wrapper */}
     <BrowserRouter>
+      {/* SnackbarComponent adds little messages for errors and the like */}
       <SnackbarComponent>
+        {/* Set routes here */}
         <Routes>
           <Route path="/" element={<Reroute></Reroute>} />
           <Route path="/Cartographers/" element={<Main />} />
