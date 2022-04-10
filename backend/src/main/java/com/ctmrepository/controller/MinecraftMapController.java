@@ -2,6 +2,7 @@ package com.ctmrepository.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.repository.MinecraftMapRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,37 +46,41 @@ public class MinecraftMapController {
         }
     }
 
-    // @GetMapping("/maps")
-    // public ResponseEntity<List<MinecraftMap>> getAllMaps(@RequestParam(required =
-    // false) String name) {
-    // try {
-    // List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
+    /*
+     * @GetMapping("/maps")
+     * public ResponseEntity<List<MinecraftMap>> getAllMaps(@RequestParam(required =
+     * false) String name) {
+     * try {
+     * List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
+     * 
+     * if (name == null)
+     * minecraftMapRepository.findAll().forEach(maps::add);
+     * else
+     * // Search for Name of Map
+     * minecraftMapRepository.findAll().forEach(maps::add);
+     * // minecraftMapRepository.findByNameContaining(name).forEach(maps::add);
+     * 
+     * if (maps.isEmpty()) {
+     * return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+     * }
+     * 
+     * return new ResponseEntity<>(maps, HttpStatus.OK);
+     * } catch (Exception e) {
+     * return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+     * }
+     * }
+     */
 
-    // if (name == null)
-    // minecraftMapRepository.findAll().forEach(maps::add);
-    // else
-    // minecraftMapRepository.findByNameContaining(name).forEach(maps::add);
+    @GetMapping("/maps/{id}")
+    public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
+        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
-    // if (maps.isEmpty()) {
-    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    // }
-
-    // return new ResponseEntity<>(maps, HttpStatus.OK);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
-    // @GetMapping("/maps/{id}")
-    // public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
-    // Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
-
-    // if (mapData.isPresent()) {
-    // return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
-    // } else {
-    // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    // }
-    // }
+        if (mapData.isPresent()) {
+            return new ResponseEntity<>(mapData.get(), HttpStatus.FOUND);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     // @PostMapping("/maps")
     // public ResponseEntity<MinecraftMap> createMap(@RequestBody MinecraftMap map)
