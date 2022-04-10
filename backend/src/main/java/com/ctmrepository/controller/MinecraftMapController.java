@@ -1,6 +1,7 @@
 package com.ctmrepository.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,6 +81,75 @@ public class MinecraftMapController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    // Start Here: calling the Sort by Relevance function, 
+    // given the full map database and string to search for
+    public ResponseEntity<List<MinecraftMap>> searchThroughMaps(String search) {
+        List<MinecraftMap> sortedMaps = sortByRelevance(minecraftMapRepository.findAll(), search);
+        return new ResponseEntity<>(sortedMaps, HttpStatus.OK);
+    }
+
+    // Next, given a list of maps and the search string,
+    // sort the list of maps by the Levenshtein Distances and Return
+    public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
+        // Get Levenshtein Distances for names
+        List<Integer> mapValues = new ArrayList<Integer>();
+        for (int i = 0; i < maps.size(); i++) {
+            mapValues.add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName(), search)));
+        }
+
+        // Custom Sort by Levenshtein Distances
+        // Get smallest relative distance, throw it into the new map, repeat, n^2 time
+        List<MinecraftMap> sortedMaps = new ArrayList<MinecraftMap>();
+        while (!maps.isEmpty()) {
+            int index = 0; 
+            Integer indexValue = mapValues.get(index);
+            for (int i = 0; i < mapValues.size(); i++) {
+                if (mapValues.get(i) < indexValue) {
+                    index = i;
+                    indexValue = mapValues.get(index);
+                }
+            }
+            sortedMaps.add(maps.get(index));
+            maps.remove(index);
+            mapValues.remove(index);
+        }
+        return sortedMaps;
+    }
+
+    // A comparison where the larger the int the more different the strings are
+    // Made by the number of addition, subtractions, or substitutions needed to match x to y
+    public int getLevenshteinDistance(String x, String y) {
+        int[][] dp = new int[x.length() + 1][y.length() + 1];
+
+        for (int i = 0; i <= x.length(); i++) {
+            for (int j = 0; j <= y.length(); j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else {
+                    dp[i][j] = min(dp[i - 1][j - 1]
+                            + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),
+                            dp[i - 1][j] + 1,
+                            dp[i][j - 1] + 1);
+                }
+            }
+        }
+
+        return dp[x.length()][y.length()];
+    }
+
+    // return if there is a substitution cost or not
+    public static int costOfSubstitution(char a, char b) {
+        return a == b ? 0 : 1;
+    }
+
+    // return the smallest of the int numbers
+    public static int min(int... numbers) {
+        return Arrays.stream(numbers)
+          .min().orElse(Integer.MAX_VALUE);
     }
 
     // @PostMapping("/maps")
