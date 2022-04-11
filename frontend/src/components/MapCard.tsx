@@ -14,10 +14,18 @@ interface IProps {
   map: MCMap
 }
 
+/**
+ * Creates a Card component given a map, displaying the most essential properties
+ * @param {{ map: MCMap }} props The map to display
+ * @returns {JSX.Element} the view
+ */
 export default function MapCard({ map }: IProps) {
   return (
-    <Card sx={{ maxWidth: 'min(95vw, 600px)', minWidth: 'max(30vw, 300px)' }} className="mapCard">
-      <CardActionArea>
+    <Card className="mapCard">
+      <CardActionArea sx={{
+        maxWidth: 'min(95vw, 600px)',
+        minWidth: 'max(30vw, 300px)'
+      }}>
         <CardMedia
           component="img"
           height="140"
@@ -48,6 +56,11 @@ interface InfoPieceProps {
   children: JSX.Element
 }
 
+/**
+ * A helper function for MapCard
+ * @param {{ text: String, children: JSX.Element }} props the text and other content to display
+ * @returns the view
+ */
 function InfoPiece({ text, children }: InfoPieceProps) {
   return <div className="info">
     {children}

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../components/Snackbar";
 import useFetch from "react-fetch-hook";
 import { useEffect } from "react";
+import { get_url } from "./env_config";
 
 
 /**
@@ -49,11 +50,6 @@ export function useFetchAPI(path, dependsArray = null) {
  * @returns path with http and the api path added
  */
 export function fullPath(path) {
-    if (process.env.REACT_APP_IS_PRODUCTION) {
-        return 'https://' + process.env.REACT_APP_PROD_API + '/api/' + path;
-    }
-    else {
-        return 'http://' + process.env.REACT_APP_DEV_API + '/api/' + path;
-    }
+    return get_url() + path
 }
 
