@@ -44,8 +44,8 @@ PGUSER = postgres
 This will cause `psql.exe` command-line utility to use the `postgres` superuser account as the default when the `psql` command is run.
 
 ## Windows
-> On Windows, setting `PGUSER` can be accomplished by either opening `System Properties`, `Environment Variables...`, and then creating a new environment variable, or by running the following command in an Administrator PowerShell terminal using the built-in `setx.exe` utility:
-> ```powershell
+> On Windows, setting `PGUSER` can be accomplished by either opening `System Properties`, `Environment Variables...`, and then creating a new environment variable, or by running the following command in an Administrator Command Line or PowerShell terminal using the built-in `setx.exe` utility:
+> ```cmd
 > setx PGUSER "postgres" /M
 > ```
 > For this change to take effect, a system restart will likely be required.
