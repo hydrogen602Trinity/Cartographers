@@ -9,6 +9,10 @@
             "path": "frontend"
         },
         {
+            "name": "Documentation",
+            "path": "docs"
+        },
+        {
             "name": "GitHub",
             "path": ".github"
         },
