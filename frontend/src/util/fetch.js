@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../components/Snackbar";
 import useFetch from "react-fetch-hook";
 import { useEffect } from "react";
-import { get_url } from "./env_config";
+import { getRestAPI } from "./env_config";
 
 
 /**
@@ -49,7 +49,7 @@ export function useFetchAPI(path, dependsArray = null) {
  * @param {string} path the api endpoint 
  * @returns path with http and the api path added
  */
-export function fullPath(path) {
-    return get_url() + path
+function fullPath(path) {
+    return getRestAPI() + path
 }
 
