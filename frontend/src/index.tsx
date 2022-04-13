@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import * as ReactDOMClient from 'react-dom/client';
+import ReactDOMClient from 'react-dom/client';
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
 import './index.css';
@@ -41,11 +40,9 @@ function Reroute() {
   return <p>Redirection...</p>
 }
 
-console.log('gh pages are working');
-
 let root_container = document.getElementById('root');
 if (!root_container) {
-  throw new Error("root element missing");
+  throw new Error("Missing root container element");
 }
 
 // Main render function
@@ -58,7 +55,7 @@ root.render(
       <SnackbarComponent>
         {/* Set routes here */}
         <Routes>
-          <Route path="/" element={<Reroute></Reroute>} />
+          <Route path="/" element={<Reroute />} />
           <Route path="/Cartographers/" element={<Main />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>

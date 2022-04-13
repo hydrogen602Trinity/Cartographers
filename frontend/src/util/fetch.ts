@@ -24,7 +24,7 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null): [b
     };
 
     const { isLoading, data, error } = useFetch(
-        fullPath(path), args);
+        getFetchPath(path), args);
 
     useEffect(() => {
         if (error) {
@@ -47,7 +47,7 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null): [b
  * @param {string} path the api endpoint 
  * @returns {string} path with http and the api path added
  */
-function fullPath(path: string): string {
+function getFetchPath(path: string): string {
     return getRestAPI() + path
 }
 

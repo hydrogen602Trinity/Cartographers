@@ -1,4 +1,5 @@
 import Card from '@mui/material/Card';
+import Grid from "@mui/material/Grid";
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -21,33 +22,28 @@ interface IProps {
  */
 export default function MapCard({ map }: IProps) {
   return (
-    <Card className="mapCard">
-      <CardActionArea sx={{
-        maxWidth: 'min(95vw, 600px)',
-        minWidth: 'max(30vw, 300px)'
-      }}>
-        <CardMedia
-          component="img"
-          height="140"
-          image={map.image_url}
-          alt="image of map"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {map.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {map.description_short}
-          </Typography>
-          <div className='info-group'>
-            <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
-            <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
-            <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
-            <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
-          </div>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Grid item key={map.id} sm={12} md={6} lg={4}>
+      <Card className="mapCard">
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            image={map.image_url}
+            alt="Map Image"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {map.name}
+            </Typography>
+            <div className='info-group'>
+              <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
+              <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
+              <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
+              <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
+            </div>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Grid>
   );
 }
 
