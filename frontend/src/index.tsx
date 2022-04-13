@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import * as ReactDOMClient from 'react-dom/client';
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
 import './index.css';
@@ -42,8 +43,14 @@ function Reroute() {
 
 console.log('gh pages are working');
 
+let root_container = document.getElementById('root');
+if (!root_container) {
+  throw new Error("root element missing");
+}
+
 // Main render function
-ReactDOM.render(
+let root = ReactDOMClient.createRoot(root_container);
+root.render(
   <React.StrictMode>
     {/* Route System Wrapper */}
     <BrowserRouter>
@@ -57,7 +64,6 @@ ReactDOM.render(
         </Routes>
       </SnackbarComponent>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 

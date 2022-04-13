@@ -11,7 +11,7 @@ import { getRestAPI } from "./env_config";
  * @param {[any]} dependsArray values that should trigger a reload of data if they change
  * @returns {[isLoading, data, error]} whether its still loading, the data, error 
  */
-export function useFetchAPI(path, dependsArray = null) {
+export function useFetchAPI(path: string, dependsArray: any[] | null = null): [boolean, any, useFetch.UseFetchError | undefined] {
     if (path.startsWith('/')) {
         path = path.substring(1);
     }
@@ -20,10 +20,8 @@ export function useFetchAPI(path, dependsArray = null) {
     const nav = useNavigate();
     const args = {
         //credentials: 'include',
+        depends: (dependsArray) ? dependsArray : undefined
     };
-    if (dependsArray) {
-        args.depends = dependsArray;
-    }
 
     const { isLoading, data, error } = useFetch(
         fullPath(path), args);
@@ -47,9 +45,9 @@ export function useFetchAPI(path, dependsArray = null) {
 /**
  * Adds the api path to an api endpoint
  * @param {string} path the api endpoint 
- * @returns path with http and the api path added
+ * @returns {string} path with http and the api path added
  */
-function fullPath(path) {
+function fullPath(path: string): string {
     return getRestAPI() + path
 }
 
