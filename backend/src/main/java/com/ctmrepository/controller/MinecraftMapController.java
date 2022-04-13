@@ -83,16 +83,16 @@ public class MinecraftMapController {
         }
     }
 
-    // Start Here: calling the Sort by Relevance function, 
+    // Start Here: calling the Sort by Relevance function,
     // given the full map database and string to search for
-    public ResponseEntity<List<MinecraftMap>> searchThroughMaps(String search) {
-        List<MinecraftMap> sortedMaps = sortByRelevance(minecraftMapRepository.findAll(), search);
+    public ResponseEntity<List<Long>> searchThroughMaps(String search) {
+        List<Long> sortedMaps = sortByRelevance(minecraftMapRepository.findAll(), search);
         return new ResponseEntity<>(sortedMaps, HttpStatus.OK);
     }
 
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
-    public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
+    public List<Long> sortByRelevance(List<MinecraftMap> maps, String search) {
         // Get Levenshtein Distances for names
         List<Integer> mapValues = new ArrayList<Integer>();
         for (int i = 0; i < maps.size(); i++) {
@@ -101,9 +101,9 @@ public class MinecraftMapController {
 
         // Custom Sort by Levenshtein Distances
         // Get smallest relative distance, throw it into the new map, repeat, n^2 time
-        List<MinecraftMap> sortedMaps = new ArrayList<MinecraftMap>();
+        List<Long> sortedMapIDs = new ArrayList<Long>();
         while (!maps.isEmpty()) {
-            int index = 0; 
+            int index = 0;
             Integer indexValue = mapValues.get(index);
             for (int i = 0; i < mapValues.size(); i++) {
                 if (mapValues.get(i) < indexValue) {
@@ -111,15 +111,16 @@ public class MinecraftMapController {
                     indexValue = mapValues.get(index);
                 }
             }
-            sortedMaps.add(maps.get(index));
+            sortedMapIDs.add(maps.get(index).getId());
             maps.remove(index);
             mapValues.remove(index);
         }
-        return sortedMaps;
+        return sortedMapIDs;
     }
 
     // A comparison where the larger the int the more different the strings are
-    // Made by the number of addition, subtractions, or substitutions needed to match x to y
+    // Made by the number of addition, subtractions, or substitutions needed to
+    // match x to y
     public int getLevenshteinDistance(String x, String y) {
         int[][] dp = new int[x.length() + 1][y.length() + 1];
 
@@ -149,7 +150,7 @@ public class MinecraftMapController {
     // return the smallest of the int numbers
     public static int min(int... numbers) {
         return Arrays.stream(numbers)
-          .min().orElse(Integer.MAX_VALUE);
+                .min().orElse(Integer.MAX_VALUE);
     }
 
     // @PostMapping("/maps")
