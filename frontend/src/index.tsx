@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import ReactDOMClient from 'react-dom/client';
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
-import './index.css';
+import './index.scss';
 import Main from './main';
 
 /**

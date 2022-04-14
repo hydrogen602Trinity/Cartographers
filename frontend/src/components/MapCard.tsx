@@ -1,14 +1,14 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Card from '@mui/material/Card';
-import Grid from "@mui/material/Grid";
+import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import { MCMap } from '../util/api';
-import PersonIcon from '@mui/icons-material/Person';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import HistoryIcon from '@mui/icons-material/History';
 import DownloadIcon from '@mui/icons-material/Download';
+import HistoryIcon from '@mui/icons-material/History';
+import PersonIcon from '@mui/icons-material/Person';
+import Typography from '@mui/material/Typography';
+
+import { MCMap } from '../util/api';
 import "./MapCard.scss"
 
 interface IProps {
@@ -20,30 +20,28 @@ interface IProps {
  * @param {{ map: MCMap }} props The map to display
  * @returns {JSX.Element} the view
  */
-export default function MapCard({ map }: IProps) {
+export default function MapCard({ map }: IProps): JSX.Element {
   return (
-    <Grid item key={map.id} sm={12} md={6} lg={4}>
-      <Card className="mapCard">
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            image={map.image_url}
-            alt="Map Image"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {map.name}
-            </Typography>
-            <div className='info-group'>
-              <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
-              <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
-              <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
-              <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
-            </div>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
+    <Card className="mapCard">
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          image={map.image_url}
+          alt="Map Image"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {map.name}
+          </Typography>
+          <div className='info-group'>
+            <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
+            <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
+            <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
+            <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
+          </div>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 }
 

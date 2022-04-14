@@ -1,15 +1,10 @@
-/**
- * A system for displaying snackbar messages to the user for various things
- * This system is for the entire site so a message can be dispatched anywhere
- */
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 import { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
-
 
 /**
- * This defines how the specify what to dispatch 
+ * Interface which defines what to dispatch
  */
 export interface ISnackbarMsg {
     type: 'error' | 'warning' | 'info' | 'success' | null,
@@ -92,7 +87,7 @@ export interface IProps {
  * @param {IProps} props the only prop in children. Only things in children can use this system
  * @returns {JSX.Element} the view
  */
-export function SnackbarComponent(props: IProps) {
+export function SnackbarComponent(props: IProps): JSX.Element {
     const [state, dispatchMsg] = useReducer(reducer, initialState);
 
     const handleClose = () => {
