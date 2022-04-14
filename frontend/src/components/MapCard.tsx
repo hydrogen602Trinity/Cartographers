@@ -1,14 +1,14 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Card from '@mui/material/Card';
-import Grid from "@mui/material/Grid";
+import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import { MCMap } from '../util/api';
-import PersonIcon from '@mui/icons-material/Person';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import HistoryIcon from '@mui/icons-material/History';
 import DownloadIcon from '@mui/icons-material/Download';
+import HistoryIcon from '@mui/icons-material/History';
+import PersonIcon from '@mui/icons-material/Person';
+import Typography from '@mui/material/Typography';
+
+import { MCMap } from '../util/api';
 import "./MapCard.scss"
 
 interface IProps {
@@ -20,7 +20,7 @@ interface IProps {
  * @param {{ map: MCMap }} props The map to display
  * @returns {JSX.Element} the view
  */
-export default function MapCard({ map }: IProps) {
+export default function MapCard({ map }: IProps): JSX.Element {
   return (
     <Card className="map-card">
       <CardActionArea>
