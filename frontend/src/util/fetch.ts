@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../components/Snackbar";
 import useFetch from "react-fetch-hook";
 import { useEffect } from "react";
+import { useSnackbar } from "../components/Snackbar";
+import { getRestAPI } from "./env";
 
 
 /**
@@ -10,7 +11,7 @@ import { useEffect } from "react";
  * @param {[any]} dependsArray values that should trigger a reload of data if they change
  * @returns {[isLoading, data, error]} whether its still loading, the data, error 
  */
-export function useFetchAPI(path, dependsArray = null) {
+export function useFetchAPI(path: string, dependsArray: any[] | null = null): [boolean, any, useFetch.UseFetchError | undefined] {
     if (path.startsWith('/')) {
         path = path.substring(1);
     }
@@ -19,13 +20,11 @@ export function useFetchAPI(path, dependsArray = null) {
     const nav = useNavigate();
     const args = {
         //credentials: 'include',
+        depends: (dependsArray) ? dependsArray : undefined
     };
-    if (dependsArray) {
-        args.depends = dependsArray;
-    }
 
     const { isLoading, data, error } = useFetch(
-        fullPath(path), args);
+        getFetchPath(path), args);
 
     useEffect(() => {
         if (error) {
@@ -46,14 +45,9 @@ export function useFetchAPI(path, dependsArray = null) {
 /**
  * Adds the api path to an api endpoint
  * @param {string} path the api endpoint 
- * @returns path with http and the api path added
+ * @returns {string} path with http and the api path added
  */
-export function fullPath(path) {
-    if (process.env.REACT_APP_IS_PRODUCTION) {
-        return 'https://' + process.env.REACT_APP_PROD_API + '/api/' + path;
-    }
-    else {
-        return 'http://' + process.env.REACT_APP_DEV_API + '/api/' + path;
-    }
+function getFetchPath(path: string): string {
+    return getRestAPI() + path
 }
 

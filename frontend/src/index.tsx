@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOMClient from 'react-dom/client';
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
-import './index.css';
+import './index.scss';
 import Main from './main';
 
+/**
+ * 404 Page Component
+ * @returns {JSX.Element} the view component
+ */
 function NoMatch() {
   let location = useLocation();
   const nav = useNavigate();
@@ -22,6 +26,10 @@ function NoMatch() {
   );
 }
 
+/**
+ * View that redirects to the home page
+ * @returns {JSX.Element} the view
+ */
 function Reroute() {
   const nav = useNavigate();
 
@@ -32,20 +40,27 @@ function Reroute() {
   return <p>Redirection...</p>
 }
 
-console.log('gh pages are working');
+let root_container = document.getElementById('root');
+if (!root_container) {
+  throw new Error("Missing root container element");
+}
 
-ReactDOM.render(
+// Main render function
+let root = ReactDOMClient.createRoot(root_container);
+root.render(
   <React.StrictMode>
+    {/* Route System Wrapper */}
     <BrowserRouter>
+      {/* SnackbarComponent adds little messages for errors and the like */}
       <SnackbarComponent>
+        {/* Set routes here */}
         <Routes>
-          <Route path="/" element={<Reroute></Reroute>} />
+          <Route path="/" element={<Reroute />} />
           <Route path="/Cartographers/" element={<Main />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </SnackbarComponent>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 

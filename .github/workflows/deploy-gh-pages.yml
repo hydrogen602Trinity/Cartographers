@@ -1,4 +1,4 @@
-name: Deploy Try 2
+name: GitHub Pages Deployment
 
 on:
   push:
@@ -15,12 +15,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
-    
-    # - name: Cache
-    #   uses: actions/cache@v3.0.1
-    #   with:
-    #     path: frontend/node_modules
-    #     key: ${{ hashFiles('frontend/package-lock.json') }}
 
     - name: Deploy with gh-pages
       run: |
@@ -28,7 +22,7 @@ jobs:
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         cd frontend
 
-        npm i
+        npm install
         npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
