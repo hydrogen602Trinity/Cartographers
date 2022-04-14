@@ -9,7 +9,7 @@
  * env vars: REACT_APP_URL_PRODUCTION, REACT_APP_URL_DEVELOPMENT
  * 
  * NODE_ENV is auto managed based on npm start vs. npm run build
- * Use REACT_APP_FORCE_URL_PRODUCTION to use the production backend in development
+ * Use REACT_APP_FORCE_URL_PRODUCTION=true to use the production backend in development
  * 
  * @returns {string} the url
  */

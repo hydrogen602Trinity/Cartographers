@@ -26,21 +26,8 @@ export interface MCMap {
  * @return {[boolean, MCMap, any]} [whether its still loading, the data, error]
  */
 export function useAllMaps(): [boolean, MCMap[], any] {
-    // let m: any = {
-    //     image_url: 'https://avatars.githubusercontent.com/u/55502571?s=400&u=81eee2f66bb699cdcc56b2d8d8b1edbb53ea5536&v=4',
-    //     name: 'Empty Prop 1',
-    //     author: 'hydrogen602',
-    //     description_short: 'A basic prop for testing cause the backend doesn\'t work'
-    // };
-    // return [false, [
-    //     m, m, m, m, m, m, m
-    // ], undefined];
-
     let [isLoading, data, error] = useFetchAPI('/maps/search');
-
-    if (error) {
-        data = [];
-    }
+    if (error) data = [];
 
     return [isLoading, data, error];
 }

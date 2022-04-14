@@ -28,15 +28,14 @@ git clone https://github.com/hydrogen602Trinity/Cartographers.git
 
 ## MacOS
 
->If git is not installed, install it with either
+>If git is not installed, it can be installed it with either Xcode or [Homebrew](https://brew.sh/)* using one of the following commands:
 >```
 >xcode-select –install
 >```
->or
 >```
 >brew install git
 >```
->\* *If following this guide on MacOS, it is recommended to download homebrew if it is not already installed on your system, as the following instructions assume that homebrew is installed. Instructions are available at `https://brew.sh/`*
+>\* *If following this guide on MacOS, it is recommended to download homebrew if it is not already installed on your system, as the following instructions assume that homebrew is installed.*
 
 # Dependencies
 To run this project, there are several third-party applications that will need be installed on your system. These are listed below in addition to some optional applications which make development of the project easier.
@@ -74,7 +73,7 @@ To run this project, there are several third-party applications that will need b
 > ```
 
 ## MacOS
-> The following is a list of terminal commands for installing required and recommended applications using homebrew.
+> The following is a list of terminal commands for installing required and recommended applications using Homebrew.
 >
 > **Required**
 > ```
@@ -111,12 +110,14 @@ PGUSER = postgres
 This will cause the 'psql' command-line utility to use the postgres superuser account as the default when the psql command is run.
 
 ## Windows
-> On Windows, setting `PGUSER` can be accomplished by either opening `System Properties`, `Environment Variables...`, and then creating a new environment variable, or by running the following command in an Administrator PowerShell terminal:
+> After installing PostgreSQL with winget, the default superuser account should be called `postgres` with a default password of `postgres`. It may be convenient to set this user as the default user for the `psql` utility so that it isn't necessary to specify a user every time the utility is run.
+>
+> This can be done by adding the `PGUSER` environment variable in the Advanced tab of System Properties, or by running the following command in an Administrator PowerShell terminal:
 > ```powershell
 > [Environment]::SetEnvironmentVariable('PGUSER','postgres',[EnvironmentVariableTarget]::Machine)
 > ```
 >
-> Next, ensure that the `psql` utility is on your system path. You can do this by running the following PowerShell command:
+> Next, ensure that the `psql` utility is on your system path. You can do this by running the following PowerShell command, but note that if the path was just added you may need to open a new terminal for it to be detected:
 > ```powershell
 > [Environment]::GetEnvironmentVariable('PATH') -split ';'
 > ```
@@ -128,40 +129,21 @@ This will cause the 'psql' command-line utility to use the postgres superuser ac
 > To finish applying these changes, a system restart will likely be required.
 
 ## MacOS
-> Setting `PGUSER` can be accomplished by running
-> ```
+> Setting `PGUSER` can be accomplished by running the following command, where the default user is `postgres`:
+> ```bash
 > echo "export PGUSER=postgres" >> ~/.bash_profile
 > ```
 
 # Database Setup
-To create the project database, run `psql` in a terminal and sign-in to the postgres superuser account. If installed with winget, the password for the postgres account should be `postgres` by default. If `PGUSER` was not defined previously, then you can sign-in by running `psql` with a specified user:
+To create the project database, run `psql` in a terminal and sign-in to the postgres superuser account. If installed with winget, the password for the postgres account should be `postgres` by default. If `PGUSER` was not defined previously, then you can sign-in by running `psql` with a specific user by specifying them with the `-U` argument:
 ```
 psql -U postgres
 ```
 
 After signing in, you should first create a new user called `ctmadmin` with the password `s$cret`. Then, create a new database called `ctmdb` with `ctmadmin` as the database's owner:
 ```
-CREATE ROLE ctmadmin WITH CREATEDB PASSWORD 's$cret';
+CREATE ROLE ctmadmin WITH CREATEDB LOGIN PASSWORD 's$cret';
 ```
-> If this fails with 
-> ```
-> permission denied to create role
-> ```
-> then another account may be the database superuser.
-> Run
-> ```
-> \du
-> ```
-> And identify the role with the `Create role` attribute. Exit postgres with
-> ```
-> \q
-> ```
-> And then sign in with
-> ```
-> psql -U the-username-with-create-role
-> ```
-> 
-
 ```
 CREATE DATABASE ctmdb OWNER ctmadmin;
 ```
