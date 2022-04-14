@@ -13,7 +13,7 @@ function Main() {
   return (
     <div className="main">
       <div className="header center">
-        <img src="Cartographers/logo.webp" />
+        <img src="Cartographers/logo.webp" alt="CTM Repository" />
       </div>
       <div className="maps">
         <div className="center">

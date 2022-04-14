@@ -22,8 +22,8 @@ interface IProps {
  */
 export default function MapCard({ map }: IProps) {
   return (
-    <Grid item key={map.id} sm={12} md={6} lg={4}>
-      <Card className="mapCard">
+    <Grid item key={map.id} xs={12} sm={6} md={6} lg={4} xl={3}>
+      <Card className="map-card">
         <CardActionArea>
           <CardMedia
             component="img"
