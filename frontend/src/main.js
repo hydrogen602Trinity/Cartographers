@@ -14,7 +14,9 @@ function Main() {
   return (
     <div className="main">
       {/* page header */}
-      <div className="header center"><h1>CTM Repository</h1></div>
+      <div className="header center">
+        <img src="Cartographers/logo.webp" />
+      </div>
       {/* body of page */}
       <div className="maps">
         <div className="center">

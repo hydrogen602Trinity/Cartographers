@@ -17,15 +17,29 @@
         align-items: center;
         align-content: center;
         justify-content: center;
+
+        img {
+            margin-top: 3vh;
+            margin-bottom: 1vh;
+            object-fit: contain;
+            width: max(min(100vw, 900px), 50vw);
+            // max(..., 50vw) makes it still decent on 4k monitors
+        }
     }
 
     .maps {
+
         // padding: 2em;
-        margin: 3vw;
+        @media only screen and (min-width: 500px) {
+            // no space for side border on mobile
+            margin: 3vw;
+            border-radius: 0.5em;
+        }
+
         padding: 2vw;
         min-height: 80vh;
         background-color: white;
-        border-radius: 0.5em;
+
 
         .MuiPagination-ul {
             justify-content: center;

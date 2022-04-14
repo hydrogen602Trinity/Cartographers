@@ -21,23 +21,18 @@ interface IProps {
  */
 export default function MapCard({ map }: IProps) {
   return (
-    <Card className="mapCard">
-      <CardActionArea sx={{
-        maxWidth: 'min(95vw, 600px)',
-        minWidth: 'max(30vw, 300px)'
-      }}>
+    <Card className="map-card">
+      <CardActionArea className="map-action-area">
         <CardMedia
           component="img"
-          height="140"
+          width="576"
           image={map.image_url}
+          className="map-card-media"
           alt="image of map"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {map.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {map.description_short}
           </Typography>
           <div className='info-group'>
             <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
