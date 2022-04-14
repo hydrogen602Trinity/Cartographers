@@ -1,4 +1,15 @@
-.mapCard {
+.map-card {
+    flex-basis: max(25vw, 300px);
+
+    .map-action-area {
+        max-width: min(95vw, 600px);
+        min-width: max(25vw, 300px);
+    }
+
+    .map-card-media {
+        object-fit: contain;
+    }
+
     .info-group {
         display: flex;
         flex-direction: row;

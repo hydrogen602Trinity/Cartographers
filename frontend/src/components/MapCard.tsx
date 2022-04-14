@@ -22,7 +22,7 @@ interface IProps {
  */
 export default function MapCard({ map }: IProps): JSX.Element {
   return (
-    <Card className="mapCard">
+    <Card className="map-card">
       <CardActionArea>
         <CardMedia
           component="img"

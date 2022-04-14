@@ -13,7 +13,7 @@ function Main() {
   return (
     <div className="main">
       <div className="header center">
-        <h1>CTM Repository</h1>
+        <img src="Cartographers/logo.webp" alt="CTM Repository" />
       </div>
       <div className="maps">
         <div className="center">
@@ -27,7 +27,7 @@ function Main() {
             <div>
               <Grid container spacing={2}>
                 {maps.map((map, index) => (
-                  <Grid item key={map.id} xs={12} md={6} xl={4}>
+                  <Grid item key={map.id} xs={12} sm={6} md={6} lg={4} xl={3}>
                     <MapCard map={map} key={index} />
                   </Grid>
                 ))}
