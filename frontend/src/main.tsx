@@ -26,7 +26,11 @@ function Main() {
             ) :
             <div>
               <Grid container spacing={2}>
-                {maps.map((map, index) => (<MapCard map={map} key={index} />))}
+                {maps.map((map, index) => (
+                  <Grid item key={map.id} xs={12} sm={6} md={6} lg={4} xl={3}>
+                    <MapCard map={map} key={index} />
+                  </Grid>
+                ))}
               </Grid>
               <Pagination count={10} sx={{ marginTop: '2em' }}></Pagination>
             </div>

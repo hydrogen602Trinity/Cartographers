@@ -22,28 +22,26 @@ interface IProps {
  */
 export default function MapCard({ map }: IProps) {
   return (
-    <Grid item key={map.id} xs={12} sm={6} md={6} lg={4} xl={3}>
-      <Card className="map-card">
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            image={map.image_url}
-            alt="Map Image"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {map.name}
-            </Typography>
-            <div className='info-group'>
-              <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
-              <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
-              <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
-              <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
-            </div>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
+    <Card className="map-card">
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          image={map.image_url}
+          alt="Map Image"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {map.name}
+          </Typography>
+          <div className='info-group'>
+            <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
+            <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
+            <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
+            <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
+          </div>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 }
 
