@@ -85,8 +85,11 @@ public class MinecraftMapController {
 
     // Start Here: calling the Sort by Relevance function,
     // given the full map database and string to search for
-    public ResponseEntity<List<Long>> searchThroughMaps(String search) {
-        List<Long> sortedMaps = sortByRelevance(minecraftMapRepository.findAll(), search);
+    // Note that in the url, '_' is assumed to be the spaces
+    @GetMapping("/search/{search}")
+    public ResponseEntity<List<Long>> searchThroughMaps(@PathVariable("search") String search) {
+        search = search.replaceAll("_", " ");
+        List<Long> sortedMaps = sortByRelevance(minecraftMapRepository.findAll(), search.toUpperCase());
         return new ResponseEntity<>(sortedMaps, HttpStatus.OK);
     }
 
@@ -94,26 +97,27 @@ public class MinecraftMapController {
     // sort the list of maps by the Levenshtein Distances and Return
     public List<Long> sortByRelevance(List<MinecraftMap> maps, String search) {
         // Get Levenshtein Distances for names
-        List<Integer> mapValues = new ArrayList<Integer>();
+        List<Integer> levenschteinValues = new ArrayList<Integer>();
         for (int i = 0; i < maps.size(); i++) {
-            mapValues.add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName(), search)));
+            levenschteinValues
+                    .add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName().toUpperCase(), search)));
         }
 
         // Custom Sort by Levenshtein Distances
         // Get smallest relative distance, throw it into the new map, repeat, n^2 time
         List<Long> sortedMapIDs = new ArrayList<Long>();
         while (!maps.isEmpty()) {
-            int index = 0;
-            Integer indexValue = mapValues.get(index);
-            for (int i = 0; i < mapValues.size(); i++) {
-                if (mapValues.get(i) < indexValue) {
+            int index = -1;
+            Integer indexValue = Integer.MAX_VALUE;
+            for (int i = 0; i < levenschteinValues.size(); i++) {
+                if (levenschteinValues.get(i) < indexValue) {
                     index = i;
-                    indexValue = mapValues.get(index);
+                    indexValue = levenschteinValues.get(index);
                 }
             }
             sortedMapIDs.add(maps.get(index).getId());
             maps.remove(index);
-            mapValues.remove(index);
+            levenschteinValues.remove(index);
         }
         return sortedMapIDs;
     }
