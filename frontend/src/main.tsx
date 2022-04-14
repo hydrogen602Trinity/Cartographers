@@ -2,6 +2,7 @@ import { Grid, Pagination } from "@mui/material";
 import MapCard from "./components/MapCard";
 import "./main.scss";
 import { useAllMaps } from "./util/api";
+import { getWithStaticPrefix } from "./util/env";
 
 /**
  * View of home page
@@ -13,7 +14,7 @@ function Main() {
   return (
     <div className="main">
       <div className="header center">
-        <img src="Cartographers/logo.webp" alt="CTM Repository" />
+        <img src={getWithStaticPrefix('logo.webp')} alt="CTM Repository" />
       </div>
       <div className="maps">
         <div className="center">
