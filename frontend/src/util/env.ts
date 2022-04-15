@@ -23,20 +23,3 @@ export function getRestAPI(): string {
     throw new Error("Invalid Environment URL");
 }
 
-
-/**
- * Gets the necessary root of the path to static content. For example,
- * rendering the logo in development requires `Cartographers/logo.webp`,
- * but in production it needs to be `logo.webp`.
- * 
- * @param path the path to the static content
- * @returns the path with the root added
- */
-export function getWithStaticPrefix(path: string): string {
-    if (process.env.NODE_ENV === "production") {
-        return path;
-    }
-    else {
-        return 'Cartographers/' + path;
-    }
-}

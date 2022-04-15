@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { MCMap } from '../util/api';
 import "./MapCard.scss"
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   map: MCMap
@@ -21,9 +22,18 @@ interface IProps {
  * @returns {JSX.Element} the view
  */
 export default function MapCard({ map }: IProps): JSX.Element {
+  const id = map.id;
+  const name = map.name;
+
+  const nav = useNavigate();
+
+  const expand = () => {
+    nav('/Cartographers/maps/' + encodeURIComponent(id) + '/' + encodeURIComponent(name));
+  }
+
   return (
     <Card className="map-card">
-      <CardActionArea>
+      <CardActionArea onClick={expand}>
         <CardMedia
           component="img"
           image={map.image_url}
