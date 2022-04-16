@@ -28,7 +28,8 @@ export default function MapCard({ map }: IProps): JSX.Element {
   const nav = useNavigate();
 
   const expand = () => {
-    nav('/Cartographers/maps/' + encodeURIComponent(id) + '/' + encodeURIComponent(name));
+    nav('/Cartographers/maps/' + encodeURIComponent(id) + '/' +
+      encodeURIComponent(name.toLowerCase().replace(' ', '-')));
   }
 
   return (

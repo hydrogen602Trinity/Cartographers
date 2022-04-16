@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NoMatch from "./no_match";
 import { MCMap, useAllMaps } from "./util/api";
@@ -66,9 +66,12 @@ function MapView({ id }: IProps) {
   }
 
   const content = (status === Status.READY) ? (
-    <div>
+    <div className="center">
       <img src={map?.image_url} alt={map?.name} />
-    </div>
+      <ul>
+        {(map) ? Object.keys(map).map(key => <li>{`${key}: ${((map as any)[key] || '')}`}</li>) : <></>}
+      </ul>
+    </div >
   ) : <div>Loading...</div>;
 
   return ( //<p>{JSON.stringify(params)}</p>
