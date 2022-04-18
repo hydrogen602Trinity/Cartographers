@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
-@CrossOrigin(origins = { "http://localhost:3000/", "https://hydrogen602trinity.github.io/" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://hydrogen602trinity.github.io" })
 @RestController
 @RequestMapping("/")
 public class MinecraftMapController {
