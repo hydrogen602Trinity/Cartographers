@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = { "http://localhost:3000/", "https://hydrogen602trinity.github.io/" })
 @RestController
 @RequestMapping("/")
 public class MinecraftMapController {
@@ -57,7 +57,6 @@ public class MinecraftMapController {
      * @param limit maximum number of results to return per page
      * @param page  page number of results to return
      */
-    @CrossOrigin(origins = { "http://localhost:3000", "https://hydrogen602trinity.github.io/" })
     @GetMapping("/search/maps")
     public ResponseEntity<List<MinecraftMap>> getMapSearch(
             @RequestParam() String q,
@@ -82,7 +81,7 @@ public class MinecraftMapController {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
         if (mapData.isPresent()) {
-            return new ResponseEntity<>(mapData.get(), HttpStatus.FOUND);
+            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

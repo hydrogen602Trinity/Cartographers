@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import ReactDOMClient from 'react-dom/client';
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
 import './index.scss';
 import Main from './main';
-import MapView, { ParamFilter } from './map';
+import { ParamFilter } from './map';
 import NoMatch from './no_match';
 
 

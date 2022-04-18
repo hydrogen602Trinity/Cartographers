@@ -1,10 +1,8 @@
-import { Paper, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NoMatch from "./no_match";
-import { MCMap, useAllMaps } from "./util/api";
+import { useMap } from "./util/api";
 import "./map.scss";
 import "./main.scss";
-import { useMemo } from "react";
 
 /**
  * Checks the validity of URL parameters before
@@ -29,12 +27,6 @@ interface IProps {
   id: number
 }
 
-enum Status {
-  NOT_YET_RECEIVED,
-  MAP_MISSING,
-  READY
-}
-
 /**
  * Display information about a single map
  * It gets information via url parameters
@@ -42,46 +34,27 @@ enum Status {
  */
 function MapView({ id }: IProps) {
   // once the backend is updated to provide information on individual maps, replace this
-  const [_, maps, err] = useAllMaps();
 
-  const [status, map]: [Status, MCMap | null] = useMemo(() => {
-    if (maps === undefined) {
-      return [Status.NOT_YET_RECEIVED, null];
-    }
+  const [isLoading, map, err] = useMap(id);
+  // console.log(`re-render ${id}`, [isLoading, map, err]);
 
-    const candidates = maps.filter(m => m.id == id);
-    if (candidates.length !== 1) {
-      // invalid id: id not found
-      console.error(`id=${id} not found in maps`);
-      return [Status.MAP_MISSING, null];
-    }
-
-    return [Status.READY, candidates[0] || null];
-  }, [maps]);
-
-  console.log(map);
-
-  if (status === Status.MAP_MISSING) {
+  if (err && err.status === 404) {
     return <NoMatch />;
   }
-
-  const content = (status === Status.READY) ? (
-    <div className="center">
-      <img src={map?.image_url} alt={map?.name} />
-      <ul>
-        {(map) ? Object.keys(map).map(key => <li>{`${key}: ${((map as any)[key] || '')}`}</li>) : <></>}
-      </ul>
-    </div >
-  ) : <div>Loading...</div>;
 
   return ( //<p>{JSON.stringify(params)}</p>
     <div className="main map-view">
       <div className="maps">
         <div className="center">
-          {err ?
-            <div>Error Loading Page</div>
+          {(isLoading || err) ?
+            (err ? <div>Error fetching data</div> : <div>Loading...</div>)
             :
-            content
+            <div className="center">
+              <img src={map?.image_url} alt={map?.name} />
+              <ul>
+                {(map) ? Object.keys(map).map(key => <li key={key}>{`${key}: ${((map as any)[key] || '')}`}</li>) : <></>}
+              </ul>
+            </div >
           }
         </div>
       </div>
