@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOMClient from 'react-dom/client';
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
 import './index.scss';
 import Main from './main';
@@ -32,7 +32,7 @@ let root = ReactDOMClient.createRoot(root_container);
 root.render(
   <React.StrictMode>
     {/* Route System Wrapper */}
-    <BrowserRouter>
+    <HashRouter>
       {/* SnackbarComponent adds little messages for errors and the like */}
       <SnackbarComponent>
         {/* Set routes here */}
@@ -45,7 +45,7 @@ root.render(
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </SnackbarComponent>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
 
