@@ -1,3 +1,4 @@
+import useFetch from "react-fetch-hook";
 import { useFetchAPI } from "./fetch"
 
 /**
@@ -48,10 +49,12 @@ export interface MCMap {
 
 /**
  * Get all maps from the backend. A react hook
+ * @param {any[] | null} dependsArray re-request data when the values in the array change.
+ * Set to [] (the default) to never reload data
  * @return {[boolean, MCMap, any]} [whether its still loading, the data, error]
  */
-export function useAllMaps(): [boolean, MCMap[], any] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: '' }), null, []);
+export function useAllMaps(dependsArray: any[] | null = []): [boolean, MCMap[], useFetch.UseFetchError | undefined] {
+    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: '' }), dependsArray, []);
 }
 
 const ENTRIES_PER_PAGE: number = 12;
@@ -60,17 +63,21 @@ const ENTRIES_PER_PAGE: number = 12;
  * Searches for maps from the backend with paging. A react hook
  * @param {string} query the search string
  * @param {page} page the page number
+ * @param {any[] | null} dependsArray re-request data when the values in the array change.
+ * Set to [] (the default) to never reload data
  * @return {[boolean, MCMap, any]} [whether its still loading, the data, error]
  */
-export function useSearchMaps(query: string, page: number = 0): [boolean, MCMap[], any] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: query, per_page: ENTRIES_PER_PAGE, page: page }), null, []);
+export function useSearchMaps(query: string, page: number = 0, dependsArray: any[] | null = []): [boolean, MCMap[], useFetch.UseFetchError | undefined] {
+    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: query, per_page: ENTRIES_PER_PAGE, page: page }), dependsArray, []);
 }
 
 /**
  * Get one map from the backend by id. A react hook
- * @param {number} id the id number of the map to get 
+ * @param {number} id the id number of the map to get
+ * @param {any[] | null} dependsArray re-request data when the values in the array change.
+ * Set to [] (the default) to never reload data
  * @return {[boolean, MCMap | null, any]} [whether its still loading, the data, error]
  */
-export function useMap(id: number): [boolean, MCMap | null, any] {
-    return useFetchAPI(API_ENDPOINTS.ONE_MAP(id), null, null);
+export function useMap(id: number, dependsArray: any[] | null = []): [boolean, MCMap | null, useFetch.UseFetchError | undefined] {
+    return useFetchAPI(API_ENDPOINTS.ONE_MAP(id), dependsArray, {});
 }
