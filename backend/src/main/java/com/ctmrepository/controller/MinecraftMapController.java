@@ -2,8 +2,11 @@ package com.ctmrepository.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.repository.MinecraftMapRepository;
@@ -96,6 +99,27 @@ public class MinecraftMapController {
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     public List<Long> sortByRelevance(List<MinecraftMap> maps, String search) {
+        Collections.sort( maps, new Comparator<MinecraftMap>() {
+            public int compare(MinecraftMap m1, MinecraftMap m2) {
+                int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
+                int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
+                int levenComp = mapLeven1 - mapLeven2;
+
+                System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+" ("+mapLeven2+")"+" = "+levenComp);
+                if (levenComp != 0) {
+                    return levenComp;
+                }
+
+                Long m1D = m1.getDownload_count();
+                Long m2D = m2.getDownload_count();
+                return m1D.compareTo(m2D);
+            }
+        });
+
+        List<Long> sortedMapIDs = maps.stream().map(MinecraftMap::getId).collect(Collectors.toList());
+
+        return sortedMapIDs;  
+        /*
         // Get Levenshtein Distances for names
         List<Integer> levenschteinValues = new ArrayList<Integer>();
         for (int i = 0; i < maps.size(); i++) {
@@ -120,6 +144,7 @@ public class MinecraftMapController {
             levenschteinValues.remove(index);
         }
         return sortedMapIDs;
+        */
     }
 
     // A comparison where the larger the int the more different the strings are
@@ -148,7 +173,7 @@ public class MinecraftMapController {
 
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
-        return a == b ? 0 : 1;
+        return a == b ? 0 : 2;
     }
 
     // return the smallest of the int numbers
