@@ -161,19 +161,20 @@ public class MinecraftMapController {
                     dp[i][j] = i;
                 } else {
                     dp[i][j] = min(dp[i - 1][j - 1]
-                            + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),
-                            dp[i - 1][j] + 1,
-                            dp[i][j - 1] + 1);
+                            + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)), // Substitute
+                            dp[i - 1][j] + 2, // Delete 
+                            dp[i][j - 1] + 1); // Insert
                 }
             }
         }
 
+        //  System.out.println("Lengths: "+x.length()+" - "+y.length());
         return dp[x.length()][y.length()];
     }
 
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
-        return a == b ? 0 : 2;
+        return a == b ? 0 : 3;
     }
 
     // return the smallest of the int numbers
