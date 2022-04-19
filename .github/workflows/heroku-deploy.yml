@@ -11,16 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Deploy with heroku
-      run: |
-        echo "hi"
-        git status
-        echo "machine git.heroku.com" > ~/.netrc
-        echo "  login jrotter@trinity.edu" >> ~/.netrc
-        echo ""
-        cat ~/.netrc
-        heroku git:remote --app ctm-repository
-        git push heroku heroku-cli-github-actions
-        
-      env: 
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "ctm-repository"
+          heroku_email: "jrotter@trinity.edu"
