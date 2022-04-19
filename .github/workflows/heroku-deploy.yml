@@ -1,4 +1,4 @@
-name: GitHub Pages Deployment
+name: Heroku Deployment
 
 on:
   push:
