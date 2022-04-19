@@ -15,12 +15,12 @@ jobs:
       run: |
         echo "hi"
         git status
-        git pull
-        heroku git:remote --app ctm-repository
-        git push heroku heroku-cli-github-actions
         echo "machine git.heroku.com" > ~/.netrc
         echo "  login jrotter@trinity.edu" >> ~/.netrc
         echo ""
         cat ~/.netrc
+        heroku git:remote --app ctm-repository
+        git push heroku heroku-cli-github-actions
+        
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
