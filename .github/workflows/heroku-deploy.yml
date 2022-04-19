@@ -11,9 +11,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Deploy with gh-pages
+    - name: Deploy with heroku
       run: |
         echo "hi"
+        git status
+        git pull
         heroku git:remote --app ctm-repository
         git push heroku main
       env: 
