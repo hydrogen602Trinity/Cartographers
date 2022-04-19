@@ -14,5 +14,7 @@ jobs:
     - name: Deploy with gh-pages
       run: |
         echo "hi"
+        heroku git:remote --app ctm-repository
+        git push heroku main
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
