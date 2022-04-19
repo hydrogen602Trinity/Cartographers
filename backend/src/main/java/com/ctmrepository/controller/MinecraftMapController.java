@@ -76,6 +76,20 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * Get the total count of published maps.
+     * This is necessary to compute the number of pages in the frontend.
+     */
+    @GetMapping("/maps/count")
+    public ResponseEntity<Integer> getMapCount() {
+        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
+    }
+
+    /**
+     * Get one map by id
+     * 
+     * @param id the id of the map to get
+     */
     @GetMapping("/maps/{id}")
     public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);

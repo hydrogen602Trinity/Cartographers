@@ -1,14 +1,22 @@
 import { Grid, Pagination } from "@mui/material";
+import { useState } from "react";
 import MapCard from "./components/MapCard";
 import "./main.scss";
-import { useAllMaps } from "./util/api";
+import { useMapCount, useSearchMaps } from "./util/api";
+import { computePageCount } from "./util/paging";
 
 /**
  * View of home page
  * @returns {JSX.Element} the view
  */
 function Main() {
-  const [isLoading, maps, err] = useAllMaps();
+  const [page, setPage] = useState(1);
+
+  const mapsPerPage = 10;
+
+  const [isLoadingCount, mapCount, errCount] = useMapCount();
+  const pageCount = computePageCount(mapCount, mapsPerPage);
+  const [isLoading, maps, err] = useSearchMaps('', page, [], mapsPerPage);
 
   return (
     <div className="main">
@@ -17,10 +25,10 @@ function Main() {
       </div>
       <div className="maps">
         <div className="center">
-          {(isLoading || err) ?
+          {(isLoading || isLoadingCount || err || errCount) ?
             (
               /* If page is loading or errored, show messages instead */
-              (isLoading) ?
+              (isLoading || isLoadingCount) ?
                 <div>Loading...</div> :
                 <div>Error Loading Page</div>
             ) :
@@ -32,7 +40,7 @@ function Main() {
                   </Grid>
                 ))}
               </Grid>
-              <Pagination count={10} sx={{ marginTop: '2em' }}></Pagination>
+              <Pagination count={pageCount} sx={{ marginTop: '2em' }} page={page} onChange={(_, e) => { setPage(e) }}></Pagination>
             </div>
           }
         </div>

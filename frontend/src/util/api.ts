@@ -23,7 +23,8 @@ function search_param_helper(obj: any): string {
  */
 const API_ENDPOINTS = {
     ALL_MAPS: (params: { q: string, page?: number, per_page?: number }) => '/search/maps?' + search_param_helper(params),
-    ONE_MAP: (id: number) => `/maps/${id}`
+    ONE_MAP: (id: number) => `/maps/${id}`,
+    COUNT_MAPS: '/maps/count'
 }
 
 
@@ -67,8 +68,8 @@ const ENTRIES_PER_PAGE: number = 12;
  * Set to [] (the default) to never reload data
  * @return {[boolean, MCMap, any]} [whether its still loading, the data, error]
  */
-export function useSearchMaps(query: string, page: number = 0, dependsArray: any[] | null = []): [boolean, MCMap[], useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: query, per_page: ENTRIES_PER_PAGE, page: page }), dependsArray, []);
+export function useSearchMaps(query: string, page: number = 0, dependsArray: any[] | null = [], per_page: number = ENTRIES_PER_PAGE): [boolean, MCMap[], useFetch.UseFetchError | undefined] {
+    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: query, per_page: per_page, page: page }), dependsArray, []);
 }
 
 /**
@@ -79,5 +80,10 @@ export function useSearchMaps(query: string, page: number = 0, dependsArray: any
  * @return {[boolean, MCMap | null, any]} [whether its still loading, the data, error]
  */
 export function useMap(id: number, dependsArray: any[] | null = []): [boolean, MCMap | null, useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ONE_MAP(id), dependsArray, {});
+    return useFetchAPI(API_ENDPOINTS.ONE_MAP(id), dependsArray, null);
+}
+
+
+export function useMapCount(dependsArray: any[] | null = []): [boolean, number, useFetch.UseFetchError | undefined] {
+    return useFetchAPI(API_ENDPOINTS.COUNT_MAPS, dependsArray, 0);
 }
