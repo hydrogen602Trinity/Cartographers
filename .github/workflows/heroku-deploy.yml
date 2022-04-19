@@ -17,6 +17,6 @@ jobs:
         git status
         git pull
         heroku git:remote --app ctm-repository
-        git push heroku main
+        git push heroku heroku-cli-github-actions
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
