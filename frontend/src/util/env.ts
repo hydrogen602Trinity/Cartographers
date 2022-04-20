@@ -18,7 +18,8 @@ export function getRestAPI(): string {
         process.env.REACT_APP_URL_PRODUCTION :
         process.env.REACT_APP_URL_DEVELOPMENT;
 
-    if (url) return url
+    if (url) return url;
 
-    throw new Error("Invalid Environment URL")
+    throw new Error("Invalid Environment URL");
 }
+

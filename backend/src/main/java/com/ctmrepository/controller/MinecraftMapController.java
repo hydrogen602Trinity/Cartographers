@@ -8,22 +8,41 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@Validated
+@CrossOrigin(origins = { "http://localhost:3000", "https://hydrogen602trinity.github.io" })
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class MinecraftMapController {
+
+    public static <T> List<T> paginateList(List<T> list, Integer page, Integer resultsPerPage) {
+        Integer fromIndex = (page - 1) * resultsPerPage;
+        Integer toIndex = fromIndex + resultsPerPage;
+
+        if (list.size() >= toIndex) {
+            return list.subList(fromIndex, toIndex);
+        } else if (list.size() >= fromIndex) {
+            return list.subList(fromIndex, list.size());
+        } else {
+            return new ArrayList<T>();
+        }
+    }
 
     @Autowired
     MinecraftMapRepository minecraftMapRepository;
@@ -33,15 +52,25 @@ public class MinecraftMapController {
         return "Greetings from Spring Boot!";
     }
 
-    @CrossOrigin(origins = { "http://localhost:3000", "https://hydrogen602trinity.github.io/" })
-    @GetMapping("/maps/search")
-    public ResponseEntity<List<MinecraftMap>> getMapSearch() {
+    /**
+     * Sorts map database according to query and returns results corresponding to
+     * given page and response limit.
+     *
+     * @param q     search query
+     * @param limit maximum number of results to return per page
+     * @param page  page number of results to return
+     */
+    @GetMapping("/search/maps")
+    public ResponseEntity<List<MinecraftMap>> getMapSearch(
+            @RequestParam() String q,
+            @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
+            @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page) {
         try {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
 
-            minecraftMapRepository.findAll().forEach(maps::add);
-
-            System.out.println("it runs");
+            q = q.replaceAll("_", " ");
+            sortByRelevance(minecraftMapRepository.findAll(), q.toUpperCase()).forEach(maps::add);
+            maps = paginateList(maps, page, per_page);
 
             return new ResponseEntity<>(maps, HttpStatus.OK);
         } catch (Exception e) {
@@ -149,6 +178,13 @@ public class MinecraftMapController {
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
         return a == b ? 0 : 3;
+    /**
+     * Get the total count of published maps.
+     * This is necessary to compute the number of pages in the frontend.
+     */
+    @GetMapping("/maps/count")
+    public ResponseEntity<Integer> getMapCount() {
+        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
     }
 
     // return the smallest of the int numbers
@@ -156,6 +192,32 @@ public class MinecraftMapController {
         return Arrays.stream(numbers)
                 .min().orElse(Integer.MAX_VALUE);
     }
+
+
+    /*
+     * @GetMapping("/maps")
+     * public ResponseEntity<List<MinecraftMap>> getAllMaps(@RequestParam(required =
+     * false) String name) {
+     * try {
+     * List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
+     * 
+     * if (name == null)
+     * minecraftMapRepository.findAll().forEach(maps::add);
+     * else
+     * // Search for Name of Map
+     * minecraftMapRepository.findAll().forEach(maps::add);
+     * // minecraftMapRepository.findByNameContaining(name).forEach(maps::add);
+     * 
+     * if (maps.isEmpty()) {
+     * return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+     * }
+     * 
+     * return new ResponseEntity<>(maps, HttpStatus.OK);
+     * } catch (Exception e) {
+     * return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+     * }
+     * }
+     */
 
     // @PostMapping("/maps")
     // public ResponseEntity<MinecraftMap> createMap(@RequestBody MinecraftMap map)

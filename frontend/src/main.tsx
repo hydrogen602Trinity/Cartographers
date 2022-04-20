@@ -1,38 +1,46 @@
 import { Grid, Pagination } from "@mui/material";
+import { useState } from "react";
 import MapCard from "./components/MapCard";
 import "./main.scss";
-import { useAllMaps } from "./util/api";
+import { useMapCount, useSearchMaps } from "./util/api";
+import { computePageCount } from "./util/paging";
 
 /**
  * View of home page
  * @returns {JSX.Element} the view
  */
 function Main() {
-  const [isLoading, maps, err] = useAllMaps();
+  const [page, setPage] = useState(1);
+
+  const mapsPerPage = 10;
+
+  const [isLoadingCount, mapCount, errCount] = useMapCount();
+  const pageCount = computePageCount(mapCount, mapsPerPage);
+  const [isLoading, maps, err] = useSearchMaps('', page, [], mapsPerPage);
 
   return (
     <div className="main">
       <div className="header center">
-        <h1>CTM Repository</h1>
+        <img src={'/Cartographers/logo.webp'} alt="CTM Repository" />
       </div>
       <div className="maps">
         <div className="center">
-          {(isLoading || err) ?
+          {(isLoading || isLoadingCount || err || errCount) ?
             (
               /* If page is loading or errored, show messages instead */
-              (isLoading) ?
+              (isLoading || isLoadingCount) ?
                 <div>Loading...</div> :
                 <div>Error Loading Page</div>
             ) :
             <div>
               <Grid container spacing={2}>
                 {maps.map((map, index) => (
-                  <Grid item key={map.id} xs={12} md={6} xl={4}>
+                  <Grid item key={map.id} xs={12} sm={6} md={6} lg={4} xl={3}>
                     <MapCard map={map} key={index} />
                   </Grid>
                 ))}
               </Grid>
-              <Pagination count={10} sx={{ marginTop: '2em' }}></Pagination>
+              <Pagination count={pageCount} sx={{ marginTop: '2em' }} page={page} onChange={(_, e) => { setPage(e) }}></Pagination>
             </div>
           }
         </div>

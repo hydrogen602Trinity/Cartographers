@@ -1,30 +1,12 @@
 import React, { useEffect } from 'react';
 import ReactDOMClient from 'react-dom/client';
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { SnackbarComponent } from './components/Snackbar';
 import './index.scss';
 import Main from './main';
+import { ParamFilter } from './map';
+import NoMatch from './no_match';
 
-/**
- * 404 Page Component
- * @returns {JSX.Element} the view component
- */
-function NoMatch() {
-  let location = useLocation();
-  const nav = useNavigate();
-
-  return (
-    <div style={{ padding: '1em' }}>
-      <h1>404</h1>
-      <h3>
-        No match for <code>{location.pathname}</code>
-      </h3>
-      <button onClick={() => {
-        nav('/Cartographers');
-      }}>Home</button>
-    </div>
-  );
-}
 
 /**
  * View that redirects to the home page
@@ -50,17 +32,20 @@ let root = ReactDOMClient.createRoot(root_container);
 root.render(
   <React.StrictMode>
     {/* Route System Wrapper */}
-    <BrowserRouter>
+    <HashRouter>
       {/* SnackbarComponent adds little messages for errors and the like */}
       <SnackbarComponent>
         {/* Set routes here */}
         <Routes>
           <Route path="/" element={<Reroute />} />
-          <Route path="/Cartographers/" element={<Main />} />
+          <Route path="/Cartographers/">
+            <Route path="" element={<Main />} />
+            <Route path="maps/:id/*" element={<ParamFilter />} />
+          </Route>
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </SnackbarComponent>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
 

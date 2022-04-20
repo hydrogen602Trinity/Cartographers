@@ -11,20 +11,28 @@ import { getRestAPI } from "./env";
  * @param {[any]} dependsArray values that should trigger a reload of data if they change
  * @returns {[isLoading, data, error]} whether its still loading, the data, error 
  */
-export function useFetchAPI(path: string, dependsArray: any[] | null = null): [boolean, any, useFetch.UseFetchError | undefined] {
+export function useFetchAPI(path: string, dependsArray: any[] | null = null, data_default: any = null): [boolean, any, useFetch.UseFetchError | undefined] {
     if (path.startsWith('/')) {
         path = path.substring(1);
     }
 
     const dispatchMsg = useSnackbar();
     const nav = useNavigate();
-    const args = {
+
+    const args: any = {
         //credentials: 'include',
-        depends: (dependsArray) ? dependsArray : undefined
     };
 
-    const { isLoading, data, error } = useFetch(
+    if (dependsArray) {
+        args.depends = dependsArray;
+    }
+
+    let { isLoading, data, error } = useFetch(
         getFetchPath(path), args);
+
+    if (isLoading || error) {
+        data = data_default;
+    }
 
     useEffect(() => {
         if (error) {
