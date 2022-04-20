@@ -67,8 +67,13 @@ public class MinecraftMapController {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
 
             q = q.replaceAll("_", " ");
-            System.out.println(minecraftMapRepository.findAll().size());
-            sortByRelevance(minecraftMapRepository.findByPublished(true), q.toUpperCase()).forEach(maps::add);
+
+            hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
+            if (maps.size() < 1) {
+                // System.out.println("HardSearchSort found nothing, going fuzzy...");
+                maps.clear();
+                fuzzySearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
+            }
             maps = paginateList(maps, page, per_page);
 
             return new ResponseEntity<>(maps, HttpStatus.OK);
@@ -80,8 +85,16 @@ public class MinecraftMapController {
 
     private List<MinecraftMap> getPublishedMaps() {
         List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
-        System.out.println(maps.size());
         return maps;
+    }
+
+    private List<MinecraftMap> hardSearchSort(List<MinecraftMap> maps, String search) {
+        List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
+        for (MinecraftMap map : maps) {
+            if (map.getName().toUpperCase().contains(search))
+                relevantMaps.add(map);
+        }
+        return relevantMaps;
     }
 
     /**
@@ -111,14 +124,39 @@ public class MinecraftMapController {
 
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
-    public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
-        Collections.sort( maps, new Comparator<MinecraftMap>() {
+    private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
+        Collections.sort(maps, new Comparator<MinecraftMap>() {
+            public int compare(MinecraftMap m1, MinecraftMap m2) {
+                double mapJaro1 = getJaroDistance(m1.getName().toUpperCase(), search);
+                double mapJaro2 = getJaroDistance(m2.getName().toUpperCase(), search);
+                double jaroComp = mapJaro2 - mapJaro1;
+
+                // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
+                // ("+mapLeven2+")"+" = "+levenComp);
+                if (Math.abs(jaroComp) > 0.1) {
+                    return (int) Math.round(jaroComp * 100);
+                }
+
+                Long m1D = m1.getDownload_count();
+                Long m2D = m2.getDownload_count();
+                return m1D.compareTo(m2D);
+            }
+        });
+        /*
+        for (MinecraftMap map: maps) {
+            System.out.println(map.getName()+": "+jaro_distance(map.getName().toUpperCase(), search));
+        }
+
+        System.out.println("\n Versus: \n");
+
+        Collections.sort(maps, new Comparator<MinecraftMap>() {
             public int compare(MinecraftMap m1, MinecraftMap m2) {
                 int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
                 int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
                 int levenComp = mapLeven1 - mapLeven2;
 
-                System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+" ("+mapLeven2+")"+" = "+levenComp);
+                // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
+                // ("+mapLeven2+")"+" = "+levenComp);
                 if (levenComp != 0) {
                     return levenComp;
                 }
@@ -129,10 +167,82 @@ public class MinecraftMapController {
             }
         });
 
-        return maps;  
+        for (MinecraftMap map: maps) {
+            System.out.println(map.getName()+": "+getLevenshteinDistance(map.getName().toUpperCase(), search));
+        }
+        */
+        return maps;
     }
 
-    // A comparison where the larger the int the more different the strings are
+    // Java implementation of above approach
+    double getJaroDistance(String s1, String s2) {
+        // If the Strings are equal
+        if (s1 == s2)
+            return 1.0;
+
+        // Length of two Strings
+        int len1 = s1.length(),
+                len2 = s2.length();
+
+        // Maximum distance upto which matching
+        // is allowed
+        int max_dist = (int) (Math.floor(Math.max(len1, len2) / 2) - 1);
+
+        // Count of matches
+        int match = 0;
+
+        // Hash for matches
+        int hash_s1[] = new int[s1.length()];
+        int hash_s2[] = new int[s2.length()];
+
+        // Traverse through the first String
+        for (int i = 0; i < len1; i++) {
+
+            // Check if there is any matches
+            for (int j = Math.max(0, i - max_dist); j < Math.min(len2, i + max_dist + 1); j++)
+
+                // If there is a match
+                if (s1.charAt(i) == s2.charAt(j) && hash_s2[j] == 0) {
+                    hash_s1[i] = 1;
+                    hash_s2[j] = 1;
+                    match++;
+                    break;
+                }
+        }
+
+        // If there is no match
+        if (match == 0)
+            return 0.0;
+
+        // Number of transpositions
+        double t = 0;
+
+        int point = 0;
+
+        // Count number of occurrences
+        // where two characters match but
+        // there is a third matched character
+        // in between the indices
+        for (int i = 0; i < len1; i++)
+            if (hash_s1[i] == 1) {
+
+                // Find the next matched character
+                // in second String
+                while (hash_s2[point] == 0)
+                    point++;
+
+                if (s1.charAt(i) != s2.charAt(point++))
+                    t++;
+            }
+
+        t /= 2;
+
+        // Return the Jaro Similarity
+        return (((double) match) / ((double) len1)
+                + ((double) match) / ((double) len2)
+                + ((double) match - t) / ((double) match))
+                / 3.0;
+    }    // A comparison where the larger the int the more different the strings are
     // Made by the number of addition, subtractions, or substitutions needed to
     // match x to y
     public int getLevenshteinDistance(String x, String y) {
@@ -160,6 +270,7 @@ public class MinecraftMapController {
     public static int costOfSubstitution(char a, char b) {
         return a == b ? 0 : 3;
     }
+
     // return the smallest of the int numbers
     public static int min(int... numbers) {
         return Arrays.stream(numbers)
