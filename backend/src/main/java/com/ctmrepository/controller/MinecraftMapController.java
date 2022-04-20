@@ -104,37 +104,33 @@ public class MinecraftMapController {
      * }
      */
 
+    /**
+     * Get one map by id
+     * 
+     * @param id the id of the map to get
+     */
     @GetMapping("/maps/{id}")
     public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
         if (mapData.isPresent()) {
-            return new ResponseEntity<>(mapData.get(), HttpStatus.FOUND);
+            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Start Here: calling the Sort by Relevance function,
-    // given the full map database and string to search for
-    // Note that in the url, '_' is assumed to be the spaces
-    @GetMapping("/search/{search}")
-    public ResponseEntity<List<Long>> searchThroughMaps(@PathVariable("search") String search) {
-        search = search.replaceAll("_", " ");
-        List<Long> sortedMaps = sortByRelevance(minecraftMapRepository.findAll(), search.toUpperCase());
-        return new ResponseEntity<>(sortedMaps, HttpStatus.OK);
-    }
-
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
-    public List<Long> sortByRelevance(List<MinecraftMap> maps, String search) {
-        Collections.sort( maps, new Comparator<MinecraftMap>() {
+    public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
+        Collections.sort(maps, new Comparator<MinecraftMap>() {
             public int compare(MinecraftMap m1, MinecraftMap m2) {
                 int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
                 int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
                 int levenComp = mapLeven1 - mapLeven2;
 
-                System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+" ("+mapLeven2+")"+" = "+levenComp);
+                System.out.println(m1.getName() + " (" + mapLeven1 + ")" + " / " + m2.getName() + " (" + mapLeven2 + ")"
+                        + " = " + levenComp);
                 if (levenComp != 0) {
                     return levenComp;
                 }
@@ -145,9 +141,7 @@ public class MinecraftMapController {
             }
         });
 
-        List<Long> sortedMapIDs = maps.stream().map(MinecraftMap::getId).collect(Collectors.toList());
-
-        return sortedMapIDs;  
+        return maps;
     }
 
     // A comparison where the larger the int the more different the strings are
@@ -165,19 +159,21 @@ public class MinecraftMapController {
                 } else {
                     dp[i][j] = min(dp[i - 1][j - 1]
                             + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)), // Substitute
-                            dp[i - 1][j] + 2, // Delete 
+                            dp[i - 1][j] + 2, // Delete
                             dp[i][j - 1] + 1); // Insert
                 }
             }
         }
 
-        //  System.out.println("Lengths: "+x.length()+" - "+y.length());
+        // System.out.println("Lengths: "+x.length()+" - "+y.length());
         return dp[x.length()][y.length()];
     }
 
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
         return a == b ? 0 : 3;
+    }
+
     /**
      * Get the total count of published maps.
      * This is necessary to compute the number of pages in the frontend.
@@ -192,32 +188,6 @@ public class MinecraftMapController {
         return Arrays.stream(numbers)
                 .min().orElse(Integer.MAX_VALUE);
     }
-
-
-    /*
-     * @GetMapping("/maps")
-     * public ResponseEntity<List<MinecraftMap>> getAllMaps(@RequestParam(required =
-     * false) String name) {
-     * try {
-     * List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
-     * 
-     * if (name == null)
-     * minecraftMapRepository.findAll().forEach(maps::add);
-     * else
-     * // Search for Name of Map
-     * minecraftMapRepository.findAll().forEach(maps::add);
-     * // minecraftMapRepository.findByNameContaining(name).forEach(maps::add);
-     * 
-     * if (maps.isEmpty()) {
-     * return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-     * }
-     * 
-     * return new ResponseEntity<>(maps, HttpStatus.OK);
-     * } catch (Exception e) {
-     * return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * }
-     */
 
     // @PostMapping("/maps")
     // public ResponseEntity<MinecraftMap> createMap(@RequestBody MinecraftMap map)
