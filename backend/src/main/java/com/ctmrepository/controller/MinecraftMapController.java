@@ -67,8 +67,13 @@ public class MinecraftMapController {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
 
             q = q.replaceAll("_", " ");
-            System.out.println(minecraftMapRepository.findAll().size());
-            sortByRelevance(minecraftMapRepository.findByPublished(true), q.toUpperCase()).forEach(maps::add);
+
+            hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
+            if (maps.size() < 1) {
+                System.out.println("HardSearchSort found nothing, going fuzzy...");
+                maps.clear();
+                fuzzySearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
+            }
             maps = paginateList(maps, page, per_page);
 
             return new ResponseEntity<>(maps, HttpStatus.OK);
@@ -80,8 +85,16 @@ public class MinecraftMapController {
 
     private List<MinecraftMap> getPublishedMaps() {
         List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
-        System.out.println(maps.size());
         return maps;
+    }
+
+    private List<MinecraftMap> hardSearchSort(List<MinecraftMap> maps, String search) {
+        List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
+        for (MinecraftMap map : maps) {
+            if (map.getName().toUpperCase().contains(search))
+                relevantMaps.add(map);
+        }
+        return relevantMaps;
     }
 
     /**
@@ -160,6 +173,7 @@ public class MinecraftMapController {
     public static int costOfSubstitution(char a, char b) {
         return a == b ? 0 : 3;
     }
+
     // return the smallest of the int numbers
     public static int min(int... numbers) {
         return Arrays.stream(numbers)
