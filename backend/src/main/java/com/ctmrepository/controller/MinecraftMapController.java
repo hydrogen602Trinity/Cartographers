@@ -119,32 +119,6 @@ public class MinecraftMapController {
         List<Long> sortedMapIDs = maps.stream().map(MinecraftMap::getId).collect(Collectors.toList());
 
         return sortedMapIDs;  
-        /*
-        // Get Levenshtein Distances for names
-        List<Integer> levenschteinValues = new ArrayList<Integer>();
-        for (int i = 0; i < maps.size(); i++) {
-            levenschteinValues
-                    .add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName().toUpperCase(), search)));
-        }
-
-        // Custom Sort by Levenshtein Distances
-        // Get smallest relative distance, throw it into the new map, repeat, n^2 time
-        List<Long> sortedMapIDs = new ArrayList<Long>();
-        while (!maps.isEmpty()) {
-            int index = -1;
-            Integer indexValue = Integer.MAX_VALUE;
-            for (int i = 0; i < levenschteinValues.size(); i++) {
-                if (levenschteinValues.get(i) < indexValue) {
-                    index = i;
-                    indexValue = levenschteinValues.get(index);
-                }
-            }
-            sortedMapIDs.add(maps.get(index).getId());
-            maps.remove(index);
-            levenschteinValues.remove(index);
-        }
-        return sortedMapIDs;
-        */
     }
 
     // A comparison where the larger the int the more different the strings are
