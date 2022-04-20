@@ -2,9 +2,10 @@ package com.ctmrepository.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -66,7 +67,8 @@ public class MinecraftMapController {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
 
             q = q.replaceAll("_", " ");
-            sortByRelevance(minecraftMapRepository.findAll(), q.toUpperCase()).forEach(maps::add);
+            System.out.println(minecraftMapRepository.findAll().size());
+            sortByRelevance(minecraftMapRepository.findByPublished(true), q.toUpperCase()).forEach(maps::add);
             maps = paginateList(maps, page, per_page);
 
             return new ResponseEntity<>(maps, HttpStatus.OK);
@@ -74,6 +76,12 @@ public class MinecraftMapController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private List<MinecraftMap> getPublishedMaps() {
+        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
+        System.out.println(maps.size());
+        return maps;
     }
 
     /**
@@ -94,7 +102,7 @@ public class MinecraftMapController {
     public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
-        if (mapData.isPresent()) {
+        if (mapData.isPresent() && mapData.get().isPublished()) {
             return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -104,30 +112,24 @@ public class MinecraftMapController {
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
-        // Get Levenshtein Distances for names
-        List<Integer> levenschteinValues = new ArrayList<Integer>();
-        for (int i = 0; i < maps.size(); i++) {
-            levenschteinValues
-                    .add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName().toUpperCase(), search)));
-        }
+        Collections.sort( maps, new Comparator<MinecraftMap>() {
+            public int compare(MinecraftMap m1, MinecraftMap m2) {
+                int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
+                int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
+                int levenComp = mapLeven1 - mapLeven2;
 
-        // Custom Sort by Levenshtein Distances
-        // Get smallest relative distance, throw it into the new map, repeat, n^2 time
-        List<MinecraftMap> sortedMaps = new ArrayList<MinecraftMap>();
-        while (!maps.isEmpty()) {
-            int index = -1;
-            Integer indexValue = Integer.MAX_VALUE;
-            for (int i = 0; i < levenschteinValues.size(); i++) {
-                if (levenschteinValues.get(i) < indexValue) {
-                    index = i;
-                    indexValue = levenschteinValues.get(index);
+                System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+" ("+mapLeven2+")"+" = "+levenComp);
+                if (levenComp != 0) {
+                    return levenComp;
                 }
+
+                Long m1D = m1.getDownload_count();
+                Long m2D = m2.getDownload_count();
+                return m1D.compareTo(m2D);
             }
-            sortedMaps.add(maps.get(index));
-            maps.remove(index);
-            levenschteinValues.remove(index);
-        }
-        return sortedMaps;
+        });
+
+        return maps;  
     }
 
     // A comparison where the larger the int the more different the strings are
@@ -156,9 +158,8 @@ public class MinecraftMapController {
 
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
-        return a == b ? 0 : 1;
+        return a == b ? 0 : 3;
     }
-
     // return the smallest of the int numbers
     public static int min(int... numbers) {
         return Arrays.stream(numbers)

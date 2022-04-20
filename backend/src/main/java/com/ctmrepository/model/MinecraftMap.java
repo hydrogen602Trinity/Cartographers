@@ -54,6 +54,21 @@ public class MinecraftMap {
     @Column(name = "mc_version")
     private String mc_version;
 
+    @Column(name = "published")
+    private boolean published;
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void publish() {
+        published = true;
+    }
+
+    public void retract() {
+        published = false;
+    }
+
     public long getId() {
         return this.id;
     }
@@ -185,6 +200,26 @@ public class MinecraftMap {
         this.image_url = image_url;
         this.series = series;
         this.mc_version = mc_version;
+        this.published = true;
+    }
+
+    public MinecraftMap(String name, long upload_date, String author, String length, int objective_main,
+            int objective_bonus, String difficulty, String description_short, long download_count, String type,
+            String image_url, String series, String mc_version, boolean published) {
+        this.name = name;
+        this.upload_date = upload_date;
+        this.author = author;
+        this.length = length;
+        this.objective_main = objective_main;
+        this.objective_bonus = objective_bonus;
+        this.difficulty = difficulty;
+        this.description_short = description_short;
+        this.download_count = download_count;
+        this.type = type;
+        this.image_url = image_url;
+        this.series = series;
+        this.mc_version = mc_version;
+        this.published = published;
     }
 
     // @Override
