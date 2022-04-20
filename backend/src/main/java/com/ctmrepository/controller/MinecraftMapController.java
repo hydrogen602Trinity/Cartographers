@@ -2,11 +2,8 @@ package com.ctmrepository.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -79,30 +76,14 @@ public class MinecraftMapController {
         }
     }
 
-    /*
-     * @GetMapping("/maps")
-     * public ResponseEntity<List<MinecraftMap>> getAllMaps(@RequestParam(required =
-     * false) String name) {
-     * try {
-     * List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
-     * 
-     * if (name == null)
-     * minecraftMapRepository.findAll().forEach(maps::add);
-     * else
-     * // Search for Name of Map
-     * minecraftMapRepository.findAll().forEach(maps::add);
-     * // minecraftMapRepository.findByNameContaining(name).forEach(maps::add);
-     * 
-     * if (maps.isEmpty()) {
-     * return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-     * }
-     * 
-     * return new ResponseEntity<>(maps, HttpStatus.OK);
-     * } catch (Exception e) {
-     * return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * }
+    /**
+     * Get the total count of published maps.
+     * This is necessary to compute the number of pages in the frontend.
      */
+    @GetMapping("/maps/count")
+    public ResponseEntity<Integer> getMapCount() {
+        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
+    }
 
     /**
      * Get one map by id
@@ -134,11 +115,6 @@ public class MinecraftMapController {
                 if (levenComp != 0) {
                     return levenComp;
                 }
-
-                Long m1D = m1.getDownload_count();
-                Long m2D = m2.getDownload_count();
-                return m1D.compareTo(m2D);
-            }
         });
 
         return maps;
@@ -165,7 +141,6 @@ public class MinecraftMapController {
             }
         }
 
-        // System.out.println("Lengths: "+x.length()+" - "+y.length());
         return dp[x.length()][y.length()];
     }
 
