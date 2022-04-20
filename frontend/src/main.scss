@@ -27,34 +27,42 @@
         }
     }
 
-    .maps {
+    .content {
 
         // padding: 2em;
         @media only screen and (min-width: 500px) {
             // no space for side border on mobile
             margin: 3vw;
-            border-radius: 0.5em;
-        }
-
-        padding: 2vw;
-        min-height: 50vh;
-        background-color: white;
-
-
-        .MuiPagination-ul {
-            justify-content: center;
-        }
-
-        .map-grid {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            align-content: center;
-            justify-content: center;
-            flex-wrap: wrap;
 
             >* {
-                margin: 1em;
+                border-radius: 0.5em;
+            }
+        }
+
+        .maps {
+
+
+
+            padding: 2vw;
+            min-height: 50vh;
+            background-color: white;
+
+
+            .MuiPagination-ul {
+                justify-content: center;
+            }
+
+            .map-grid {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                align-content: center;
+                justify-content: center;
+                flex-wrap: wrap;
+
+                >* {
+                    margin: 1em;
+                }
             }
         }
     }

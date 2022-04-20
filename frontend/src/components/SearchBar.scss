@@ -1,0 +1,21 @@
+.search-bar {
+    background-color: white;
+    margin-bottom: 1em;
+
+    padding: {
+        left: 3em;
+        right: 3em;
+        top: 24px;
+        bottom: 24px;
+    }
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .search-area {
+        background-color: whitesmoke;
+
+        .search-icon {}
+    }
+}
