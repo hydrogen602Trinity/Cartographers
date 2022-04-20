@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -69,7 +67,8 @@ public class MinecraftMapController {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
 
             q = q.replaceAll("_", " ");
-            sortByRelevance(minecraftMapRepository.findAll(), q.toUpperCase()).forEach(maps::add);
+            System.out.println(minecraftMapRepository.findAll().size());
+            sortByRelevance(minecraftMapRepository.findByPublished(true), q.toUpperCase()).forEach(maps::add);
             maps = paginateList(maps, page, per_page);
 
             return new ResponseEntity<>(maps, HttpStatus.OK);
@@ -77,6 +76,12 @@ public class MinecraftMapController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private List<MinecraftMap> getPublishedMaps() {
+        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
+        System.out.println(maps.size());
+        return maps;
     }
 
     /**
@@ -97,7 +102,7 @@ public class MinecraftMapController {
     public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
-        if (mapData.isPresent()) {
+        if (mapData.isPresent() && mapData.get().isPublished()) {
             return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

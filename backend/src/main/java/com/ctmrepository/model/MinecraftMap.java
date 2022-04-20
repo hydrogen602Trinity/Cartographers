@@ -200,7 +200,7 @@ public class MinecraftMap {
         this.image_url = image_url;
         this.series = series;
         this.mc_version = mc_version;
-        this.published = false;
+        this.published = true;
     }
 
     public MinecraftMap(String name, long upload_date, String author, String length, int objective_main,
