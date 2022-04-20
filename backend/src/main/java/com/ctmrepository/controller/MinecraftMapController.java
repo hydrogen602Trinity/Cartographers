@@ -107,30 +107,24 @@ public class MinecraftMapController {
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
-        // Get Levenshtein Distances for names
-        List<Integer> levenschteinValues = new ArrayList<Integer>();
-        for (int i = 0; i < maps.size(); i++) {
-            levenschteinValues
-                    .add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName().toUpperCase(), search)));
-        }
+        Collections.sort( maps, new Comparator<MinecraftMap>() {
+            public int compare(MinecraftMap m1, MinecraftMap m2) {
+                int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
+                int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
+                int levenComp = mapLeven1 - mapLeven2;
 
-        // Custom Sort by Levenshtein Distances
-        // Get smallest relative distance, throw it into the new map, repeat, n^2 time
-        List<MinecraftMap> sortedMaps = new ArrayList<MinecraftMap>();
-        while (!maps.isEmpty()) {
-            int index = -1;
-            Integer indexValue = Integer.MAX_VALUE;
-            for (int i = 0; i < levenschteinValues.size(); i++) {
-                if (levenschteinValues.get(i) < indexValue) {
-                    index = i;
-                    indexValue = levenschteinValues.get(index);
+                System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+" ("+mapLeven2+")"+" = "+levenComp);
+                if (levenComp != 0) {
+                    return levenComp;
                 }
+
+                Long m1D = m1.getDownload_count();
+                Long m2D = m2.getDownload_count();
+                return m1D.compareTo(m2D);
             }
-            sortedMaps.add(maps.get(index));
-            maps.remove(index);
-            levenschteinValues.remove(index);
-        }
-        return sortedMaps;
+        });
+
+        return maps;  
     }
 
     // A comparison where the larger the int the more different the strings are
