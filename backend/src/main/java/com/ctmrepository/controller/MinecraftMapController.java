@@ -69,7 +69,7 @@ public class MinecraftMapController {
             q = q.replaceAll("_", " ");
 
             hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
-            if (maps.size() < 10) {
+            if (maps.size() < 1) {
                 // System.out.println("HardSearchSort found nothing, going fuzzy...");
                 maps.clear();
                 fuzzySearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
