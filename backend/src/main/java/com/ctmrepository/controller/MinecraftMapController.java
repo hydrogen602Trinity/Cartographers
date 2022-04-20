@@ -127,14 +127,14 @@ public class MinecraftMapController {
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         Collections.sort(maps, new Comparator<MinecraftMap>() {
             public int compare(MinecraftMap m1, MinecraftMap m2) {
-                double mapJaro1 = getJaroDistance(m1.getName().toUpperCase(), search);
-                double mapJaro2 = getJaroDistance(m2.getName().toUpperCase(), search);
-                double jaroComp = mapJaro2 - mapJaro1;
+                double mapJWD1 = getJaroWinklerDistance(m1.getName().toUpperCase(), search);
+                double mapJWD2 = getJaroWinklerDistance(m2.getName().toUpperCase(), search);
+                double jwdComp = mapJWD2 - mapJWD1;
 
                 // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
                 // ("+mapLeven2+")"+" = "+levenComp);
-                if (Math.abs(jaroComp) > 0.1) {
-                    return (int) Math.round(jaroComp * 100);
+                if (Math.abs(jwdComp) > 0.1) {
+                    return (int) Math.round(jwdComp * 100);
                 }
 
                 Long m1D = m1.getDownload_count();
@@ -142,10 +142,11 @@ public class MinecraftMapController {
                 return m1D.compareTo(m2D);
             }
         });
+
+        // for (MinecraftMap map: maps) {
+        //     System.out.println(map.getName()+": "+getJaroWinklerDistance(map.getName().toUpperCase(), search));
+        // }
         /*
-        for (MinecraftMap map: maps) {
-            System.out.println(map.getName()+": "+jaro_distance(map.getName().toUpperCase(), search));
-        }
 
         System.out.println("\n Versus: \n");
 
@@ -172,6 +173,39 @@ public class MinecraftMapController {
         }
         */
         return maps;
+    }
+
+    double getJaroWinklerDistance(String s1, String s2)
+    {
+        double jaro_dist = getJaroDistance(s1, s2);
+
+        // If the jaro Similarity is above a threshold
+        if (jaro_dist > 0.7)
+        {
+
+            // Find the length of common prefix
+            int prefix = 0;
+
+            for (int i = 0;
+                 i < Math.min(s1.length(), s2.length()); i++)
+            {
+
+                // If the characters match
+                if (s1.charAt(i) == s2.charAt(i))
+                    prefix++;
+
+                    // Else break
+                else
+                    break;
+            }
+
+            // Maximum of 4 characters are allowed in prefix
+            prefix = Math.min(4, prefix);
+
+            // Calculate jaro winkler Similarity
+            jaro_dist += 0.1 * prefix * (1 - jaro_dist);
+        }
+        return jaro_dist;
     }
 
     // Java implementation of above approach
