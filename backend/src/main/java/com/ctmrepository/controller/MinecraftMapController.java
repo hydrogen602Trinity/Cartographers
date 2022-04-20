@@ -178,6 +178,7 @@ public class MinecraftMapController {
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
         return a == b ? 0 : 3;
+    }
     /**
      * Get the total count of published maps.
      * This is necessary to compute the number of pages in the frontend.
