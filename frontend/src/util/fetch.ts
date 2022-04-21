@@ -7,6 +7,8 @@ import { getRestAPI } from "./env";
 
 /**
  * A react hook for getting data. The hook manages error handling
+ * 
+ * Note: there is a bug with useFetch that will make it not fetch if dependsArray includes falsy values
  * @param {string} path the api endpoint
  * @param {[any]} dependsArray values that should trigger a reload of data if they change
  * @returns {[isLoading, data, error]} whether its still loading, the data, error 
@@ -21,11 +23,9 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null, dat
 
     const args: any = {
         //credentials: 'include',
+        depends: dependsArray,
+        cache: "default"
     };
-
-    if (dependsArray) {
-        args.depends = dependsArray;
-    }
 
     let { isLoading, data, error } = useFetch(
         getFetchPath(path), args);

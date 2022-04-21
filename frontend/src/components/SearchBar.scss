@@ -1,21 +1,32 @@
 .search-bar {
-    background-color: white;
-    margin-bottom: 1em;
+    position: relative;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.15);
 
-    padding: {
-        left: 3em;
-        right: 3em;
-        top: 24px;
-        bottom: 24px;
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
     }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
 
-    .search-area {
-        background-color: whitesmoke;
+    .input-base {
+        color: inherit;
+        width: 100%;
 
-        .search-icon {}
+        .MuiInputBase-input {
+            width: 100%;
+            padding: 8px 8px 8px 0px;
+            padding-left: calc(1em + 32px);
+        }
+    }
+
+    .icon-wrapper {
+        padding: 0 16px;
+        height: 100%;
+        position: absolute;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

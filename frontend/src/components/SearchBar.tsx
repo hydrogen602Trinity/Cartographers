@@ -1,50 +1,37 @@
-import { styled } from '@mui/material/styles';
-
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import "./SearchBar.scss";
-import { Box, TextField } from '@mui/material';
+import { useState } from 'react';
 
-// const SearchIconWrapper = styled('div')(({ theme }) => ({
-//     padding: theme.spacing(0, 2),
-//     height: '100%',
-//     position: 'absolute',
-//     pointerEvents: 'none',
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-// }));
+interface IProps {
+    callback: (_: string) => void,
+    defaultValue: string
+}
 
-// const StyledInputBase = styled(InputBase)(({ theme }) => ({
-//     color: 'inherit',
-//     '& .MuiInputBase-input': {
-//         padding: theme.spacing(1, 1, 1, 0),
-//         // vertical padding + font size from searchIcon
-//         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-//         transition: theme.transitions.create('width'),
-//         width: '100%',
-//         [theme.breakpoints.up('md')]: {
-//             width: '20ch',
-//         },
-//     },
-// }));
 
-export default function SearchBar() {
+export default function SearchBar({ callback, defaultValue }: IProps) {
+    const [searchTerm, setSearchTerm] = useState(defaultValue);
+
+
+    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        callback(searchTerm);
+    }
+
     return (
-        // <div>
-        //     <SearchIconWrapper>
-        //         <SearchIcon />
-        //     </SearchIconWrapper>
-        //     <StyledInputBase
-        //         placeholder="Search…"
-        //         inputProps={{ 'aria-label': 'search' }}
-        //     />
-        // </div>
         <div className='search-bar'>
-            <Box sx={{ display: 'flex', alignItems: 'flex-end', marginTop: '-16px' }}>
-                <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                <TextField id="input-with-sx" label="With sx" variant="standard" />
-            </Box>
+            <div className='icon-wrapper'>
+                <SearchIcon />
+            </div>
+            <form onSubmit={submitHandler}>
+                <InputBase
+                    onChange={e => setSearchTerm(e.target.value)}
+                    value={searchTerm}
+                    className='input-base'
+                    placeholder="Search…"
+                    inputProps={{ 'aria-label': 'search' }}
+                />
+            </form>
         </div>
     );
 }

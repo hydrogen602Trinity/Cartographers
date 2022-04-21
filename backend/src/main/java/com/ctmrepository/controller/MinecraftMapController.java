@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -12,6 +13,7 @@ import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -69,7 +71,9 @@ public class MinecraftMapController {
             sortByRelevance(minecraftMapRepository.findAll(), q.toUpperCase()).forEach(maps::add);
             maps = paginateList(maps, page, per_page);
 
-            return new ResponseEntity<>(maps, HttpStatus.OK);
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic())
+                    .body(maps);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

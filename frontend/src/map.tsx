@@ -1,8 +1,9 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NoMatch from "./no_match";
 import { useMap } from "./util/api";
 import "./map.scss";
 import "./main.scss";
+import { useEffect } from "react";
 
 /**
  * Checks the validity of URL parameters before
@@ -37,6 +38,14 @@ function MapView({ id }: IProps) {
 
   const [isLoading, map, err] = useMap(id);
   // console.log(`re-render ${id}`, [isLoading, map, err]);
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (err && err.status !== 404) {
+      nav(-1); // go back
+    }
+  })
 
   if (err && err.status === 404) {
     return <NoMatch />;
