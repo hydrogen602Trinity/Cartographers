@@ -8,91 +8,92 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataLoader {
 
-    private MinecraftMapRepository repo;
+        private MinecraftMapRepository repo;
 
-    @Autowired
-    public DataLoader(MinecraftMapRepository repo) {
-        this.repo = repo;
-        LoadData();
-    }
+        @Autowired
+        public DataLoader(MinecraftMapRepository repo) {
+                this.repo = repo;
+                LoadData();
+        }
 
-    // String name, long upload_date, String author, String length, int
-    // objective_main,
-    // int objective_bonus, String difficulty, String description_short, long
-    // download_count, String type,
-    // String image_url, String series, String mc_version
+        // String name, long upload_date, String author, String length, int
+        // objective_main,
+        // int objective_bonus, String difficulty, String description_short, long
+        // download_count, String type,
+        // String image_url, String series, String mc_version
 
-    private void LoadData() {
-        repo.save(new MinecraftMap("Moonlight", 0, "The CTMC", "Long", 17, 54, "Medium",
-                "Moonlight is the lovechild of the Rookiewreck mapping event, featuring dozens of builders creating full-length areas over the span of a single month!",
-                899, "Linear Branching", "https://hydrogen602trinity.github.io/Cartographers/5886020644119590.webp",
-                "Rookiewreck", "1.17.1"));
-        repo.save(new MinecraftMap("Divinity's End", 0, "The DE Team", "Long", 13, 16, "Medium",
-                "Divinity's End is a massive collaborative CTM map featuring areas from some of the best mapmakers the CTMC has to offer. As the final entry on the Pantheon series, it features action packed, heavily customized gameplay for you to enjoy either by yourself or with as many friends as you want.",
-                21850, "Branching", "https://hydrogen602trinity.github.io/Cartographers/div.webp",
-                "Pantheon", "1.16.5"));
-        repo.save(new MinecraftMap("Monstrosity", 20190118, "Cold Fusion", "Medium", 12, 0, "Medium",
-                "A great map for newcomers to the CTM genre. Explore a massive network of caves mysteriously abandoned by the once great ARCANE Company. Delve deep enough, and you might just find out why they fled.",
-                6602, "Branching", "/Cartographers/images/3.jpg", "None", "1.8.8"));
-        repo.save(new MinecraftMap("Unassuming", 20190118, "Tala", "Short", 3, 0, "Easy",
-                "A simple, straightforward map that is exactly what it looks like on the surface! No tricks, no twists, just pure fun! \r\nRemember to use your noggin, and have fun!",
-                2157, "Linear", "/Cartographers/images/4.png", "None", "1.12"));
-        repo.save(new MinecraftMap("WinterStorm", 20190118, "Tecnocraft2802", "Medium", 3, 0, "Medium",
-                "WINTER STORM es un mapa MiniCTM de la 1.12.2.<br>\r\nEstÃ¡s atrapado en las altas montaÃ±as bajo una tormenta de nieve, tendrÃ¡s que sobrevir como puedas y intentar no morir por causa de la hipotermia..",
-                2442, "Open World", "/Cartographers/images/8.png", "Seasons Time", "1.12.2"));
-        repo.save(new MinecraftMap("HOURGLASS", 20190118, "SrMaMr & Tecnocraft2802", "Short", 12, 0, "Medium",
-                "Hourglass es un Mapa MiniCTM Hardcore para la versiÃ³n 1.11.2", 2823, "Branching",
-                "/Cartographers/images/9.png", "None", "1.11.2"));
-        repo.save(new MinecraftMap("LAST NIGHT", 20190118, "Tecnocraft2802", "Short", 2, 0, "Hard",
-                "LAST NIGHT es un mapa MiniCTM Hardcore de la 1.12. \r\nTu verdadero enemigo es el Tiempo.", 1891,
-                "Linear", "/Cartographers/images/10.png", "None", "1.12"));
-        repo.save(new MinecraftMap("The Harbinger", 20190118, "Kunii", "Short", 3, 0, "Hard",
-                "A brutal path of death and destruction... Let nothing stand in your way.  You are the harbinger of doom...",
-                3046, "Branching", "/Cartographers/images/11.png", "Dark Realms", "1.13.2"));
-        repo.save(new MinecraftMap("Minimalist", 20190118, "Kaladun", "Short", 16, 1, "Easy",
-                "A tiny map with a massive adventure! The classic 16-wool CTM where every wool dungeon is a 24 block cube. Downloaded 20,000 times, and so iconic it inspired the CTM community Austerity maps!",
-                4997, "Branching", "/Cartographers/images/12.png", "None", "1.8"));
-        repo.save(new MinecraftMap("Fantasy Challenge", 20190118, "MineBye", "Short", 2, 0, "Hard",
-                "A MiniCTM Hardcore, a real challenge. Be prepared to face your doom.", 1376, "Linear",
-                "/Cartographers/images/13.jpg", "None", "1.12.2"));
-        repo.save(new MinecraftMap("Gloom and Shroom", 20190114, "14er", "Short", 3, 0, "Medium",
-                "Delve into the mushroom filled caverns of what was once the only CTM map available for 1.13 (though now it has friends :D )",
-                1358, "Linear", "/Cartographers/images/GloomShroom.png", "None", "1.13.2"));
-        repo.save(new MinecraftMap("Rift Up", 20190122, "Stetofire", "Medium", 5, 0, "Medium",
-                "An obsidian spire has pierced up through a small island. Follow a trail of journals and discover its source!",
-                1916, "Adventure", "/Cartographers/images/14.png", "None", "1.12"));
-        repo.save(new MinecraftMap("The Corrupted Path", 20190319, "Heliceo", "Long", 18, 0, "Hard",
-                "Are you looking for a huge, challenging, heavily combat-oriented CTM map? Venture the infamous first installment of the Ragecraft series and fight your way to complete the monument in this insane adventure",
-                2794, "Open World", "/Cartographers/images/16.jpg", "Ragecraft", "1.5.2"));
-        repo.save(new MinecraftMap("From Flames Reborn", 20190319, "Gustavo Team", "Medium", 16, 0, "Medium",
-                "\"From Flames: Reborn\" is an open world CTM map, set in the post-apocalyptic world, based on the original \"From Flames\".",
-                1584, "Open World", "/Cartographers/images/17.png", "None", "1.12"));
-        repo.save(new MinecraftMap("Insomnia", 20190319, "Heliceo", "Long", 16, 16, "Hard",
-                "Are you looking for a huge, challenging, heavily combat-oriented map? Welcome to the map that changed completely the CTM genre taking mechanics and custom mobs to the next level",
-                5476, "Branching", "/Cartographers/images/18.jpg", "Ragecraft", "1.7.2"));
-        repo.save(new MinecraftMap("Infested Lands", 20190410, "Creepernick01", "Medium", 19, 0, "Medium",
-                "My first CTM map. I feel that I did a good effort for a first try. You will be put through 16 different areas to find wools. No intricate storylines or mechanics. Just pure, classic-style CTM.",
-                1772, "Branching", "/Cartographers/images/23.png", "None", "1.8.9"));
-        repo.save(new MinecraftMap("Goliath", 20190410, "renderXR", "Long", 19, 1, "Medium",
-                "From forests to deserts. Go diving in the deepest oceans or go spelunking in the darkest caves. This map is an environment based map. It is extremely vast so that explains its name. It starts off relatively easy, but it gets harder and harder over time. But be wary, the map has a fair amount of traps",
-                1663, "Branching", "/Cartographers/images/US1.png", "Untold Stories", "1.8.9"));
-        repo.save(new MinecraftMap("The Sower", 20190410, "renderXR", "Short", 8, 0, "Hard",
-                "In a world roses have withered and gloom filled the sky your objective is to find all flowers in the dark depths. Retrieve all flowers to reap the victory. You start in a barren wasteland filled with old barrows. As you explore these desolate ruins you will discover there is more than just old crypts below.",
-                1794, "Open World", "/Cartographers/images/USm1.png", "Untold Stories", "1.13.2"));
-        repo.save(new MinecraftMap("Myriad Caves", 20190410, "renderXR", "Long", 22, 54, "Hard",
-                "Myriad Caves, an extensive network of caves providing plenty to explore. This map is experimental in two ways. Firstly, the map layout is an open-world cave layout.Secondly, the map uses a different food/health system than a normal MC world. How far will you make it?",
-                2734, "Open World", "/Cartographers/images/US3.png", "Untold Stories", "1.9.4"));
-        repo.save(new MinecraftMap("Calamity Canyon", 20190410, "renderXR", "Medium", 17, 10, "Medium",
-                "These once fertile lands are now blighted and devoid of life. Dark clouds have covered the canyon and spread evil. Survival in this barren wasteland is difficult due to the absence of an infinite food source. Explore the mesa and uncover the secrets that it holds. Can you manage to stay alive?",
-                2757, "Open World", "/Cartographers/images/US5.png", "Untold Stories", "1.12.2"));
-        repo.save(new MinecraftMap("Soul Reaper", 20190723, "Krose", "Short", 4, 0, "Hard",
-                "Made for the 8th Strawberry Jam, this map presents a brutal challenge even for the veteran player thanks to the manipulation of health and natural regeneration. Test your patience and skills in this tough experience",
-                1004, "Open World", "/Cartographers/images/27.jpg", "Extreme Adventures", "1.8"));
-        repo.save(new MinecraftMap("Galaroth", 20190723, "Caecilleus", "Medium", 16, 0, "Very Hard",
-                "Battle your way through fire and ash in this 16 Objective UHC CTM for MC 1.12.2! It even has a custom soundtrack to listen to as you play! How cool is that?",
-                1744, "Branching", "/Cartographers/images/28.png", "None", "1.12.2"));
-        repo.save(new MinecraftMap("Marooned", 20190803, "Krose", "Short", 4, 0, "Easy",
-                "Made up of a number of small islands floating over void, this mini-CTM offers special loot, an innovative teleportation system and full multiplayer compatibility making this a blast to play!",
-                603, "Branching", "/Cartographers/images/29.jpg", "Shattered Skies", "1.8.8"));
-    }
+        private void LoadData() {
+                repo.save(new MinecraftMap("Moonlight", 0, "The CTMC", "Long", 17, 54, "Medium",
+                                "Moonlight is the lovechild of the Rookiewreck mapping event, featuring dozens of builders creating full-length areas over the span of a single month!",
+                                899, "Linear Branching", "/Cartographers/images/5886020644119590.webp",
+                                "Rookiewreck", "1.17.1"));
+                repo.save(new MinecraftMap("Divinity's End", 0, "The DE Team", "Long", 13, 16, "Medium",
+                                "Divinity's End is a massive collaborative CTM map featuring areas from some of the best mapmakers the CTMC has to offer. As the final entry on the Pantheon series, it features action packed, heavily customized gameplay for you to enjoy either by yourself or with as many friends as you want.",
+                                21850, "Branching", "/Cartographers/images/div.webp",
+                                "Pantheon", "1.16.5"));
+                repo.save(new MinecraftMap("Monstrosity", 20190118, "Cold Fusion", "Medium", 12, 0, "Medium",
+                                "A great map for newcomers to the CTM genre. Explore a massive network of caves mysteriously abandoned by the once great ARCANE Company. Delve deep enough, and you might just find out why they fled.",
+                                6602, "Branching", "/Cartographers/images/3.webp", "None", "1.8.8"));
+                repo.save(new MinecraftMap("Unassuming", 20190118, "Tala", "Short", 3, 0, "Easy",
+                                "A simple, straightforward map that is exactly what it looks like on the surface! No tricks, no twists, just pure fun! \r\nRemember to use your noggin, and have fun!",
+                                2157, "Linear", "/Cartographers/images/4.webp", "None", "1.12"));
+                repo.save(new MinecraftMap("WinterStorm", 20190118, "Tecnocraft2802", "Medium", 3, 0, "Medium",
+                                "WINTER STORM es un mapa MiniCTM de la 1.12.2.<br>\r\nEstÃ¡s atrapado en las altas montaÃ±as bajo una tormenta de nieve, tendrÃ¡s que sobrevir como puedas y intentar no morir por causa de la hipotermia..",
+                                2442, "Open World", "/Cartographers/images/8.webp", "Seasons Time", "1.12.2"));
+                repo.save(new MinecraftMap("HOURGLASS", 20190118, "SrMaMr & Tecnocraft2802", "Short", 12, 0, "Medium",
+                                "Hourglass es un Mapa MiniCTM Hardcore para la versiÃ³n 1.11.2", 2823, "Branching",
+                                "/Cartographers/images/9.webp", "None", "1.11.2"));
+                repo.save(new MinecraftMap("LAST NIGHT", 20190118, "Tecnocraft2802", "Short", 2, 0, "Hard",
+                                "LAST NIGHT es un mapa MiniCTM Hardcore de la 1.12. \r\nTu verdadero enemigo es el Tiempo.",
+                                1891,
+                                "Linear", "/Cartographers/images/10.webp", "None", "1.12"));
+                repo.save(new MinecraftMap("The Harbinger", 20190118, "Kunii", "Short", 3, 0, "Hard",
+                                "A brutal path of death and destruction... Let nothing stand in your way.  You are the harbinger of doom...",
+                                3046, "Branching", "/Cartographers/images/11.webp", "Dark Realms", "1.13.2"));
+                repo.save(new MinecraftMap("Minimalist", 20190118, "Kaladun", "Short", 16, 1, "Easy",
+                                "A tiny map with a massive adventure! The classic 16-wool CTM where every wool dungeon is a 24 block cube. Downloaded 20,000 times, and so iconic it inspired the CTM community Austerity maps!",
+                                4997, "Branching", "/Cartographers/images/12.webp", "None", "1.8"));
+                repo.save(new MinecraftMap("Fantasy Challenge", 20190118, "MineBye", "Short", 2, 0, "Hard",
+                                "A MiniCTM Hardcore, a real challenge. Be prepared to face your doom.", 1376, "Linear",
+                                "/Cartographers/images/13.webp", "None", "1.12.2"));
+                repo.save(new MinecraftMap("Gloom and Shroom", 20190114, "14er", "Short", 3, 0, "Medium",
+                                "Delve into the mushroom filled caverns of what was once the only CTM map available for 1.13 (though now it has friends :D )",
+                                1358, "Linear", "/Cartographers/images/GloomShroom.webp", "None", "1.13.2"));
+                repo.save(new MinecraftMap("Rift Up", 20190122, "Stetofire", "Medium", 5, 0, "Medium",
+                                "An obsidian spire has pierced up through a small island. Follow a trail of journals and discover its source!",
+                                1916, "Adventure", "/Cartographers/images/14.webp", "None", "1.12"));
+                repo.save(new MinecraftMap("The Corrupted Path", 20190319, "Heliceo", "Long", 18, 0, "Hard",
+                                "Are you looking for a huge, challenging, heavily combat-oriented CTM map? Venture the infamous first installment of the Ragecraft series and fight your way to complete the monument in this insane adventure",
+                                2794, "Open World", "/Cartographers/images/16.webp", "Ragecraft", "1.5.2"));
+                repo.save(new MinecraftMap("From Flames Reborn", 20190319, "Gustavo Team", "Medium", 16, 0, "Medium",
+                                "\"From Flames: Reborn\" is an open world CTM map, set in the post-apocalyptic world, based on the original \"From Flames\".",
+                                1584, "Open World", "/Cartographers/images/17.webp", "None", "1.12"));
+                repo.save(new MinecraftMap("Insomnia", 20190319, "Heliceo", "Long", 16, 16, "Hard",
+                                "Are you looking for a huge, challenging, heavily combat-oriented map? Welcome to the map that changed completely the CTM genre taking mechanics and custom mobs to the next level",
+                                5476, "Branching", "/Cartographers/images/18.webp", "Ragecraft", "1.7.2"));
+                repo.save(new MinecraftMap("Infested Lands", 20190410, "Creepernick01", "Medium", 19, 0, "Medium",
+                                "My first CTM map. I feel that I did a good effort for a first try. You will be put through 16 different areas to find wools. No intricate storylines or mechanics. Just pure, classic-style CTM.",
+                                1772, "Branching", "/Cartographers/images/23.webp", "None", "1.8.9"));
+                repo.save(new MinecraftMap("Goliath", 20190410, "renderXR", "Long", 19, 1, "Medium",
+                                "From forests to deserts. Go diving in the deepest oceans or go spelunking in the darkest caves. This map is an environment based map. It is extremely vast so that explains its name. It starts off relatively easy, but it gets harder and harder over time. But be wary, the map has a fair amount of traps",
+                                1663, "Branching", "/Cartographers/images/US1.webp", "Untold Stories", "1.8.9"));
+                repo.save(new MinecraftMap("The Sower", 20190410, "renderXR", "Short", 8, 0, "Hard",
+                                "In a world roses have withered and gloom filled the sky your objective is to find all flowers in the dark depths. Retrieve all flowers to reap the victory. You start in a barren wasteland filled with old barrows. As you explore these desolate ruins you will discover there is more than just old crypts below.",
+                                1794, "Open World", "/Cartographers/images/USm1.webp", "Untold Stories", "1.13.2"));
+                repo.save(new MinecraftMap("Myriad Caves", 20190410, "renderXR", "Long", 22, 54, "Hard",
+                                "Myriad Caves, an extensive network of caves providing plenty to explore. This map is experimental in two ways. Firstly, the map layout is an open-world cave layout.Secondly, the map uses a different food/health system than a normal MC world. How far will you make it?",
+                                2734, "Open World", "/Cartographers/images/US3.webp", "Untold Stories", "1.9.4"));
+                repo.save(new MinecraftMap("Calamity Canyon", 20190410, "renderXR", "Medium", 17, 10, "Medium",
+                                "These once fertile lands are now blighted and devoid of life. Dark clouds have covered the canyon and spread evil. Survival in this barren wasteland is difficult due to the absence of an infinite food source. Explore the mesa and uncover the secrets that it holds. Can you manage to stay alive?",
+                                2757, "Open World", "/Cartographers/images/US5.webp", "Untold Stories", "1.12.2"));
+                repo.save(new MinecraftMap("Soul Reaper", 20190723, "Krose", "Short", 4, 0, "Hard",
+                                "Made for the 8th Strawberry Jam, this map presents a brutal challenge even for the veteran player thanks to the manipulation of health and natural regeneration. Test your patience and skills in this tough experience",
+                                1004, "Open World", "/Cartographers/images/27.webp", "Extreme Adventures", "1.8"));
+                repo.save(new MinecraftMap("Galaroth", 20190723, "Caecilleus", "Medium", 16, 0, "Very Hard",
+                                "Battle your way through fire and ash in this 16 Objective UHC CTM for MC 1.12.2! It even has a custom soundtrack to listen to as you play! How cool is that?",
+                                1744, "Branching", "/Cartographers/images/28.webp", "None", "1.12.2"));
+                repo.save(new MinecraftMap("Marooned", 20190803, "Krose", "Short", 4, 0, "Easy",
+                                "Made up of a number of small islands floating over void, this mini-CTM offers special loot, an innovative teleportation system and full multiplayer compatibility making this a blast to play!",
+                                603, "Branching", "/Cartographers/images/29.webp", "Shattered Skies", "1.8.8"));
+        }
 }
