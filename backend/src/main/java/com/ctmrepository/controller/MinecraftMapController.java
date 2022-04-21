@@ -143,10 +143,8 @@ public class MinecraftMapController {
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         Collections.sort(maps, new Comparator<MinecraftMap>() {
             public int compare(MinecraftMap m1, MinecraftMap m2) {
-                double mapJWD1 = getJaroWinklerDistance(m1.getName().toUpperCase(), search)
-                        + getJaroWinklerDistance(m1.getAuthor().toUpperCase(), search);
-                double mapJWD2 = getJaroWinklerDistance(m2.getName().toUpperCase(), search)
-                + getJaroWinklerDistance(m2.getAuthor().toUpperCase(), search);
+                double mapJWD1 = getLargestJWDist(m1, search, search.split(" "));
+                double mapJWD2 = getLargestJWDist(m2, search, search.split(" "));
                 double jwdComp = mapJWD2 - mapJWD1;
 
                 // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
@@ -191,6 +189,17 @@ public class MinecraftMapController {
         }
         */
         return maps;
+    }
+
+    double getLargestJWDist(MinecraftMap map, String search, String[] words) {
+        double largestSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search)
+            + getJaroWinklerDistance(map.getAuthor().toUpperCase(), search);
+        for (int i = 0; i < words.length; i++) {
+            double newJW = getJaroWinklerDistance(map.getName().toUpperCase(), words[i])
+                + getJaroWinklerDistance(map.getAuthor().toUpperCase(), words[i]);
+            largestSearch = newJW > largestSearch ? newJW : largestSearch;
+        }
+        return largestSearch;
     }
 
     double getJaroWinklerDistance(String s1, String s2)
