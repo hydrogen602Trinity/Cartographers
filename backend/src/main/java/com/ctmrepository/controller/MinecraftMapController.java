@@ -54,6 +54,31 @@ public class MinecraftMapController {
     }
 
     /**
+     * Get the total count of published maps.
+     * This is necessary to compute the number of pages in the frontend.
+     */
+    @GetMapping("/maps/count")
+    public ResponseEntity<Integer> getMapCount() {
+        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
+    }
+
+    /**
+     * Get one map by id
+     * 
+     * @param id the id of the map to get
+     */
+    @GetMapping("/maps/{id}")
+    public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
+        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
+
+        if (mapData.isPresent() && mapData.get().isPublished()) {
+            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Sorts map database according to query and returns results corresponding to
      * given page and response limit.
      *
@@ -96,35 +121,21 @@ public class MinecraftMapController {
     private List<MinecraftMap> hardSearchSort(List<MinecraftMap> maps, String search) {
         List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
         for (MinecraftMap map : maps) {
-            if (map.getName().toUpperCase().contains(search))
+            if (map.getName().toUpperCase().contains(search)
+                || map.getAuthor().toUpperCase().contains(search))
                 relevantMaps.add(map);
+            else {
+                String[] words = search.split(" ");
+                for (int i = 0; i < words.length; i++) {
+                    if (map.getName().toUpperCase().contains(words[i])
+                        || map.getAuthor().toUpperCase().contains(words[i])) {
+                        relevantMaps.add(map);
+                        i = words.length;
+                    }
+                }
+            }
         }
         return relevantMaps;
-    }
-
-    /**
-     * Get the total count of published maps.
-     * This is necessary to compute the number of pages in the frontend.
-     */
-    @GetMapping("/maps/count")
-    public ResponseEntity<Integer> getMapCount() {
-        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
-    }
-
-    /**
-     * Get one map by id
-     * 
-     * @param id the id of the map to get
-     */
-    @GetMapping("/maps/{id}")
-    public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
-        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
-
-        if (mapData.isPresent() && mapData.get().isPublished()) {
-            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     // Next, given a list of maps and the search string,
@@ -132,8 +143,10 @@ public class MinecraftMapController {
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         Collections.sort(maps, new Comparator<MinecraftMap>() {
             public int compare(MinecraftMap m1, MinecraftMap m2) {
-                double mapJWD1 = getJaroWinklerDistance(m1.getName().toUpperCase(), search);
-                double mapJWD2 = getJaroWinklerDistance(m2.getName().toUpperCase(), search);
+                double mapJWD1 = getJaroWinklerDistance(m1.getName().toUpperCase(), search)
+                        + getJaroWinklerDistance(m1.getAuthor().toUpperCase(), search);
+                double mapJWD2 = getJaroWinklerDistance(m2.getName().toUpperCase(), search)
+                + getJaroWinklerDistance(m2.getAuthor().toUpperCase(), search);
                 double jwdComp = mapJWD2 - mapJWD1;
 
                 // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
