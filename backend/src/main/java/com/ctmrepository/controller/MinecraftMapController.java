@@ -205,30 +205,23 @@ public class MinecraftMapController {
     double getJaroWinklerDistance(String s1, String s2)
     {
         double jaro_dist = getJaroDistance(s1, s2);
-
         // If the jaro Similarity is above a threshold
         if (jaro_dist > 0.7)
         {
-
             // Find the length of common prefix
             int prefix = 0;
-
             for (int i = 0;
                  i < Math.min(s1.length(), s2.length()); i++)
             {
-
                 // If the characters match
                 if (s1.charAt(i) == s2.charAt(i))
                     prefix++;
-
                     // Else break
                 else
                     break;
             }
-
             // Maximum of 4 characters are allowed in prefix
             prefix = Math.min(4, prefix);
-
             // Calculate jaro winkler Similarity
             jaro_dist += 0.1 * prefix * (1 - jaro_dist);
         }
@@ -258,7 +251,6 @@ public class MinecraftMapController {
 
         // Traverse through the first String
         for (int i = 0; i < len1; i++) {
-
             // Check if there is any matches
             for (int j = Math.max(0, i - max_dist); j < Math.min(len2, i + max_dist + 1); j++)
 
@@ -270,14 +262,11 @@ public class MinecraftMapController {
                     break;
                 }
         }
-
         // If there is no match
         if (match == 0)
             return 0.0;
-
         // Number of transpositions
         double t = 0;
-
         int point = 0;
 
         // Count number of occurrences
@@ -286,24 +275,22 @@ public class MinecraftMapController {
         // in between the indices
         for (int i = 0; i < len1; i++)
             if (hash_s1[i] == 1) {
-
                 // Find the next matched character
                 // in second String
                 while (hash_s2[point] == 0)
                     point++;
-
                 if (s1.charAt(i) != s2.charAt(point++))
                     t++;
             }
-
         t /= 2;
-
         // Return the Jaro Similarity
         return (((double) match) / ((double) len1)
                 + ((double) match) / ((double) len2)
                 + ((double) match - t) / ((double) match))
                 / 3.0;
-    }    // A comparison where the larger the int the more different the strings are
+    }    
+    
+    // A comparison where the larger the int the more different the strings are
     // Made by the number of addition, subtractions, or substitutions needed to
     // match x to y
     public int getLevenshteinDistance(String x, String y) {
@@ -323,7 +310,6 @@ public class MinecraftMapController {
                 }
             }
         }
-
         return dp[x.length()][y.length()];
     }
 
