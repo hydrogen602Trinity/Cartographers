@@ -54,6 +54,31 @@ public class MinecraftMapController {
     }
 
     /**
+     * Get the total count of published maps.
+     * This is necessary to compute the number of pages in the frontend.
+     */
+    @GetMapping("/maps/count")
+    public ResponseEntity<Integer> getMapCount() {
+        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
+    }
+
+    /**
+     * Get one map by id
+     * 
+     * @param id the id of the map to get
+     */
+    @GetMapping("/maps/{id}")
+    public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
+        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
+
+        if (mapData.isPresent() && mapData.get().isPublished()) {
+            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Sorts map database according to query and returns results corresponding to
      * given page and response limit.
      *
@@ -96,35 +121,21 @@ public class MinecraftMapController {
     private List<MinecraftMap> hardSearchSort(List<MinecraftMap> maps, String search) {
         List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
         for (MinecraftMap map : maps) {
-            if (map.getName().toUpperCase().contains(search))
+            if (map.getName().toUpperCase().contains(search)
+                || map.getAuthor().toUpperCase().contains(search))
                 relevantMaps.add(map);
+            else {
+                String[] words = search.split(" ");
+                for (int i = 0; i < words.length; i++) {
+                    if (map.getName().toUpperCase().contains(words[i])
+                        || map.getAuthor().toUpperCase().contains(words[i])) {
+                        relevantMaps.add(map);
+                        i = words.length;
+                    }
+                }
+            }
         }
         return relevantMaps;
-    }
-
-    /**
-     * Get the total count of published maps.
-     * This is necessary to compute the number of pages in the frontend.
-     */
-    @GetMapping("/maps/count")
-    public ResponseEntity<Integer> getMapCount() {
-        return new ResponseEntity<>((int) minecraftMapRepository.count(), HttpStatus.OK);
-    }
-
-    /**
-     * Get one map by id
-     * 
-     * @param id the id of the map to get
-     */
-    @GetMapping("/maps/{id}")
-    public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
-        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
-
-        if (mapData.isPresent() && mapData.get().isPublished()) {
-            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     // Next, given a list of maps and the search string,
@@ -132,8 +143,8 @@ public class MinecraftMapController {
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         Collections.sort(maps, new Comparator<MinecraftMap>() {
             public int compare(MinecraftMap m1, MinecraftMap m2) {
-                double mapJWD1 = getJaroWinklerDistance(m1.getName().toUpperCase(), search);
-                double mapJWD2 = getJaroWinklerDistance(m2.getName().toUpperCase(), search);
+                double mapJWD1 = getLargestJWDist(m1, search, search.split(" "));
+                double mapJWD2 = getLargestJWDist(m2, search, search.split(" "));
                 double jwdComp = mapJWD2 - mapJWD1;
 
                 // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
@@ -180,33 +191,37 @@ public class MinecraftMapController {
         return maps;
     }
 
+    double getLargestJWDist(MinecraftMap map, String search, String[] words) {
+        double largestSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search)
+            + getJaroWinklerDistance(map.getAuthor().toUpperCase(), search);
+        for (int i = 0; i < words.length; i++) {
+            double newJW = getJaroWinklerDistance(map.getName().toUpperCase(), words[i])
+                + getJaroWinklerDistance(map.getAuthor().toUpperCase(), words[i]);
+            largestSearch = newJW > largestSearch ? newJW : largestSearch;
+        }
+        return largestSearch;
+    }
+
     double getJaroWinklerDistance(String s1, String s2)
     {
         double jaro_dist = getJaroDistance(s1, s2);
-
         // If the jaro Similarity is above a threshold
         if (jaro_dist > 0.7)
         {
-
             // Find the length of common prefix
             int prefix = 0;
-
             for (int i = 0;
                  i < Math.min(s1.length(), s2.length()); i++)
             {
-
                 // If the characters match
                 if (s1.charAt(i) == s2.charAt(i))
                     prefix++;
-
                     // Else break
                 else
                     break;
             }
-
             // Maximum of 4 characters are allowed in prefix
             prefix = Math.min(4, prefix);
-
             // Calculate jaro winkler Similarity
             jaro_dist += 0.1 * prefix * (1 - jaro_dist);
         }
@@ -236,7 +251,6 @@ public class MinecraftMapController {
 
         // Traverse through the first String
         for (int i = 0; i < len1; i++) {
-
             // Check if there is any matches
             for (int j = Math.max(0, i - max_dist); j < Math.min(len2, i + max_dist + 1); j++)
 
@@ -248,14 +262,11 @@ public class MinecraftMapController {
                     break;
                 }
         }
-
         // If there is no match
         if (match == 0)
             return 0.0;
-
         // Number of transpositions
         double t = 0;
-
         int point = 0;
 
         // Count number of occurrences
@@ -264,24 +275,22 @@ public class MinecraftMapController {
         // in between the indices
         for (int i = 0; i < len1; i++)
             if (hash_s1[i] == 1) {
-
                 // Find the next matched character
                 // in second String
                 while (hash_s2[point] == 0)
                     point++;
-
                 if (s1.charAt(i) != s2.charAt(point++))
                     t++;
             }
-
         t /= 2;
-
         // Return the Jaro Similarity
         return (((double) match) / ((double) len1)
                 + ((double) match) / ((double) len2)
                 + ((double) match - t) / ((double) match))
                 / 3.0;
-    }    // A comparison where the larger the int the more different the strings are
+    }    
+    
+    // A comparison where the larger the int the more different the strings are
     // Made by the number of addition, subtractions, or substitutions needed to
     // match x to y
     public int getLevenshteinDistance(String x, String y) {
@@ -301,7 +310,6 @@ public class MinecraftMapController {
                 }
             }
         }
-
         return dp[x.length()][y.length()];
     }
 
