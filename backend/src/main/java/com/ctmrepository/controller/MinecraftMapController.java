@@ -88,8 +88,8 @@ public class MinecraftMapController {
      */
     @GetMapping("/search/maps")
     public ResponseEntity<List<MinecraftMap>> getMapSearch(
-            @RequestParam(required = false, defaultValue = "true") boolean hardSearch,
             @RequestParam() String q,
+            @RequestParam(required = false, defaultValue = "true") boolean hard_search,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page) {
         try {
@@ -97,7 +97,7 @@ public class MinecraftMapController {
 
             q = q.replaceAll("_", " ");
 
-            if (hardSearch) {
+            if (hard_search) {
                 hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
             } else {
                 fuzzySearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
@@ -116,6 +116,11 @@ public class MinecraftMapController {
 
     private List<MinecraftMap> getPublishedMaps() {
         List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
+        return maps;
+    }
+
+    private List<MinecraftMap> getUnpublishedMaps() {
+        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(false);
         return maps;
     }
 
