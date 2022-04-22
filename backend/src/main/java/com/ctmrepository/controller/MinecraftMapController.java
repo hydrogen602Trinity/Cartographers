@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -164,6 +165,33 @@ public class MinecraftMapController {
         return Arrays.stream(numbers)
                 .min().orElse(Integer.MAX_VALUE);
     }
+
+    /**
+     * Add one map to the list
+     * 
+     * @param map the map to be added from the frontend
+     * 
+     */
+    @PostMapping("/maps/upload") // New API Endpoint
+    public void addMap(List<MinecraftMap> maps, MinecraftMap map) {
+
+        maps.add(map);
+
+        return;
+    }
+
+    /*
+     * AUSTIN STUFF
+     * //
+     * // 1) Convert Data into MinecraftMap Object
+     * // - If given MinecraftMap object, then just add object
+     * //
+     * // Am I making a frontend function to send the params to the backend?\
+     * // How will the data be sent to the backend? As a list of strings or a
+     * // MinecraftMap object
+     * //
+     * // How do I get params from frontend, and get an object from the params
+     */
 
     /*
      * @GetMapping("/maps")
