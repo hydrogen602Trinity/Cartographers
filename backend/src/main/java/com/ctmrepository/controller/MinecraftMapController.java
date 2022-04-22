@@ -2,8 +2,11 @@ package com.ctmrepository.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -12,6 +15,7 @@ import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -51,33 +55,6 @@ public class MinecraftMapController {
     }
 
     /**
-     * Sorts map database according to query and returns results corresponding to
-     * given page and response limit.
-     *
-     * @param q     search query
-     * @param limit maximum number of results to return per page
-     * @param page  page number of results to return
-     */
-    @GetMapping("/search/maps")
-    public ResponseEntity<List<MinecraftMap>> getMapSearch(
-            @RequestParam() String q,
-            @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
-            @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page) {
-        try {
-            List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
-
-            q = q.replaceAll("_", " ");
-            sortByRelevance(minecraftMapRepository.findAll(), q.toUpperCase()).forEach(maps::add);
-            maps = paginateList(maps, page, per_page);
-
-            return new ResponseEntity<>(maps, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
      * Get the total count of published maps.
      * This is necessary to compute the number of pages in the frontend.
      */
@@ -95,42 +72,225 @@ public class MinecraftMapController {
     public ResponseEntity<MinecraftMap> getMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
-        if (mapData.isPresent()) {
+        if (mapData.isPresent() && mapData.get().isPublished()) {
             return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Next, given a list of maps and the search string,
-    // sort the list of maps by the Levenshtein Distances and Return
-    public List<MinecraftMap> sortByRelevance(List<MinecraftMap> maps, String search) {
-        // Get Levenshtein Distances for names
-        List<Integer> levenschteinValues = new ArrayList<Integer>();
-        for (int i = 0; i < maps.size(); i++) {
-            levenschteinValues
-                    .add(Integer.valueOf(getLevenshteinDistance(maps.get(i).getName().toUpperCase(), search)));
-        }
+    /**
+     * Sorts map database according to query and returns results corresponding to
+     * given page and response limit.
+     *
+     * @param q     search query
+     * @param limit maximum number of results to return per page
+     * @param page  page number of results to return
+     */
+    @GetMapping("/search/maps")
+    public ResponseEntity<List<MinecraftMap>> getMapSearch(
+            @RequestParam() String q,
+            @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
+            @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page) {
+        try {
+            List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
 
-        // Custom Sort by Levenshtein Distances
-        // Get smallest relative distance, throw it into the new map, repeat, n^2 time
-        List<MinecraftMap> sortedMaps = new ArrayList<MinecraftMap>();
-        while (!maps.isEmpty()) {
-            int index = -1;
-            Integer indexValue = Integer.MAX_VALUE;
-            for (int i = 0; i < levenschteinValues.size(); i++) {
-                if (levenschteinValues.get(i) < indexValue) {
-                    index = i;
-                    indexValue = levenschteinValues.get(index);
-                }
+            q = q.replaceAll("_", " ");
+
+            hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
+            if (maps.size() < 1) {
+                // System.out.println("HardSearchSort found nothing, going fuzzy...");
+                maps.clear();
+                fuzzySearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
             }
-            sortedMaps.add(maps.get(index));
-            maps.remove(index);
-            levenschteinValues.remove(index);
+            maps = paginateList(maps, page, per_page);
+
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic())
+                    .body(maps);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return sortedMaps;
     }
 
+    private List<MinecraftMap> getPublishedMaps() {
+        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
+        return maps;
+    }
+
+    private List<MinecraftMap> hardSearchSort(List<MinecraftMap> maps, String search) {
+        List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
+        for (MinecraftMap map : maps) {
+            if (map.getName().toUpperCase().contains(search)
+                || map.getAuthor().toUpperCase().contains(search))
+                relevantMaps.add(map);
+            else {
+                String[] words = search.split(" ");
+                for (int i = 0; i < words.length; i++) {
+                    if (map.getName().toUpperCase().contains(words[i])
+                        || map.getAuthor().toUpperCase().contains(words[i])) {
+                        relevantMaps.add(map);
+                        i = words.length;
+                    }
+                }
+            }
+        }
+        return relevantMaps;
+    }
+
+    // Next, given a list of maps and the search string,
+    // sort the list of maps by the Levenshtein Distances and Return
+    private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
+        Collections.sort(maps, new Comparator<MinecraftMap>() {
+            public int compare(MinecraftMap m1, MinecraftMap m2) {
+                double mapJWD1 = getLargestJWDist(m1, search, search.split(" "));
+                double mapJWD2 = getLargestJWDist(m2, search, search.split(" "));
+                double jwdComp = mapJWD2 - mapJWD1;
+
+                // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
+                // ("+mapLeven2+")"+" = "+levenComp);
+                if (Math.abs(jwdComp) > 0.1) {
+                    return (int) Math.round(jwdComp * 100);
+                }
+
+                Long m1D = m1.getDownload_count();
+                Long m2D = m2.getDownload_count();
+                return m1D.compareTo(m2D);
+            }
+        });
+
+        // for (MinecraftMap map: maps) {
+        //     System.out.println(map.getName()+": "+getJaroWinklerDistance(map.getName().toUpperCase(), search));
+        // }
+        /*
+
+        System.out.println("\n Versus: \n");
+
+        Collections.sort(maps, new Comparator<MinecraftMap>() {
+            public int compare(MinecraftMap m1, MinecraftMap m2) {
+                int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
+                int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
+                int levenComp = mapLeven1 - mapLeven2;
+
+                // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
+                // ("+mapLeven2+")"+" = "+levenComp);
+                if (levenComp != 0) {
+                    return levenComp;
+                }
+
+                Long m1D = m1.getDownload_count();
+                Long m2D = m2.getDownload_count();
+                return m1D.compareTo(m2D);
+            }
+        });
+
+        for (MinecraftMap map: maps) {
+            System.out.println(map.getName()+": "+getLevenshteinDistance(map.getName().toUpperCase(), search));
+        }
+        */
+        return maps;
+    }
+
+    double getLargestJWDist(MinecraftMap map, String search, String[] words) {
+        double largestSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search)
+            + getJaroWinklerDistance(map.getAuthor().toUpperCase(), search);
+        for (int i = 0; i < words.length; i++) {
+            double newJW = getJaroWinklerDistance(map.getName().toUpperCase(), words[i])
+                + getJaroWinklerDistance(map.getAuthor().toUpperCase(), words[i]);
+            largestSearch = newJW > largestSearch ? newJW : largestSearch;
+        }
+        return largestSearch;
+    }
+
+    double getJaroWinklerDistance(String s1, String s2)
+    {
+        double jaro_dist = getJaroDistance(s1, s2);
+        // If the jaro Similarity is above a threshold
+        if (jaro_dist > 0.7)
+        {
+            // Find the length of common prefix
+            int prefix = 0;
+            for (int i = 0;
+                 i < Math.min(s1.length(), s2.length()); i++)
+            {
+                // If the characters match
+                if (s1.charAt(i) == s2.charAt(i))
+                    prefix++;
+                    // Else break
+                else
+                    break;
+            }
+            // Maximum of 4 characters are allowed in prefix
+            prefix = Math.min(4, prefix);
+            // Calculate jaro winkler Similarity
+            jaro_dist += 0.1 * prefix * (1 - jaro_dist);
+        }
+        return jaro_dist;
+    }
+
+    // Java implementation of above approach
+    double getJaroDistance(String s1, String s2) {
+        // If the Strings are equal
+        if (s1 == s2)
+            return 1.0;
+
+        // Length of two Strings
+        int len1 = s1.length(),
+                len2 = s2.length();
+
+        // Maximum distance upto which matching
+        // is allowed
+        int max_dist = (int) (Math.floor(Math.max(len1, len2) / 2) - 1);
+
+        // Count of matches
+        int match = 0;
+
+        // Hash for matches
+        int hash_s1[] = new int[s1.length()];
+        int hash_s2[] = new int[s2.length()];
+
+        // Traverse through the first String
+        for (int i = 0; i < len1; i++) {
+            // Check if there is any matches
+            for (int j = Math.max(0, i - max_dist); j < Math.min(len2, i + max_dist + 1); j++)
+
+                // If there is a match
+                if (s1.charAt(i) == s2.charAt(j) && hash_s2[j] == 0) {
+                    hash_s1[i] = 1;
+                    hash_s2[j] = 1;
+                    match++;
+                    break;
+                }
+        }
+        // If there is no match
+        if (match == 0)
+            return 0.0;
+        // Number of transpositions
+        double t = 0;
+        int point = 0;
+
+        // Count number of occurrences
+        // where two characters match but
+        // there is a third matched character
+        // in between the indices
+        for (int i = 0; i < len1; i++)
+            if (hash_s1[i] == 1) {
+                // Find the next matched character
+                // in second String
+                while (hash_s2[point] == 0)
+                    point++;
+                if (s1.charAt(i) != s2.charAt(point++))
+                    t++;
+            }
+        t /= 2;
+        // Return the Jaro Similarity
+        return (((double) match) / ((double) len1)
+                + ((double) match) / ((double) len2)
+                + ((double) match - t) / ((double) match))
+                / 3.0;
+    }    
+    
     // A comparison where the larger the int the more different the strings are
     // Made by the number of addition, subtractions, or substitutions needed to
     // match x to y
@@ -151,13 +311,12 @@ public class MinecraftMapController {
                 }
             }
         }
-
         return dp[x.length()][y.length()];
     }
 
     // return if there is a substitution cost or not
     public static int costOfSubstitution(char a, char b) {
-        return a == b ? 0 : 1;
+        return a == b ? 0 : 3;
     }
 
     // return the smallest of the int numbers
