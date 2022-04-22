@@ -147,8 +147,6 @@ public class MinecraftMapController {
                 double mapJWD2 = getLargestJWDist(m2, search, search.split(" "));
                 double jwdComp = mapJWD2 - mapJWD1;
 
-                // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
-                // ("+mapLeven2+")"+" = "+levenComp);
                 if (Math.abs(jwdComp) > 0.1) {
                     return (int) Math.round(jwdComp * 100);
                 }
@@ -158,48 +156,19 @@ public class MinecraftMapController {
                 return m1D.compareTo(m2D);
             }
         });
-
-        // for (MinecraftMap map: maps) {
-        //     System.out.println(map.getName()+": "+getJaroWinklerDistance(map.getName().toUpperCase(), search));
-        // }
-        /*
-
-        System.out.println("\n Versus: \n");
-
-        Collections.sort(maps, new Comparator<MinecraftMap>() {
-            public int compare(MinecraftMap m1, MinecraftMap m2) {
-                int mapLeven1 = getLevenshteinDistance(m1.getName().toUpperCase(), search);
-                int mapLeven2 = getLevenshteinDistance(m2.getName().toUpperCase(), search);
-                int levenComp = mapLeven1 - mapLeven2;
-
-                // System.out.println(m1.getName()+" ("+mapLeven1+")"+" / "+m2.getName()+"
-                // ("+mapLeven2+")"+" = "+levenComp);
-                if (levenComp != 0) {
-                    return levenComp;
-                }
-
-                Long m1D = m1.getDownload_count();
-                Long m2D = m2.getDownload_count();
-                return m1D.compareTo(m2D);
-            }
-        });
-
-        for (MinecraftMap map: maps) {
-            System.out.println(map.getName()+": "+getLevenshteinDistance(map.getName().toUpperCase(), search));
-        }
-        */
         return maps;
     }
 
     double getLargestJWDist(MinecraftMap map, String search, String[] words) {
-        double largestSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search)
-            + getJaroWinklerDistance(map.getAuthor().toUpperCase(), search);
+        double largestTitleSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search);
+        double largestAuthorSearch = getJaroWinklerDistance(map.getAuthor().toUpperCase(), search);
         for (int i = 0; i < words.length; i++) {
-            double newJW = getJaroWinklerDistance(map.getName().toUpperCase(), words[i])
-                + getJaroWinklerDistance(map.getAuthor().toUpperCase(), words[i]);
-            largestSearch = newJW > largestSearch ? newJW : largestSearch;
+            double newJWTitle = getJaroWinklerDistance(map.getName().toUpperCase(), words[i]);
+            double newJWAuthor = getJaroWinklerDistance(map.getAuthor().toUpperCase(), words[i]);
+            largestTitleSearch = newJWTitle > largestTitleSearch ? newJWTitle : largestTitleSearch;
+            largestAuthorSearch = newJWAuthor > largestAuthorSearch ? newJWAuthor : largestAuthorSearch;
         }
-        return largestSearch;
+        return largestTitleSearch + largestAuthorSearch;
     }
 
     double getJaroWinklerDistance(String s1, String s2)
