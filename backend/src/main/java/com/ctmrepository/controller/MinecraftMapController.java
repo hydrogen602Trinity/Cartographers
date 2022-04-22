@@ -88,6 +88,7 @@ public class MinecraftMapController {
      */
     @GetMapping("/search/maps")
     public ResponseEntity<List<MinecraftMap>> getMapSearch(
+            @RequestParam(required = false, defaultValue = "true") boolean hardSearch,
             @RequestParam() String q,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page) {
@@ -96,12 +97,12 @@ public class MinecraftMapController {
 
             q = q.replaceAll("_", " ");
 
-            hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
-            if (maps.size() < 1) {
-                // System.out.println("HardSearchSort found nothing, going fuzzy...");
-                maps.clear();
+            if (hardSearch) {
+                hardSearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
+            } else {
                 fuzzySearchSort(getPublishedMaps(), q.toUpperCase()).forEach(maps::add);
             }
+            
             maps = paginateList(maps, page, per_page);
 
             return ResponseEntity.ok()
