@@ -1,7 +1,6 @@
 package com.ctmrepository.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -103,7 +102,10 @@ public class MinecraftMapController {
                 fuzzySearchSort(getPublishedMaps(), q).forEach(maps::add);
             }
 
-            maps = paginateList(maps, page, per_page);
+            int max_pages = maps.size() % per_page == 0 ? ((maps.size() - (maps.size() % per_page)) / per_page)
+                    : ((maps.size() - (maps.size() % per_page)) / per_page) + 1;
+            page = page <= max_pages ? page : max_pages;
+            maps = paginateList(maps, page, per_page); 
 
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic())
@@ -163,9 +165,10 @@ public class MinecraftMapController {
             }
         });
 
-        for (MinecraftMap map : maps) {
-            // System.out.println(map.getName() + ": " + getLargestJWDist(map, search, search.split(" ")));
-        }
+        //for (MinecraftMap map : maps) {
+            // System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
+            // search.split(" ")));
+        //}
 
         return maps;
     }
@@ -230,41 +233,47 @@ public class MinecraftMapController {
 
         // Maximum distance upto which matching
         // is allowed
-        int match_distance  = (int) (Math.floor(Math.max(s_len, t_len) / 2) - 1);
+        int match_distance = (int) (Math.floor(Math.max(s_len, t_len) / 2) - 1);
 
         boolean[] s_matches = new boolean[s1.length()];
         boolean[] t_matches = new boolean[s2.length()];
- 
+
         int matches = 0;
         int transpositions = 0;
- 
+
         for (int i = 0; i < s_len; i++) {
-            int start = Integer.max(0, i-match_distance);
-            int end = Integer.min(i+match_distance+1, t_len);
- 
+            int start = Integer.max(0, i - match_distance);
+            int end = Integer.min(i + match_distance + 1, t_len);
+
             for (int j = start; j < end; j++) {
-                if (t_matches[j]) continue;
-                if (s1.charAt(i) != s2.charAt(j)) continue;
+                if (t_matches[j])
+                    continue;
+                if (s1.charAt(i) != s2.charAt(j))
+                    continue;
                 s_matches[i] = true;
                 t_matches[j] = true;
                 matches++;
                 break;
             }
         }
- 
-        if (matches == 0) return 0;
- 
+
+        if (matches == 0)
+            return 0;
+
         int k = 0;
         for (int i = 0; i < s_len; i++) {
-            if (!s_matches[i]) continue;
-            while (!t_matches[k]) k++;
-            if (s1.charAt(i) != s2.charAt(k)) transpositions++;
+            if (!s_matches[i])
+                continue;
+            while (!t_matches[k])
+                k++;
+            if (s1.charAt(i) != s2.charAt(k))
+                transpositions++;
             k++;
         }
- 
-        return (((double)matches / s_len) +
-                ((double)matches / t_len) +
-                (((double)matches - transpositions/2.0) / matches)) / 3.0;
+
+        return (((double) matches / s_len) +
+                ((double) matches / t_len) +
+                (((double) matches - transpositions / 2.0) / matches)) / 3.0;
     }
 
     /*
