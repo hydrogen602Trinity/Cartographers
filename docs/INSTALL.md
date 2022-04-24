@@ -97,17 +97,6 @@ To run this project, there are several third-party applications that will need b
 
 
 # PostgreSQL Setup
-Run
-```
-psql -U postgres -c "\du"
-```
-If postgres is not `Superuser`, then skip this section on setting `PGUSER = postgres`.
-
-While not required, it is convenient to set the default user for PostgreSQL to the user `postgres` by setting the following environment variable:
-```
-PGUSER = postgres
-```
-This will cause the 'psql' command-line utility to use the postgres superuser account as the default when the psql command is run.
 
 ## Windows
 > After installing PostgreSQL with winget, the default superuser account should be called `postgres` with a default password of `postgres`. It may be convenient to set this user as the default user for the `psql` utility so that it isn't necessary to specify a user every time the utility is run.
@@ -147,4 +136,3 @@ CREATE ROLE ctmadmin WITH CREATEDB LOGIN PASSWORD 's$cret';
 ```
 CREATE DATABASE ctmdb OWNER ctmadmin;
 ```
-
