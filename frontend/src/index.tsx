@@ -6,6 +6,7 @@ import './index.scss';
 import Main from './main';
 import { ParamFilter } from './map';
 import NoMatch from './no_match';
+import UploadMap from './UploadMap';
 
 
 /**
@@ -41,6 +42,7 @@ root.render(
           <Route path="/Cartographers/">
             <Route path="" element={<Main />} />
             <Route path="maps/:id/*" element={<ParamFilter />} />
+            <Route path="upload" element={<UploadMap />} />
           </Route>
           <Route path="*" element={<NoMatch />} />
         </Routes>
