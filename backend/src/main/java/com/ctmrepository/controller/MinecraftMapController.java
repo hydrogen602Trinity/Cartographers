@@ -105,7 +105,7 @@ public class MinecraftMapController {
             int max_pages = maps.size() % per_page == 0 ? ((maps.size() - (maps.size() % per_page)) / per_page)
                     : ((maps.size() - (maps.size() % per_page)) / per_page) + 1;
             page = page <= max_pages ? page : max_pages;
-            maps = paginateList(maps, page, per_page); 
+            maps = paginateList(maps, page, per_page);
 
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic())
@@ -149,28 +149,78 @@ public class MinecraftMapController {
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
-        Collections.sort(maps, new Comparator<MinecraftMap>() {
-            public int compare(MinecraftMap m1, MinecraftMap m2) {
-                double mapJWD1 = getLargestJWDist(m1, search, search.split(" "));
-                double mapJWD2 = getLargestJWDist(m2, search, search.split(" "));
-                double jwdComp = mapJWD2 - mapJWD1;
-
-                if (Math.abs(jwdComp) > 0.1) {
-                    return (int) Math.round(jwdComp * 100);
-                }
-
-                Long m1D = m1.getDownload_count();
-                Long m2D = m2.getDownload_count();
-                return m1D.compareTo(m2D);
-            }
-        });
-
+        searchSortMaps(maps, search);
         //for (MinecraftMap map : maps) {
-            // System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
-            // search.split(" ")));
+        //    System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
+        //            search.split(" ")));
         //}
-
         return maps;
+    }
+
+    private List<MinecraftMap> searchSortMaps(List<MinecraftMap> maps, String search) {
+        List<Double> dists = new ArrayList<>();
+        for (MinecraftMap map : maps) {
+            dists.add(getLargestJWDist(map, search, search.split(" ")));
+        }
+        mergeSort(maps, dists);
+        return maps;
+    }
+
+    private void mergeSort(List<MinecraftMap> maps, List<Double> dists) {
+        int start = 0;
+        int end = dists.size() - 1;
+        mergeSort(maps, dists, start, end);
+    }
+
+    private void mergeSort(List<MinecraftMap> maps, List<Double> dists, int low, int high) {
+        if (low < high) {
+            int mid = (low + high) / 2;
+            mergeSort(maps, dists, low, mid);
+            mergeSort(maps, dists, mid + 1, high);
+
+            if (dists.get(mid) < dists.get(mid + 1))
+                merge(maps, dists, low, mid, high);
+        }
+    }
+
+    private void merge(List<MinecraftMap> maps, List<Double> dists, int low, int mid, int high) {
+        int i = low,
+                j = mid + 1,
+                k = 0;
+        Double[] tempDists = new Double[high - low + 1];
+        MinecraftMap[] tempMaps = new MinecraftMap[high - low + 1];
+
+        while (i <= mid && j <= high) {
+            if (dists.get(i) > dists.get(j)) {
+                tempDists[k] = dists.get(i);
+                tempMaps[k] = maps.get(i);
+                k++;
+                i++;
+            } else {
+                tempDists[k] = dists.get(j);
+                tempMaps[k] = maps.get(j);
+                k++;
+                j++;
+            }
+        }
+        while (j <= high) {
+            tempDists[k] = dists.get(j);
+            tempMaps[k] = maps.get(j);
+            k++;
+            j++;
+        }
+        while (i <= mid) {
+            tempDists[k] = dists.get(i);
+            tempMaps[k] = maps.get(i);
+            k++;
+            i++;
+        }
+        k = 0;
+        for (i = low; i <= high; i++) {
+            dists.set(i, tempDists[k]);
+            maps.set(i, tempMaps[k]);
+            k++;
+        }
     }
 
     double getLargestJWDist(MinecraftMap map, String search, String[] words) {
