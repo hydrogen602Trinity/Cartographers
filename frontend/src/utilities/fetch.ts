@@ -58,4 +58,3 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null, dat
 function getFetchPath(path: string): string {
     return getRestAPI() + path
 }
-

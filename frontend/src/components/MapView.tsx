@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
-import NoMatch from "./no_match";
-import { useMap } from "./util/api";
-import "./map.scss";
-import "./main.scss";
+import NoMatch from "./NoMatch";
+import "./MapView.scss";
+import "../pages/Home.scss";
 import { useEffect } from "react";
+import { useMap } from "../utilities/api";
 
 /**
  * Checks the validity of URL parameters before

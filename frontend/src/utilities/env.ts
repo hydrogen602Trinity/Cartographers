@@ -22,4 +22,3 @@ export function getRestAPI(): string {
 
     throw new Error("Invalid Environment URL");
 }
-
