@@ -25,4 +25,5 @@ jobs:
         npm install
         npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
+        PUBLIC_URL: Cartographers
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
