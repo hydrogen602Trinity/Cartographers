@@ -1,8 +1,6 @@
 package com.ctmrepository.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -86,7 +84,6 @@ public class MinecraftMapController {
 
             q = q.toUpperCase().replaceAll("_", " ").trim();
 
-
             if (strict) {
                 strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             } else {
@@ -120,11 +117,6 @@ public class MinecraftMapController {
         }
     }
 
-    private List<MinecraftMap> getUnpublishedMaps() {
-        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(false);
-        return maps;
-    }
-
     private List<MinecraftMap> strictSearchSort(List<MinecraftMap> maps, String search) {
         List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
         for (MinecraftMap map : maps) {
@@ -149,10 +141,10 @@ public class MinecraftMapController {
     // sort the list of maps by the Levenshtein Distances and Return
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         searchSortMaps(maps, search);
-        //for (MinecraftMap map : maps) {
-        //    System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
-        //            search.split(" ")));
-        //}
+        // for (MinecraftMap map : maps) {
+        // System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
+        // search.split(" ")));
+        // }
         return maps;
     }
 
