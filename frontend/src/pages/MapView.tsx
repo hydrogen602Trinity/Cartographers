@@ -4,6 +4,7 @@ import "./MapView.scss";
 import "../pages/Home.scss";
 import { useEffect } from "react";
 import { useMap } from "../utilities/api";
+import { getPublicPath } from "../utilities/env";
 
 /**
  * Display information about a single map
@@ -38,7 +39,7 @@ export default function MapView() {
             (err ? <div>Error fetching data</div> : <div>Loading...</div>)
             :
             <div className="center">
-              <img src={map?.image_url} alt={map?.name} />
+              <img src={getPublicPath(map.image_url)} alt={map.name} />
               <ul>
                 {(map) ? Object.keys(map).map(key => <li key={key}>{`${key}: ${((map as any)[key] || '')}`}</li>) : <></>}
               </ul>

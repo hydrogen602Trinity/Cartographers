@@ -9,7 +9,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import Typography from '@mui/material/Typography';
 
 import { MCMap } from '../utilities/api';
-import "./MapCard.scss"
+import { getPublicPath } from '../utilities/env';
+import "./MapCard.scss";
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
@@ -37,7 +38,7 @@ export default function MapCard({ map }: IProps): JSX.Element {
       <CardActionArea onClick={expand}>
         <CardMedia
           component="img"
-          image={map.image_url}
+          image={getPublicPath(map.image_url)}
           alt="Map Image"
         />
         <CardContent>

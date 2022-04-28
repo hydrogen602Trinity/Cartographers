@@ -22,3 +22,13 @@ export function getRestAPI(): string {
 
     throw new Error("Invalid Environment URL");
 }
+
+
+/**
+ * Resolves a url as a public path url using process.env.PUBLIC_URL
+ * 
+ * @returns {string} the url relative to the public url
+ */
+export function getPublicPath(path: string): string {
+    return [(process.env.PUBLIC_URL || "").replace(/\/$/, ''), path.replace(/^\//, '')].join("/");
+}
