@@ -6,6 +6,7 @@ import SearchBar from "../components/SearchBar";
 import { useMapCount, useSearchMaps } from "../utilities/api";
 import { computePageCount } from "../utilities/paging";
 import "./Home.scss";
+import { getPublicPath } from '../utilities/env';
 
 /**
  * View of home page
@@ -32,7 +33,7 @@ export default function Home() {
   return (
     <div className="main">
       <div className="header center">
-        <img src={'/logo.webp'} alt="CTM Repository" />
+        <img src={getPublicPath('/logo.webp')} alt="CTM Repository" />
       </div>
       <div className="content">
         <div className="search-bar-wrapper">
