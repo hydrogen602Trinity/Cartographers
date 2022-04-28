@@ -22,8 +22,9 @@ jobs:
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         cd frontend
 
+        echo ${PUBLIC_URL}
         npm install
         npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
-        PUBLIC_URL: Cartographers
+        PUBLIC_URL: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
