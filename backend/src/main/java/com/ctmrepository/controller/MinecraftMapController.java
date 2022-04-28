@@ -1,8 +1,6 @@
 package com.ctmrepository.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -86,16 +84,12 @@ public class MinecraftMapController {
 
             q = q.toUpperCase().replaceAll("_", " ").trim();
 
-
             if (strict) {
                 strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             } else {
                 fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             }
 
-            int max_pages = maps.size() % per_page == 0 ? ((maps.size() - (maps.size() % per_page)) / per_page)
-                    : ((maps.size() - (maps.size() % per_page)) / per_page) + 1;
-            page = page <= max_pages ? page : max_pages;
             maps = paginateList(maps, page, per_page);
 
             return ResponseEntity.ok()
@@ -118,11 +112,6 @@ public class MinecraftMapController {
         } else {
             return new ArrayList<T>();
         }
-    }
-
-    private List<MinecraftMap> getUnpublishedMaps() {
-        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(false);
-        return maps;
     }
 
     private List<MinecraftMap> strictSearchSort(List<MinecraftMap> maps, String search) {
@@ -149,10 +138,10 @@ public class MinecraftMapController {
     // sort the list of maps by the Levenshtein Distances and Return
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         searchSortMaps(maps, search);
-        //for (MinecraftMap map : maps) {
-        //    System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
-        //            search.split(" ")));
-        //}
+        // for (MinecraftMap map : maps) {
+        // System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
+        // search.split(" ")));
+        // }
         return maps;
     }
 
