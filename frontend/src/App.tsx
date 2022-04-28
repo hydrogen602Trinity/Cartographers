@@ -12,8 +12,8 @@ function App() {
         <div>
           <SnackbarComponent>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/maps/:id/*" element={<MapView />} />
+              <Route path="" element={<Home />} />
+              <Route path="maps/:id/*" element={<MapView />} />
               <Route path="*" element={<NoMatch />} />
             </Routes>
           </SnackbarComponent>
