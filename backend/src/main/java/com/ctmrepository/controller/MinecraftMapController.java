@@ -31,19 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class MinecraftMapController {
 
-    public static <T> List<T> paginateList(List<T> list, Integer page, Integer resultsPerPage) {
-        Integer fromIndex = (page - 1) * resultsPerPage;
-        Integer toIndex = fromIndex + resultsPerPage;
-
-        if (list.size() >= toIndex) {
-            return list.subList(fromIndex, toIndex);
-        } else if (list.size() >= fromIndex) {
-            return list.subList(fromIndex, list.size());
-        } else {
-            return new ArrayList<T>();
-        }
-    }
-
     @Autowired
     MinecraftMapRepository minecraftMapRepository;
 
@@ -81,25 +68,29 @@ public class MinecraftMapController {
      * Sorts map database according to query and returns results corresponding to
      * given page and response limit.
      *
-     * @param q     search query
-     * @param limit maximum number of results to return per page
-     * @param page  page number of results to return
+     * @param q        search query string
+     * @param page     page number of results to return
+     * @param per_page maximum number of results to return per page
+     * @param strict   if true, search will only return results with exact query
+     *                 matches
      */
     @GetMapping("/search/maps")
     public ResponseEntity<List<MinecraftMap>> getMapSearch(
             @RequestParam() String q,
-            @RequestParam(required = false, defaultValue = "true") boolean hard_search,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
-            @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page) {
+            @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
+            @RequestParam(required = false, defaultValue = "true") boolean strict) {
         try {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
+            List<MinecraftMap> publishedMaps = minecraftMapRepository.findByPublished(true);
 
             q = q.toUpperCase().replaceAll("_", " ").trim();
 
-            if (hard_search) {
-                hardSearchSort(getPublishedMaps(), q).forEach(maps::add);
+
+            if (strict) {
+                strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             } else {
-                fuzzySearchSort(getPublishedMaps(), q).forEach(maps::add);
+                fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             }
 
             int max_pages = maps.size() % per_page == 0 ? ((maps.size() - (maps.size() % per_page)) / per_page)
@@ -116,9 +107,17 @@ public class MinecraftMapController {
         }
     }
 
-    private List<MinecraftMap> getPublishedMaps() {
-        List<MinecraftMap> maps = minecraftMapRepository.findByPublished(true);
-        return maps;
+    private static <T> List<T> paginateList(List<T> list, Integer page, Integer resultsPerPage) {
+        Integer fromIndex = (page - 1) * resultsPerPage;
+        Integer toIndex = fromIndex + resultsPerPage;
+
+        if (list.size() >= toIndex) {
+            return list.subList(fromIndex, toIndex);
+        } else if (list.size() >= fromIndex) {
+            return list.subList(fromIndex, list.size());
+        } else {
+            return new ArrayList<T>();
+        }
     }
 
     private List<MinecraftMap> getUnpublishedMaps() {
@@ -126,7 +125,7 @@ public class MinecraftMapController {
         return maps;
     }
 
-    private List<MinecraftMap> hardSearchSort(List<MinecraftMap> maps, String search) {
+    private List<MinecraftMap> strictSearchSort(List<MinecraftMap> maps, String search) {
         List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
         for (MinecraftMap map : maps) {
             if (map.getName().toUpperCase().contains(search)
