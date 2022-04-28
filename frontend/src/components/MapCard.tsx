@@ -8,7 +8,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import PersonIcon from '@mui/icons-material/Person';
 import Typography from '@mui/material/Typography';
 
-import { MCMap } from '../util/api';
+import { MCMap } from '../utilities/api';
 import "./MapCard.scss"
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ export default function MapCard({ map }: IProps): JSX.Element {
   const nav = useNavigate();
 
   const expand = () => {
-    nav('/Cartographers/maps/' + encodeURIComponent(id) + '/' +
+    nav('/maps/' + encodeURIComponent(id) + '/' +
       encodeURIComponent(name.toLowerCase().replace(' ', '-')));
   }
 
@@ -74,4 +74,3 @@ function InfoPiece({ text, children }: InfoPieceProps) {
     </Typography>
   </div>;
 }
-

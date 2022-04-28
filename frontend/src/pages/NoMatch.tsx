@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
  * 404 Page Component
  * @returns {JSX.Element} the view component
  */
-function NoMatch() {
+export default function NoMatch() {
     let location = useLocation();
     const nav = useNavigate();
 
@@ -15,10 +15,8 @@ function NoMatch() {
                 No match for <code>{location.pathname}</code>
             </h3>
             <button onClick={() => {
-                nav('/Cartographers');
+                nav('/');
             }}>Home</button>
         </div>
     );
 }
-
-export default NoMatch;

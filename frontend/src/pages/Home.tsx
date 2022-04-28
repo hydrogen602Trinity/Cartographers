@@ -1,17 +1,17 @@
 import { Grid, Pagination } from "@mui/material";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import MapCard from "./components/MapCard";
-import SearchBar from "./components/SearchBar";
-import "./main.scss";
-import { useMapCount, useSearchMaps } from "./util/api";
-import { computePageCount } from "./util/paging";
+import MapCard from "../components/MapCard";
+import SearchBar from "../components/SearchBar";
+import { useMapCount, useSearchMaps } from "../utilities/api";
+import { computePageCount } from "../utilities/paging";
+import "./Home.scss";
 
 /**
  * View of home page
  * @returns {JSX.Element} the view
  */
-function Main() {
+export default function Home() {
   const [page, setPage] = useState(1);
 
   const mapsPerPage = 10;
@@ -32,7 +32,7 @@ function Main() {
   return (
     <div className="main">
       <div className="header center">
-        <img src={'/Cartographers/logo.webp'} alt="CTM Repository" />
+        <img src={'/logo.webp'} alt="CTM Repository" />
       </div>
       <div className="content">
         <div className="search-bar-wrapper">
@@ -66,5 +66,3 @@ function Main() {
     </div>
   );
 }
-
-export default Main;
