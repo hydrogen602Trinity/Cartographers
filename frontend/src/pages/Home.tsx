@@ -11,7 +11,7 @@ import "./Home.scss";
  * View of home page
  * @returns {JSX.Element} the view
  */
-function Home() {
+export default function Home() {
   const [page, setPage] = useState(1);
 
   const mapsPerPage = 10;
@@ -66,5 +66,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;

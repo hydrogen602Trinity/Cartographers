@@ -6,38 +6,17 @@ import { useEffect } from "react";
 import { useMap } from "../utilities/api";
 
 /**
+ * Display information about a single map
+ * It gets information via url parameters
  * Checks the validity of URL parameters before
  * rendering view. Renders NoMatch if the parameter is
  * missing or invalid.
  * @returns {JSX.Element} the view
  */
-export function ParamFilter() {
+export default function MapView() {
   const params = useParams();
-
   const id = parseInt(params.id || '');
-  if (!isFinite(id) || id < 0) {
-    // invalid id: id must be non-negative and not infinity or NaN
-    console.error(`invalid id: id=${id}, expected nonnegative number`);
-    return <NoMatch />;
-  }
-
-  return <MapView id={id} />
-}
-
-interface IProps {
-  id: number
-}
-
-/**
- * Display information about a single map
- * It gets information via url parameters
- * @returns {JSX.Element} the view
- */
-function MapView({ id }: IProps) {
-  // once the backend is updated to provide information on individual maps, replace this
-
   const [isLoading, map, err] = useMap(id);
-  // console.log(`re-render ${id}`, [isLoading, map, err]);
 
   const nav = useNavigate();
 
@@ -51,7 +30,7 @@ function MapView({ id }: IProps) {
     return <NoMatch />;
   }
 
-  return ( //<p>{JSON.stringify(params)}</p>
+  return (
     <div className="main map-view">
       <div className="maps">
         <div className="center">
@@ -70,5 +49,3 @@ function MapView({ id }: IProps) {
     </div>
   )
 }
-
-export default MapView;
