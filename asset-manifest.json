@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/static/css/main.27a8fa25.css",
-    "main.js": "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/static/js/main.c483909a.js",
-    "index.html": "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/index.html",
-    "main.27a8fa25.css.map": "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/static/css/main.27a8fa25.css.map",
-    "main.c483909a.js.map": "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/static/js/main.c483909a.js.map"
+    "main.css": "Cartographers/static/css/main.27a8fa25.css",
+    "main.js": "Cartographers/static/js/main.53ae6d99.js",
+    "index.html": "Cartographers/index.html",
+    "main.27a8fa25.css.map": "Cartographers/static/css/main.27a8fa25.css.map",
+    "main.53ae6d99.js.map": "Cartographers/static/js/main.53ae6d99.js.map"
   },
   "entrypoints": [
     "static/css/main.27a8fa25.css",
-    "static/js/main.c483909a.js"
+    "static/js/main.53ae6d99.js"
   ]
 }
