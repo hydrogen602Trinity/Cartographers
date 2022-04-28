@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div className="main">
       <div className="header center">
-        <img src={'/Cartographers/logo.webp'} alt="CTM Repository" />
+        <img src={'/logo.webp'} alt="CTM Repository" />
       </div>
       <div className="content">
         <div className="search-bar-wrapper">
