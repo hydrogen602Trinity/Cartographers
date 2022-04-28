@@ -50,7 +50,7 @@ class ApplicationTests {
         MinecraftMap[] testMaps = new MinecraftMap[max_test_map_size];
         for (int i = 0; i < testMaps.length; i++) {
             testMaps[i] = controller.getMapById(
-                    (int) (Math.random() * (controller.getMapCount().getBody())))
+                    (int) (Math.random() * (controller.getMapCount().getBody() - 1) + 1))
                     .getBody();
         }
         for (MinecraftMap map : testMaps) {
@@ -80,7 +80,7 @@ class ApplicationTests {
         MinecraftMap[] testMaps = new MinecraftMap[max_test_map_size];
         for (int i = 0; i < testMaps.length; i++) {
             testMaps[i] = controller.getMapById(
-                    (int) (Math.random() * (controller.getMapCount().getBody())))
+                    (int) (Math.random() * (controller.getMapCount().getBody() - 1) + 1))
                     .getBody();
         }
         for (MinecraftMap map : testMaps) {
