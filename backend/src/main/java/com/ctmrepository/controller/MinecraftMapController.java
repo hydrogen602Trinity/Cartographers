@@ -90,9 +90,6 @@ public class MinecraftMapController {
                 fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             }
 
-            int max_pages = maps.size() % per_page == 0 ? ((maps.size() - (maps.size() % per_page)) / per_page)
-                    : ((maps.size() - (maps.size() % per_page)) / per_page) + 1;
-            page = page <= max_pages ? page : max_pages;
             maps = paginateList(maps, page, per_page);
 
             return ResponseEntity.ok()
