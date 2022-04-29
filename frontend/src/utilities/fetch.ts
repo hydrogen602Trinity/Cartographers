@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import useFetch from "react-fetch-hook";
 import { useEffect } from "react";
-import { useSnackbar } from "../components/Snackbar";
-import { getRestAPI } from "./env";
+import { useSnackbar } from "components/Snackbar";
+import { getRestAPI } from "utilities/env";
 
 
 /**

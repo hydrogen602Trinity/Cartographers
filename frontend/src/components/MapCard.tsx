@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -8,18 +9,17 @@ import HistoryIcon from '@mui/icons-material/History';
 import PersonIcon from '@mui/icons-material/Person';
 import Typography from '@mui/material/Typography';
 
-import { MCMap } from '../utilities/api';
-import { getPublicPath } from '../utilities/env';
+import { MinecraftMap } from 'utilities/api';
+import { getPublicPath } from 'utilities/env';
 import "./MapCard.scss";
-import { useNavigate } from 'react-router-dom';
 
 interface IProps {
-  map: MCMap
+  map: MinecraftMap
 }
 
 /**
  * Creates a Card component given a map, displaying the most essential properties
- * @param {{ map: MCMap }} props The map to display
+ * @param {{ map: MinecraftMap }} props The map to display
  * @returns {JSX.Element} the view
  */
 export default function MapCard({ map }: IProps): JSX.Element {

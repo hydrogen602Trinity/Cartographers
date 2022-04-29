@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
  */
 export default function NoMatch() {
     let location = useLocation();
-    const nav = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <div style={{ padding: '1em' }}>
@@ -15,7 +15,7 @@ export default function NoMatch() {
                 No match for <code>{location.pathname}</code>
             </h3>
             <button onClick={() => {
-                nav('/');
+                navigate('/');
             }}>Home</button>
         </div>
     );
