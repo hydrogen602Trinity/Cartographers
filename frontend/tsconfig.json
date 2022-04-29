@@ -28,5 +28,12 @@
     "exclude": [
         "node_modules",
         "**/node_modules/*"
-    ]
+    ],
+    "typedocOptions": {
+        "entryPoints": [
+            "src"
+        ],
+        "entryPointStrategy": "expand",
+        "out": "../docs/frontend"
+    }
 }
