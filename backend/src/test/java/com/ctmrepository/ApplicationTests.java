@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -97,5 +98,17 @@ class ApplicationTests {
                 .findFirst().isPresent()).isTrue();
         assertThat(searchMap.stream().filter(o -> o.getId() == 7)
                 .findFirst().isPresent()).isTrue();
+    }
+
+    @Test
+    @Order(6)
+    void canPublishMaps() {
+            
+    }
+
+    @Test
+    @Order(7)
+    void canRetractMaps() {
+            
     }
 }

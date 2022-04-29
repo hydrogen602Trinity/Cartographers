@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,17 @@ public class MinecraftMapController {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
 
         if (mapData.isPresent() && mapData.get().isPublished()) {
+            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/admin/unpublished-maps/{id}")
+    public ResponseEntity<MinecraftMap> getUnpublishedMapById(@PathVariable("id") long id) {
+        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
+
+        if (mapData.isPresent() && !mapData.get().isPublished()) {
             return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -137,15 +149,6 @@ public class MinecraftMapController {
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
-        searchSortMaps(maps, search);
-        // for (MinecraftMap map : maps) {
-        // System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
-        // search.split(" ")));
-        // }
-        return maps;
-    }
-
-    private List<MinecraftMap> searchSortMaps(List<MinecraftMap> maps, String search) {
         List<Double> dists = new ArrayList<>();
         for (MinecraftMap map : maps) {
             dists.add(getLargestJWDist(map, search, search.split(" ")));
@@ -312,6 +315,40 @@ public class MinecraftMapController {
         return (((double) matches / s_len) +
                 ((double) matches / t_len) +
                 (((double) matches - transpositions / 2.0) / matches)) / 3.0;
+    }
+
+    @GetMapping("/admin/publishing/new-maps")
+    public ResponseEntity<List<MinecraftMap>> getUnpublishedMaps() {
+        try {
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(minecraftMapRepository.findByPublished(false));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("admin/publishing/publish-map/")
+    public ResponseEntity<String> publishMap(
+            @RequestParam() int id) {
+        try {
+            ResponseEntity<MinecraftMap> receive = getUnpublishedMapById(id);
+            if (receive.getStatusCode().equals(HttpStatus.OK)) {
+                MinecraftMap map = receive.getBody();
+                map.publish();
+                minecraftMapRepository.delete(receive.getBody());
+                minecraftMapRepository.saveAndFlush(map);
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).cachePublic())
+                        .body("Map Published");
+            } else {
+                return new ResponseEntity<>("Unpublished Map Not Found", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /*
