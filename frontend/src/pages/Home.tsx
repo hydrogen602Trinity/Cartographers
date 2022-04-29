@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MapCard from "../components/MapCard";
 import SearchBar from "../components/SearchBar";
-import { useMapCount, useSearchMaps } from "../utilities/api";
+import { useGetMapsCount, useGetMapsSearch } from "../utilities/api";
 import { computePageCount } from "../utilities/paging";
 import "./Home.scss";
 import { getPublicPath } from '../utilities/env';
@@ -24,11 +24,11 @@ export default function Home() {
     setSearchParams({ q: term });
   };
 
-  const [isLoadingCount, mapCount, errCount] = useMapCount();
+  const [isLoadingCount, mapCount, errCount] = useGetMapsCount();
   const pageCount = computePageCount(mapCount, mapsPerPage);
   // useFetch has a bug where an empty string makes it not fetch data but pretend it did, so if searchTerm is empty,
   // it will use Infinity instead. An object cannot be used because React will complain
-  const [isLoading, maps, err] = useSearchMaps(searchTerm || '', page, [searchTerm || Infinity], mapsPerPage);
+  const [isLoading, maps, err] = useGetMapsSearch(searchTerm || '', page, [searchTerm || Infinity], mapsPerPage);
 
   return (
     <div className="main">

@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+
 import "./SearchBar.scss";
-import { useState } from 'react';
 
 interface IProps {
     callback: (_: string) => void,
