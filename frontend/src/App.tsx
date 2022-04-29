@@ -8,11 +8,11 @@ import NoMatch from './pages/NoMatch';
 function App() {
   return (
     <React.StrictMode>
-      <HashRouter basename={process.env.PUBLIC_URL}>
+      <HashRouter basename="/">
         <SnackbarComponent>
           <Routes>
-            <Route path="" element={<Home />} />
-            <Route path="maps/:id/*" element={<MapView />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/maps/:id/*" element={<MapView />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </SnackbarComponent>
