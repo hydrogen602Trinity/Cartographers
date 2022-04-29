@@ -329,21 +329,21 @@ public class MinecraftMapController {
         }
     }
 
-    @GetMapping("admin/publishing/publish-map/")
-    public ResponseEntity<String> publishMap(
+    @GetMapping("admin/publishing/publish-map")
+    public ResponseEntity<MinecraftMap> publishMap(
             @RequestParam() int id) {
         try {
             ResponseEntity<MinecraftMap> receive = getUnpublishedMapById(id);
             if (receive.getStatusCode().equals(HttpStatus.OK)) {
                 MinecraftMap map = receive.getBody();
                 map.publish();
-                minecraftMapRepository.delete(receive.getBody());
-                minecraftMapRepository.saveAndFlush(map);
+                minecraftMapRepository.deleteById(map.getId());
+                MinecraftMap published = minecraftMapRepository.saveAndFlush(map);
                 return ResponseEntity.ok()
                         .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).cachePublic())
-                        .body("Map Published");
+                        .body(published);
             } else {
-                return new ResponseEntity<>("Unpublished Map Not Found", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(getMapById(id).getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -20,18 +20,21 @@ class ApplicationTests {
     private MinecraftMapController controller;
 
     @Test
+    @Order(1)
     void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
         assertThat(controller.index().equals("Greetings from Spring Boot!")).isTrue();
     }
 
     @Test
+    @Order(2)
     void mapsLoad() throws Exception {
         assertThat(controller.getMapCount()).isNotNull();
         assertThat(controller.getMapCount().getStatusCodeValue() > 0).isTrue();
     }
 
     @Test
+    @Order(3)
     void mapsAreAccessible() throws Exception {
         assertThat(controller.getMapCount().getStatusCodeValue() > 0).isTrue();
         int size = controller.getMapCount().getStatusCodeValue();
@@ -42,6 +45,7 @@ class ApplicationTests {
     }
 
     @Test
+    @Order(4)
     void mapsAreStrictSearchable() throws Exception {
         // Test that Maps are searchable
         assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
@@ -71,6 +75,7 @@ class ApplicationTests {
     }
 
     @Test
+    @Order(5)
     void mapsAreFuzzySearchable() throws Exception {
         // Test that Maps are searchable
         assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
@@ -102,13 +107,24 @@ class ApplicationTests {
 
     @Test
     @Order(6)
-    void canPublishMaps() {
-            
+    void canAccessUnpublishedMaps() {
+        assertThat(controller.getUnpublishedMaps()).isNotNull();
+        assertThat(controller.getUnpublishedMaps().getStatusCode().equals(HttpStatus.OK)).isTrue();
     }
 
     @Test
     @Order(7)
+    void canPublishMaps() {
+        // Try and publish already published maps, prove you can't
+        // Try and publish not-published maps, prove you can
+        // Try and mess it up, prove internal server error
+    }
+
+    @Test
+    @Order(8)
     void canRetractMaps() {
-            
+        // Try and retract not-published maps, prove you can't
+        // Try and retract published maps, prove you can
+        // Try and mess it up, prove internal server error
     }
 }
