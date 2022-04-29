@@ -2,11 +2,13 @@ import {
   Card, CardActionArea, CardContent, CardMedia,
   Grid, List, ListItem, ListItemText, Skeleton, Typography
 } from "@mui/material";
-import "pages/MapView.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import ErrorPage from "types/ErrorPage";
+
+import ErrorPage from "pages/ErrorPage";
 import { useGetMap } from "utilities/api";
 import { getPublicPath } from "utilities/env";
+
+import "pages/MapView.scss";
 
 /**
  * Display information about a single map

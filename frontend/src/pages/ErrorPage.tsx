@@ -1,8 +1,10 @@
-import { FC } from "react";
 import { UseFetchError } from "react-fetch-hook";
 import { useNavigate } from "react-router-dom";
 
-interface ErrorProps {
+/**
+ * Properties used by ErrorPage
+ */
+export interface IErrorProps {
     error: UseFetchError,
 }
 
@@ -10,7 +12,7 @@ interface ErrorProps {
  * Generic Error Page Component
  * @returns {JSX.Element} the view component
  */
-const ErrorPage: FC<ErrorProps> = ({ error }): JSX.Element => {
+export default function ErrorPage({ error }: IErrorProps): JSX.Element {
     const navigate = useNavigate();
 
     return (
@@ -21,6 +23,4 @@ const ErrorPage: FC<ErrorProps> = ({ error }): JSX.Element => {
             }}>Home</button>
         </div>
     );
-}
-
-export default ErrorPage
+};

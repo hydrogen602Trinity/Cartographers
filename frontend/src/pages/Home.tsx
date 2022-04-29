@@ -1,12 +1,14 @@
 import { Grid, Pagination } from "@mui/material";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import MapCard from "../components/MapCard";
-import SearchBar from "../components/SearchBar";
-import { useGetMapsCount, useGetMapsSearch } from "../utilities/api";
-import { computePageCount } from "../utilities/paging";
+
+import MapCard from "components/MapCard";
+import SearchBar from "components/SearchBar";
+import { useGetMapsCount, useGetMapsSearch } from "utilities/api";
+import { getPublicPath } from 'utilities/env';
+import { computePageCount } from "utilities/paging";
+
 import "./Home.scss";
-import { getPublicPath } from '../utilities/env';
 
 /**
  * View of home page

@@ -1,5 +1,6 @@
 import useFetch from "react-fetch-hook";
-import { useFetchAPI } from "utilities/fetch"
+
+import { useFetchAPI } from "utilities/fetch";
 
 /**
  * Utility function

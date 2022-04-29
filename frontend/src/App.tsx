@@ -1,8 +1,9 @@
+import { HashRouter, Route, Routes } from "react-router-dom";
+
 import { SnackbarComponent } from 'components/Snackbar';
 import Home from 'pages/Home';
 import MapView from 'pages/MapView';
 import NoMatch from 'pages/NoMatch';
-import { HashRouter, Route, Routes } from "react-router-dom";
 
 /**
  * HashRouter basename uses '/' instead of 'process.env.PUBLIC_URL'
