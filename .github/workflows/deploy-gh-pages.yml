@@ -21,7 +21,6 @@ jobs:
 
     - name: Deploy with gh-pages
       run: |
-        echo "https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         cd frontend
 
