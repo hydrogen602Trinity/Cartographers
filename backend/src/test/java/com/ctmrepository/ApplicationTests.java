@@ -5,6 +5,7 @@ import com.ctmrepository.model.MinecraftMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Order;
@@ -18,6 +19,7 @@ class ApplicationTests {
 
     @Autowired
     private MinecraftMapController controller;
+    private MinecraftMap[] publishedTestMaps;
 
     @Test
     @Order(1)
@@ -30,7 +32,7 @@ class ApplicationTests {
     @Order(2)
     void mapsLoad() throws Exception {
         assertThat(controller.getMapCount()).isNotNull();
-        assertThat(controller.getMapCount().getStatusCodeValue() > 0).isTrue();
+        assertThat(controller.getMapCount().getBody() > 0).isTrue();
     }
 
     @Test
@@ -107,24 +109,88 @@ class ApplicationTests {
 
     @Test
     @Order(6)
-    void canAccessUnpublishedMaps() {
+    void canAccessUnpublishedMaps() throws Exception {
         assertThat(controller.getUnpublishedMaps()).isNotNull();
         assertThat(controller.getUnpublishedMaps().getStatusCode().equals(HttpStatus.OK)).isTrue();
     }
 
     @Test
     @Order(7)
-    void canPublishMaps() {
+    void canPublishMaps() throws Exception {
+        publishedTestMaps = new MinecraftMap[5];
+
         // Try and publish already published maps, prove you can't
+        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
+        for (int i = 0; i < Math.min(controller.getMapCount().getBody() / 2, 25); i++) {
+            MinecraftMap testMap = pubMaps.get(
+                    (int) (Math.random() * pubMaps.size()));
+            assertThat(controller.publishMap(testMap.getId())
+                    .getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)).isTrue();
+        }
+
         // Try and publish not-published maps, prove you can
+        List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
+        for (int i = 0; i < Math.min(publishedTestMaps.length, unPubMaps.size()); i++) {
+            int rand = (int) Math.random() * unPubMaps.size();
+            publishedTestMaps[i] = unPubMaps.get(rand);
+            unPubMaps.remove(rand);
+            assertThat(controller.publishMap(publishedTestMaps[i].getId())
+                    .getStatusCode().equals(HttpStatus.OK)).isTrue();
+        }
+
         // Try and mess it up, prove internal server error
+        pubMaps = controller.getPublishedMaps().getBody();
+        for (int i = 0; i < Math.min(publishedTestMaps.length, pubMaps.size()); i++) {
+            int rand = (int) Math.random() * pubMaps.size();
+            MinecraftMap pubMap = pubMaps.get(rand);
+            pubMaps.remove(rand);
+            assertThat(controller.publishMap(pubMap.getId())
+                    .getStatusCode().equals(HttpStatus.OK)).isFalse();
+        }
     }
 
     @Test
     @Order(8)
-    void canRetractMaps() {
+    void canRetractMaps() throws Exception {
+        if (publishedTestMaps == null) {
+            publishedTestMaps = new MinecraftMap[5];
+            List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
+            for (int i = 0; i < Math.min(publishedTestMaps.length, unPubMaps.size()); i++) {
+                int rand = (int) Math.random() * unPubMaps.size();
+                publishedTestMaps[i] = unPubMaps.get(rand);
+                unPubMaps.remove(rand);
+                controller.publishMap(publishedTestMaps[i].getId());
+            }
+        }
+
+        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
+        List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
+
         // Try and retract not-published maps, prove you can't
+        for (int i = 0; i < Math.min(unPubMaps.size(), 25); i++) {
+            MinecraftMap testMap = unPubMaps.get(
+                    (int) (Math.random() * unPubMaps.size()));
+            assertThat(controller.retractMap(testMap.getId())
+                    .getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)).isTrue();
+        }
+
         // Try and retract published maps, prove you can
+        // Maps were already set at the beginning of the method or in the
+        // canPublishMaps test (above)
+        for (int i = 0; i < Math.min(publishedTestMaps.length, pubMaps.size()); i++) {
+            assertThat(publishedTestMaps[i].isPublished()).isTrue();
+            assertThat(controller.retractMap(publishedTestMaps[i].getId())
+                    .getStatusCode().equals(HttpStatus.OK)).isTrue();
+        }
+
         // Try and mess it up, prove internal server error
+        unPubMaps = controller.getPublishedMaps().getBody();
+        for (int i = 0; i < Math.min(publishedTestMaps.length, unPubMaps.size()); i++) {
+            int rand = (int) Math.random() * unPubMaps.size();
+            MinecraftMap unPubMap = unPubMaps.get(rand);
+            unPubMaps.remove(rand);
+            assertThat(controller.retractMap(unPubMap.getId())
+                    .getStatusCode().equals(HttpStatus.OK)).isFalse();
+        }
     }
 }

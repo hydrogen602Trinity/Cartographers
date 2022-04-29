@@ -317,6 +317,18 @@ public class MinecraftMapController {
                 (((double) matches - transpositions / 2.0) / matches)) / 3.0;
     }
 
+    @GetMapping("/maps/all-maps")
+    public ResponseEntity<List<MinecraftMap>> getPublishedMaps() {
+        try {
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(minecraftMapRepository.findByPublished(true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/admin/publishing/new-maps")
     public ResponseEntity<List<MinecraftMap>> getUnpublishedMaps() {
         try {
@@ -331,7 +343,7 @@ public class MinecraftMapController {
 
     @GetMapping("admin/publishing/publish-map")
     public ResponseEntity<MinecraftMap> publishMap(
-            @RequestParam() int id) {
+            @RequestParam() long id) {
         try {
             ResponseEntity<MinecraftMap> receive = getUnpublishedMapById(id);
             if (receive.getStatusCode().equals(HttpStatus.OK)) {
@@ -344,6 +356,28 @@ public class MinecraftMapController {
                         .body(published);
             } else {
                 return new ResponseEntity<>(getMapById(id).getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("admin/publishing/retract-map")
+    public ResponseEntity<MinecraftMap> retractMap(
+            @RequestParam() long id) {
+        try {
+            ResponseEntity<MinecraftMap> receive = getMapById(id);
+            if (receive.getStatusCode().equals(HttpStatus.OK)) {
+                MinecraftMap map = receive.getBody();
+                map.retract();
+                minecraftMapRepository.deleteById(map.getId());
+                MinecraftMap retracted = minecraftMapRepository.saveAndFlush(map);
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).cachePublic())
+                        .body(retracted);
+            } else {
+                return new ResponseEntity<>(getUnpublishedMapById(id).getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
