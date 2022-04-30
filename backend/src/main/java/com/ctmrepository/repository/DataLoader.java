@@ -110,5 +110,24 @@ public class DataLoader {
 
         Arrays.stream(exampleMaps).forEach(repo::save);
         repo.flush();
+
+        // unpublished maps
+        repo.save(new MinecraftMap("Pipe Dream", 20190923, "XanaxMan", "Medium", 4, 2, "Medium",
+                "For Decades, man has tried to make efficient travel through pipes. Well now they have, leading to new worlds, each with their beauties and perils. Where will you go in these new worlds?",
+                626, "Branching", "/images/29.webp", "None", "1.8.8", false));
+        repo.save(new MinecraftMap("Teenage Dream", 20190903, "Katy Perry", "Short", 2, 0, "Medium",
+                "Let's go all the way tonight! No regrets, just love. We can dance, until we die! You and I, will be young forever... You make me Feel like I'm livin' a teenage dream! The way you turn me on, I can't sleep! Let's run away and don't ever look back, don't ever look back! My heart stops When you look at me, just one touch... Now, baby, I believe this is real. So take a chance and don't ever look back, don't ever look back",
+                965, "Linear", "/images/29.webp", "None", "1.8.8", false));
+        repo.save(new MinecraftMap("Particle Man", 19900115, "XanaxMan", "Medium", 4, 2, "Medium",
+                "Particle man, particle man \nDoing the things a particle can \nWhat's he like? It's not important \nParticle man",
+                22, "Linear", "/images/29.webp", "None", "1.8.8", false));
+        repo.save(new MinecraftMap("Horizon: Zero Dawn", 20170228, "AlloyFangirl", "Long", 42, 20, "Hard",
+                "Horizon is my favorite game ever, so I recreated it in Minecraft after I got drunk one weekend. Added Dialogue after I realized what I made. Play as a low res version of the best game ever!",
+                3145, "Open World", "/images/29.webp", "None", "1.8.8", false));
+        repo.save(new MinecraftMap("Pipe Dream 2", 20201223, "XanaxMan", "Medium", 4, 2, "Hard",
+                "After getting to the beautiful planet Raxacalicoricophallapatorius, you begin receiving a strange signal from one of the nearby moons. Could it be your people? Only one way to find out: Parkour! And pipes ofc",
+                1234, "Branching", "/images/29.webp", "None", "1.8.8", false));
+
+        repo.flush();
     }
 }

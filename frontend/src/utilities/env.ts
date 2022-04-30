@@ -1,4 +1,5 @@
 /**
+ * @module
  * Handle env variables & config here
  */
 
