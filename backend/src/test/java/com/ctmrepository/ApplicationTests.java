@@ -5,10 +5,8 @@ import com.ctmrepository.model.MinecraftMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -139,7 +137,6 @@ class ApplicationTests {
         // Try and retract published maps, prove you can
         List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
         int j = Math.min(15, pubMaps.size());
-        MinecraftMap[] testMaps = new MinecraftMap[j];
         for (int i = 0; i < j; i++) {
             int rand = (int) (Math.random() * unPubMaps.size());
             assertThat(controller.retractMap(pubMaps.get(rand).getId())
