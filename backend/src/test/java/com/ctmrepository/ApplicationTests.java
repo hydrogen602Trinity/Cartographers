@@ -19,24 +19,20 @@ class ApplicationTests {
 
     @Autowired
     private MinecraftMapController controller;
-    private MinecraftMap[] publishedTestMaps;
 
     @Test
-    @Order(1)
     void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
         assertThat(controller.index().equals("Greetings from Spring Boot!")).isTrue();
     }
 
     @Test
-    @Order(2)
     void mapsLoad() throws Exception {
         assertThat(controller.getMapCount()).isNotNull();
         assertThat(controller.getMapCount().getBody() > 0).isTrue();
     }
 
     @Test
-    @Order(3)
     void mapsAreAccessible() throws Exception {
         assertThat(controller.getMapCount().getStatusCodeValue() > 0).isTrue();
         int size = controller.getMapCount().getStatusCodeValue();
@@ -47,7 +43,6 @@ class ApplicationTests {
     }
 
     @Test
-    @Order(4)
     void mapsAreStrictSearchable() throws Exception {
         // Test that Maps are searchable
         assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
@@ -55,10 +50,11 @@ class ApplicationTests {
         // General Case
         int max_test_map_size = Math.min(controller.getMapCount().getBody() / 2, 25);
         MinecraftMap[] testMaps = new MinecraftMap[max_test_map_size];
+        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
         for (int i = 0; i < testMaps.length; i++) {
-            testMaps[i] = controller.getMapById(
-                    (int) (Math.random() * (controller.getMapCount().getBody() - 1) + 1))
-                    .getBody();
+            int rand = (int) (Math.random() * pubMaps.size());
+            testMaps[i] = pubMaps.get(rand);
+            pubMaps.remove(rand);
         }
         for (MinecraftMap map : testMaps) {
             List<MinecraftMap> searchMap = controller
@@ -66,18 +62,9 @@ class ApplicationTests {
             assertThat(searchMap.stream().filter(o -> o.getId() == map.getId())
                     .findFirst().isPresent()).isTrue();
         }
-
-        // Specific Case
-        List<MinecraftMap> searchMap = controller
-                .getMapSearch("Tecnocraft2802", 1, 20, true).getBody();
-        assertThat(searchMap.stream().filter(o -> o.getId() == 6)
-                .findFirst().isPresent()).isTrue();
-        assertThat(searchMap.stream().filter(o -> o.getId() == 7)
-                .findFirst().isPresent()).isTrue();
     }
 
     @Test
-    @Order(5)
     void mapsAreFuzzySearchable() throws Exception {
         // Test that Maps are searchable
         assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
@@ -86,10 +73,11 @@ class ApplicationTests {
         // General Case
         int max_test_map_size = Math.min(controller.getMapCount().getBody() / 2, 25);
         MinecraftMap[] testMaps = new MinecraftMap[max_test_map_size];
+        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
         for (int i = 0; i < testMaps.length; i++) {
-            testMaps[i] = controller.getMapById(
-                    (int) (Math.random() * (controller.getMapCount().getBody() - 1) + 1))
-                    .getBody();
+            int rand = (int) (Math.random() * pubMaps.size());
+            testMaps[i] = pubMaps.get(rand);
+            pubMaps.remove(rand);
         }
         for (MinecraftMap map : testMaps) {
             List<MinecraftMap> searchMap = controller
@@ -97,28 +85,16 @@ class ApplicationTests {
             assertThat(searchMap.stream().filter(o -> o.getId() == map.getId())
                     .findFirst().isPresent()).isTrue();
         }
-
-        // Specific Case
-        List<MinecraftMap> searchMap = controller
-                .getMapSearch("Tecnocraft2802", 1, 20, false).getBody();
-        assertThat(searchMap.stream().filter(o -> o.getId() == 6)
-                .findFirst().isPresent()).isTrue();
-        assertThat(searchMap.stream().filter(o -> o.getId() == 7)
-                .findFirst().isPresent()).isTrue();
     }
 
     @Test
-    @Order(6)
     void canAccessUnpublishedMaps() throws Exception {
         assertThat(controller.getUnpublishedMaps()).isNotNull();
         assertThat(controller.getUnpublishedMaps().getStatusCode().equals(HttpStatus.OK)).isTrue();
     }
 
     @Test
-    @Order(7)
     void canPublishMaps() throws Exception {
-        publishedTestMaps = new MinecraftMap[5];
-
         // Try and publish already published maps, prove you can't
         List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
         for (int i = 0; i < Math.min(controller.getMapCount().getBody() / 2, 25); i++) {
@@ -130,17 +106,17 @@ class ApplicationTests {
 
         // Try and publish not-published maps, prove you can
         List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
-        for (int i = 0; i < Math.min(publishedTestMaps.length, unPubMaps.size()); i++) {
+        for (int i = 0; i < Math.min(10, unPubMaps.size()); i++) {
             int rand = (int) Math.random() * unPubMaps.size();
-            publishedTestMaps[i] = unPubMaps.get(rand);
+            MinecraftMap publishedTestMap = unPubMaps.get(rand);
             unPubMaps.remove(rand);
-            assertThat(controller.publishMap(publishedTestMaps[i].getId())
+            assertThat(controller.publishMap(publishedTestMap.getId())
                     .getStatusCode().equals(HttpStatus.OK)).isTrue();
         }
 
         // Try and mess it up, prove internal server error
         pubMaps = controller.getPublishedMaps().getBody();
-        for (int i = 0; i < Math.min(publishedTestMaps.length, pubMaps.size()); i++) {
+        for (int i = 0; i < Math.min(15, pubMaps.size()); i++) {
             int rand = (int) Math.random() * pubMaps.size();
             MinecraftMap pubMap = pubMaps.get(rand);
             pubMaps.remove(rand);
@@ -150,23 +126,9 @@ class ApplicationTests {
     }
 
     @Test
-    @Order(8)
     void canRetractMaps() throws Exception {
-        if (publishedTestMaps == null) {
-            publishedTestMaps = new MinecraftMap[5];
-            List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
-            for (int i = 0; i < Math.min(publishedTestMaps.length, unPubMaps.size()); i++) {
-                int rand = (int) Math.random() * unPubMaps.size();
-                publishedTestMaps[i] = unPubMaps.get(rand);
-                unPubMaps.remove(rand);
-                controller.publishMap(publishedTestMaps[i].getId());
-            }
-        }
-
-        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
-        List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
-
         // Try and retract not-published maps, prove you can't
+        List<MinecraftMap> unPubMaps = controller.getUnpublishedMaps().getBody();
         for (int i = 0; i < Math.min(unPubMaps.size(), 25); i++) {
             MinecraftMap testMap = unPubMaps.get(
                     (int) (Math.random() * unPubMaps.size()));
@@ -175,17 +137,19 @@ class ApplicationTests {
         }
 
         // Try and retract published maps, prove you can
-        // Maps were already set at the beginning of the method or in the
-        // canPublishMaps test (above)
-        for (int i = 0; i < Math.min(publishedTestMaps.length, pubMaps.size()); i++) {
-            assertThat(publishedTestMaps[i].isPublished()).isTrue();
-            assertThat(controller.retractMap(publishedTestMaps[i].getId())
+        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
+        int j = Math.min(15, pubMaps.size());
+        MinecraftMap[] testMaps = new MinecraftMap[j];
+        for (int i = 0; i < j; i++) {
+            int rand = (int) (Math.random() * unPubMaps.size());
+            assertThat(controller.retractMap(pubMaps.get(rand).getId())
                     .getStatusCode().equals(HttpStatus.OK)).isTrue();
+            pubMaps.remove(rand);
         }
 
         // Try and mess it up, prove internal server error
-        unPubMaps = controller.getPublishedMaps().getBody();
-        for (int i = 0; i < Math.min(publishedTestMaps.length, unPubMaps.size()); i++) {
+        unPubMaps = controller.getUnpublishedMaps().getBody();
+        for (int i = 0; i < Math.min(15, unPubMaps.size()); i++) {
             int rand = (int) Math.random() * unPubMaps.size();
             MinecraftMap unPubMap = unPubMaps.get(rand);
             unPubMaps.remove(rand);
