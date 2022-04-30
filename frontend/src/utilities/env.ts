@@ -3,6 +3,8 @@
  * Handle env variables & config here
  */
 
+import { joinPaths } from "utilities/path";
+
 
 /**
  * Gets the url of the backend
@@ -31,5 +33,5 @@ export function getRestAPI(): string {
  * @returns {string} the url relative to the public url
  */
 export function getPublicPath(path: string): string {
-    return [(process.env.PUBLIC_URL || "").replace(/\/$/, ''), path.replace(/^\//, '')].join("/");
+    return joinPaths(process.env.PUBLIC_URL || "", path);
 }
