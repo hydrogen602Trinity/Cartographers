@@ -9,9 +9,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.ctmrepository.model.MinecraftMap;
+import com.ctmrepository.model.SearchQueryAndResult;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = { "http://localhost:3000", "https://hydrogen602trinity.github.io" })
 @RestController
 @RequestMapping("/")
+@EnableCaching
 public class MinecraftMapController {
 
     @Autowired
     MinecraftMapRepository minecraftMapRepository;
+
+    @Autowired
+    MCService service;
 
     @GetMapping("/")
     public String index() {
@@ -90,32 +96,20 @@ public class MinecraftMapController {
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
             @RequestParam(required = false, defaultValue = "true") boolean strict) {
         try {
-            List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
-            if (false) {
-                ResponseEntity.ok.cacheControl(CacheControl.);
-            } else {
-                maps = doMapSearch(q, per_page, strict);
-            }
+            SearchQueryAndResult maps;
+            maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository);
 
-            maps = paginateList(maps, page, per_page);
+            q = q.toUpperCase().replaceAll("_", " ").trim();
+
+            // int max_pages = (int) Math.ceil(maps.size() / (.0 + per_page));
+            List<MinecraftMap> outMaps = paginateList(maps.maps, page, per_page);
 
             return ResponseEntity.ok()
-                    .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic())
-                    .body(maps);
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(outMaps);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private List<MinecraftMap> doMapSearch(String q, int per_page, boolean strict) {
-        List<MinecraftMap> publishedMaps = minecraftMapRepository.findByPublished(true);
-        q = q.toUpperCase().replaceAll("_", " ").trim();
-
-        if (strict) {
-            strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
-        } else {
-            fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
         }
     }
 
@@ -130,197 +124,6 @@ public class MinecraftMapController {
         } else {
             return new ArrayList<T>();
         }
-    }
-
-    private List<MinecraftMap> strictSearchSort(List<MinecraftMap> maps, String search) {
-        List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
-        for (MinecraftMap map : maps) {
-            if (map.getName().toUpperCase().contains(search)
-                    || map.getAuthor().toUpperCase().contains(search))
-                relevantMaps.add(map);
-            else {
-                String[] words = search.split(" ");
-                for (int i = 0; i < words.length; i++) {
-                    if (map.getName().toUpperCase().contains(words[i])
-                            || map.getAuthor().toUpperCase().contains(words[i])) {
-                        relevantMaps.add(map);
-                        i = words.length;
-                    }
-                }
-            }
-        }
-        return relevantMaps;
-    }
-
-    // Next, given a list of maps and the search string,
-    // sort the list of maps by the Levenshtein Distances and Return
-    private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
-        List<Double> dists = new ArrayList<>();
-        for (MinecraftMap map : maps) {
-            dists.add(getLargestJWDist(map, search, search.split(" ")));
-        }
-        mergeSort(maps, dists);
-        return maps;
-    }
-
-    private void mergeSort(List<MinecraftMap> maps, List<Double> dists) {
-        int start = 0;
-        int end = dists.size() - 1;
-        mergeSort(maps, dists, start, end);
-    }
-
-    private void mergeSort(List<MinecraftMap> maps, List<Double> dists, int low, int high) {
-        if (low < high) {
-            int mid = (low + high) / 2;
-            mergeSort(maps, dists, low, mid);
-            mergeSort(maps, dists, mid + 1, high);
-
-            if (dists.get(mid) < dists.get(mid + 1))
-                merge(maps, dists, low, mid, high);
-        }
-    }
-
-    private void merge(List<MinecraftMap> maps, List<Double> dists, int low, int mid, int high) {
-        int i = low,
-                j = mid + 1,
-                k = 0;
-        Double[] tempDists = new Double[high - low + 1];
-        MinecraftMap[] tempMaps = new MinecraftMap[high - low + 1];
-
-        while (i <= mid && j <= high) {
-            if (dists.get(i) > dists.get(j)) {
-                tempDists[k] = dists.get(i);
-                tempMaps[k] = maps.get(i);
-                k++;
-                i++;
-            } else {
-                tempDists[k] = dists.get(j);
-                tempMaps[k] = maps.get(j);
-                k++;
-                j++;
-            }
-        }
-        while (j <= high) {
-            tempDists[k] = dists.get(j);
-            tempMaps[k] = maps.get(j);
-            k++;
-            j++;
-        }
-        while (i <= mid) {
-            tempDists[k] = dists.get(i);
-            tempMaps[k] = maps.get(i);
-            k++;
-            i++;
-        }
-        k = 0;
-        for (i = low; i <= high; i++) {
-            dists.set(i, tempDists[k]);
-            maps.set(i, tempMaps[k]);
-            k++;
-        }
-    }
-
-    double getLargestJWDist(MinecraftMap map, String search, String[] words) {
-        double largestTitleSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search);
-        String largestTitle = search;
-        double largestAuthorSearch = getJaroWinklerDistance(map.getAuthor().toUpperCase(), search);
-        String largestAuthor = search;
-        if (words.length > 1) {
-            for (int i = 0; i < words.length; i++) {
-                double newJWTitle = getJaroWinklerDistance(map.getName().toUpperCase(), words[i]);
-                double newJWAuthor = getJaroWinklerDistance(map.getAuthor().toUpperCase(), words[i]);
-                largestTitleSearch = newJWTitle > largestTitleSearch ? newJWTitle : largestTitleSearch;
-                largestTitle = newJWTitle > largestTitleSearch ? words[i] : largestTitle;
-                largestAuthorSearch = newJWAuthor > largestAuthorSearch ? newJWAuthor : largestAuthorSearch;
-                largestAuthor = newJWAuthor > largestAuthorSearch ? words[i] : largestAuthor;
-            }
-        }
-
-        if (map.getName().toUpperCase().contains(largestTitle)) {
-            largestTitleSearch *= 2;
-        }
-        if (map.getAuthor().toUpperCase().contains(largestAuthor)) {
-            largestAuthorSearch *= 2;
-        }
-
-        return largestTitleSearch + largestAuthorSearch;
-    }
-
-    double getJaroWinklerDistance(String s1, String s2) {
-        double jaro_dist = getJaroDistance(s1, s2);
-        // If the jaro Similarity is above a threshold
-        if (jaro_dist > 0.7) {
-            // Find the length of common prefix
-            int prefix = 0;
-            for (int i = 0; i < Math.min(s1.length(), s2.length()); i++) {
-                // If the characters match
-                if (s1.charAt(i) == s2.charAt(i))
-                    prefix++;
-                else
-                    break;
-            }
-            // Maximum of 4 characters are allowed in prefix
-            prefix = Math.min(4, prefix);
-            // Calculate jaro winkler Similarity
-            jaro_dist += 0.1 * prefix * (1 - jaro_dist);
-        }
-        return jaro_dist;
-    }
-
-    double getJaroDistance(String s1, String s2) {
-        if (s1.equals(s2))
-            return 1.0;
-
-        int s_len = s1.length();
-        int t_len = s2.length();
-
-        if (s_len == 0 || t_len == 0) {
-            return 1;
-        }
-
-        // Maximum distance upto which matching
-        // is allowed
-        int match_distance = (int) (Math.floor(Math.max(s_len, t_len) / 2) - 1);
-
-        boolean[] s_matches = new boolean[s1.length()];
-        boolean[] t_matches = new boolean[s2.length()];
-
-        int matches = 0;
-        int transpositions = 0;
-
-        for (int i = 0; i < s_len; i++) {
-            int start = Integer.max(0, i - match_distance);
-            int end = Integer.min(i + match_distance + 1, t_len);
-
-            for (int j = start; j < end; j++) {
-                if (t_matches[j])
-                    continue;
-                if (s1.charAt(i) != s2.charAt(j))
-                    continue;
-                s_matches[i] = true;
-                t_matches[j] = true;
-                matches++;
-                break;
-            }
-        }
-
-        if (matches == 0)
-            return 0;
-
-        int k = 0;
-        for (int i = 0; i < s_len; i++) {
-            if (!s_matches[i])
-                continue;
-            while (!t_matches[k])
-                k++;
-            if (s1.charAt(i) != s2.charAt(k))
-                transpositions++;
-            k++;
-        }
-
-        return (((double) matches / s_len) +
-                ((double) matches / t_len) +
-                (((double) matches - transpositions / 2.0) / matches)) / 3.0;
     }
 
     @GetMapping("/maps/all-maps")
