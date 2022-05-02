@@ -90,7 +90,7 @@ public class MinecraftMapController {
      *                 matches
      */
     @GetMapping("/search/maps")
-    public ResponseEntity<List<MinecraftMap>> getMapSearch(
+    public ResponseEntity<SearchPage> getMapSearch(
             @RequestParam() String q,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
