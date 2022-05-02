@@ -85,6 +85,12 @@ class ApplicationTests {
         }
     }
 
+    @Test 
+    void searchHasMaxPages() {
+        assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
+        assertThat(controller.getMapSearch("", 1, 20, true).getBody().getMaxPages() > 0).isTrue();
+    }
+
     @Test
     void canAccessUnpublishedMaps() throws Exception {
         assertThat(controller.getUnpublishedMaps()).isNotNull();
