@@ -56,7 +56,7 @@ class ApplicationTests {
         }
         for (MinecraftMap map : testMaps) {
             List<MinecraftMap> searchMap = controller
-                    .getMapSearch(map.getName(), 1, 20, true).getBody();
+                    .getMapSearch(map.getName(), 1, 20, true).getBody().mapList;
             assertThat(searchMap.stream().filter(o -> o.getId() == map.getId())
                     .findFirst().isPresent()).isTrue();
         }
@@ -79,7 +79,7 @@ class ApplicationTests {
         }
         for (MinecraftMap map : testMaps) {
             List<MinecraftMap> searchMap = controller
-                    .getMapSearch(map.getName(), 1, 20, false).getBody();
+                    .getMapSearch(map.getName(), 1, 20, false).getBody().mapList;
             assertThat(searchMap.stream().filter(o -> o.getId() == map.getId())
                     .findFirst().isPresent()).isTrue();
         }

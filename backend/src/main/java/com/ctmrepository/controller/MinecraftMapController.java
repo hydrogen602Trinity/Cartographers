@@ -9,6 +9,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.ctmrepository.model.MinecraftMap;
+import com.ctmrepository.model.SearchPage;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class MinecraftMapController {
      *                 matches
      */
     @GetMapping("/search/maps")
-    public ResponseEntity<List<MinecraftMap>> getMapSearch(
+    public ResponseEntity<SearchPage> getMapSearch(
             @RequestParam() String q,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
@@ -101,11 +102,12 @@ public class MinecraftMapController {
                 fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
             }
 
+            int max_pages = (int) Math.ceil(maps.size() / (.0 + per_page));
             maps = paginateList(maps, page, per_page);
 
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).cachePublic())
-                    .body(maps);
+                    .body(new SearchPage(max_pages, maps));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
