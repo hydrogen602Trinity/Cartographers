@@ -6,6 +6,7 @@ import { getRestAPI } from "utilities/env";
 import { joinPaths } from "utilities/path";
 
 
+
 /**
  * A react hook for getting data. The hook manages error handling
  * 

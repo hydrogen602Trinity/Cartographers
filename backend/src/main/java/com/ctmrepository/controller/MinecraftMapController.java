@@ -62,6 +62,17 @@ public class MinecraftMapController {
         }
     }
 
+    @GetMapping("/admin/unpublished-maps/{id}")
+    public ResponseEntity<MinecraftMap> getUnpublishedMapById(@PathVariable("id") long id) {
+        Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
+
+        if (mapData.isPresent() && !mapData.get().isPublished()) {
+            return new ResponseEntity<>(mapData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     /**
      * Sorts map database according to query and returns results corresponding to
      * given page and response limit.
@@ -137,15 +148,6 @@ public class MinecraftMapController {
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
-        searchSortMaps(maps, search);
-        // for (MinecraftMap map : maps) {
-        // System.out.println(map.getName() + ": " + getLargestJWDist(map, search,
-        // search.split(" ")));
-        // }
-        return maps;
-    }
-
-    private List<MinecraftMap> searchSortMaps(List<MinecraftMap> maps, String search) {
         List<Double> dists = new ArrayList<>();
         for (MinecraftMap map : maps) {
             dists.add(getLargestJWDist(map, search, search.split(" ")));
@@ -312,6 +314,74 @@ public class MinecraftMapController {
         return (((double) matches / s_len) +
                 ((double) matches / t_len) +
                 (((double) matches - transpositions / 2.0) / matches)) / 3.0;
+    }
+
+    @GetMapping("/maps/all-maps")
+    public ResponseEntity<List<MinecraftMap>> getPublishedMaps() {
+        try {
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(minecraftMapRepository.findByPublished(true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/admin/publishing/new-maps")
+    public ResponseEntity<List<MinecraftMap>> getUnpublishedMaps() {
+        try {
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(minecraftMapRepository.findByPublished(false));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("admin/publishing/publish-map")
+    public ResponseEntity<MinecraftMap> publishMap(
+            @RequestParam() long id) {
+        try {
+            ResponseEntity<MinecraftMap> receive = getUnpublishedMapById(id);
+            if (receive.getStatusCode().equals(HttpStatus.OK)) {
+                MinecraftMap map = receive.getBody();
+                map.publish();
+                minecraftMapRepository.deleteById(map.getId());
+                MinecraftMap published = minecraftMapRepository.saveAndFlush(map);
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).cachePublic())
+                        .body(published);
+            } else {
+                return new ResponseEntity<>(getMapById(id).getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("admin/publishing/retract-map")
+    public ResponseEntity<MinecraftMap> retractMap(
+            @RequestParam() long id) {
+        try {
+            ResponseEntity<MinecraftMap> receive = getMapById(id);
+            if (receive.getStatusCode().equals(HttpStatus.OK)) {
+                MinecraftMap map = receive.getBody();
+                map.retract();
+                minecraftMapRepository.deleteById(map.getId());
+                MinecraftMap retracted = minecraftMapRepository.saveAndFlush(map);
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).cachePublic())
+                        .body(retracted);
+            } else {
+                return new ResponseEntity<>(getUnpublishedMapById(id).getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /*

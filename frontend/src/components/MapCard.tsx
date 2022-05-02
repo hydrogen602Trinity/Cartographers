@@ -1,19 +1,23 @@
-import { useNavigate } from 'react-router-dom';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DownloadIcon from '@mui/icons-material/Download';
+import HistoryIcon from '@mui/icons-material/History';
+import PersonIcon from '@mui/icons-material/Person';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import DownloadIcon from '@mui/icons-material/Download';
-import HistoryIcon from '@mui/icons-material/History';
-import PersonIcon from '@mui/icons-material/Person';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 
 import { MinecraftMap } from 'utilities/api';
 import { getPublicPath } from 'utilities/env';
+
 import "./MapCard.scss";
 
-interface IProps {
+/**
+ * Properties used by MapCard
+ */
+export interface IMapCardProps {
   map: MinecraftMap
 }
 
@@ -22,7 +26,7 @@ interface IProps {
  * @param {{ map: MinecraftMap }} props The map to display
  * @returns {JSX.Element} the view
  */
-export default function MapCard({ map }: IProps): JSX.Element {
+export default function MapCard({ map }: IMapCardProps): JSX.Element {
   const id = map.id;
   const name = map.name;
 

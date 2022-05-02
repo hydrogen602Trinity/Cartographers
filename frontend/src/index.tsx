@@ -1,9 +1,11 @@
+import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import ReactDOMClient from 'react-dom/client';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
-import App from './App';
-import './index.scss';
+
+import App from 'App';
+import theme from 'theme';
+
+import 'index.scss';
 
 
 let root_container = document.getElementById('root');
