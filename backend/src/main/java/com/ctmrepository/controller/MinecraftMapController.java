@@ -91,14 +91,10 @@ public class MinecraftMapController {
             @RequestParam(required = false, defaultValue = "true") boolean strict) {
         try {
             List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
-            List<MinecraftMap> publishedMaps = minecraftMapRepository.findByPublished(true);
-
-            q = q.toUpperCase().replaceAll("_", " ").trim();
-
-            if (strict) {
-                strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
+            if (false) {
+                ResponseEntity.ok.cacheControl(CacheControl.);
             } else {
-                fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
+                maps = doMapSearch(q, per_page, strict);
             }
 
             maps = paginateList(maps, page, per_page);
@@ -109,6 +105,17 @@ public class MinecraftMapController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private List<MinecraftMap> doMapSearch(String q, int per_page, boolean strict) {
+        List<MinecraftMap> publishedMaps = minecraftMapRepository.findByPublished(true);
+        q = q.toUpperCase().replaceAll("_", " ").trim();
+
+        if (strict) {
+            strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
+        } else {
+            fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
         }
     }
 
