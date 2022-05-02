@@ -1,17 +1,20 @@
 import { Grid, Pagination } from "@mui/material";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import MapCard from "./components/MapCard";
-import SearchBar from "./components/SearchBar";
-import "./main.scss";
-import { useMapCount, useSearchMaps } from "./util/api";
-import { computePageCount } from "./util/paging";
+
+import MapCard from "components/MapCard";
+import SearchBar from "components/SearchBar";
+import { useGetMapsCount, useGetMapsSearch } from "utilities/api";
+import { getPublicPath } from 'utilities/env';
+import { computePageCount } from "utilities/paging";
+
+import "./Home.scss";
 
 /**
  * View of home page
  * @returns {JSX.Element} the view
  */
-function Main() {
+export default function Home() {
   const [page, setPage] = useState(1);
 
   const mapsPerPage = 10;
@@ -23,16 +26,16 @@ function Main() {
     setSearchParams({ q: term });
   };
 
-  const [isLoadingCount, mapCount, errCount] = useMapCount();
+  const [isLoadingCount, mapCount, errCount] = useGetMapsCount();
   const pageCount = computePageCount(mapCount, mapsPerPage);
   // useFetch has a bug where an empty string makes it not fetch data but pretend it did, so if searchTerm is empty,
   // it will use Infinity instead. An object cannot be used because React will complain
-  const [isLoading, maps, err] = useSearchMaps(searchTerm || '', page, [searchTerm || Infinity], mapsPerPage);
+  const [isLoading, maps, err] = useGetMapsSearch(searchTerm || '', page, [searchTerm || Infinity], mapsPerPage);
 
   return (
     <div className="main">
       <div className="header center">
-        <img src={'/Cartographers/logo.webp'} alt="CTM Repository" />
+        <img src={getPublicPath('/logo.webp')} alt="CTM Repository" />
       </div>
       <div className="content">
         <div className="search-bar-wrapper">
@@ -66,5 +69,3 @@ function Main() {
     </div>
   );
 }
-
-export default Main;

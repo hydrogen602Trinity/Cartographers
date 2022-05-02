@@ -16,13 +16,16 @@ jobs:
       with:
         node-version: 16.x
 
+    - name: Define public url
+      run:  echo "PUBLIC_URL=https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+
     - name: Deploy with gh-pages
       run: |
-        echo "https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         cd frontend
 
+        echo ${PUBLIC_URL}
         npm install
         npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

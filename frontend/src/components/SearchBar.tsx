@@ -1,15 +1,19 @@
-import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import "./SearchBar.scss";
+import InputBase from '@mui/material/InputBase';
 import { useState } from 'react';
 
-interface IProps {
+import "./SearchBar.scss";
+
+/**
+ * Properties used by SearchBar
+ */
+export interface ISearchProps {
     callback: (_: string) => void,
     defaultValue: string
 }
 
 
-export default function SearchBar({ callback, defaultValue }: IProps) {
+export default function SearchBar({ callback, defaultValue }: ISearchProps) {
     const [searchTerm, setSearchTerm] = useState(defaultValue);
 
 

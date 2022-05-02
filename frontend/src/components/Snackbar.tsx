@@ -1,7 +1,6 @@
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-
-import { createContext, useContext, useReducer, ReactNode } from 'react';
+import { createContext, ReactNode, useContext, useReducer } from 'react';
 
 /**
  * Interface which defines what to dispatch
