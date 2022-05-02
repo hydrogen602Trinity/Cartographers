@@ -9,6 +9,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.ctmrepository.model.MinecraftMap;
+import com.ctmrepository.model.SearchPage;
 import com.ctmrepository.model.SearchQueryAndResult;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
@@ -96,17 +97,15 @@ public class MinecraftMapController {
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
             @RequestParam(required = false, defaultValue = "true") boolean strict) {
         try {
-            SearchQueryAndResult maps;
-            maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository);
-
             q = q.toUpperCase().replaceAll("_", " ").trim();
 
-            // int max_pages = (int) Math.ceil(maps.size() / (.0 + per_page));
+            SearchQueryAndResult maps;
+            maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository);
             List<MinecraftMap> outMaps = paginateList(maps.maps, page, per_page);
 
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
-                    .body(outMaps);
+                    .body(new SearchPage(maps.max_pages, outMaps));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

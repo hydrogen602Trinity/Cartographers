@@ -55,14 +55,8 @@ public class MCService {
         for (MinecraftMap map : maps) {
             dists.add(getLargestJWDist(map, search, search.split(" ")));
         }
-        mergeSort(maps, dists);
+        mergeSort(maps, dists, 0, dists.size() - 1);
         return maps;
-    }
-
-    public void mergeSort(List<MinecraftMap> maps, List<Double> dists) {
-        int start = 0;
-        int end = dists.size() - 1;
-        mergeSort(maps, dists, start, end);
     }
 
     public void mergeSort(List<MinecraftMap> maps, List<Double> dists, int low, int high) {
