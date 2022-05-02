@@ -88,7 +88,7 @@ class ApplicationTests {
     @Test 
     void searchHasMaxPages() {
         assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
-        assertThat(controller.getMapSearch("", 1, 20, true).getBody().getMaxPages() > 0).isTrue();
+        assertThat(controller.getMapSearch("", 1, 20, true).getBody().max_pages > 0).isTrue();
     }
 
     @Test
