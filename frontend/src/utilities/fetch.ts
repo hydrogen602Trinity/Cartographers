@@ -1,9 +1,10 @@
+import { useSnackbar } from "components/Snackbar";
 import { useEffect } from "react";
 import useFetch from "react-fetch-hook";
 import { useNavigate } from "react-router-dom";
-
-import { useSnackbar } from "components/Snackbar";
 import { getRestAPI } from "utilities/env";
+import { joinPaths } from "utilities/path";
+
 
 
 /**
@@ -57,5 +58,5 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null, dat
  * @returns {string} path with http and the api path added
  */
 function getFetchPath(path: string): string {
-    return getRestAPI() + path
+    return joinPaths(getRestAPI(), path)
 }
