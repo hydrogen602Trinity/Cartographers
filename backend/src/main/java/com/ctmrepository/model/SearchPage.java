@@ -19,6 +19,7 @@ public class SearchPage {
         return mapList;
     }
 
+    @Override
     public String toString() {
         return "Max Page: "+max_pages+" \nList: "+mapList.toString();
     }
