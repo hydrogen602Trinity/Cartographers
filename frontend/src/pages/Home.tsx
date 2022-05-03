@@ -40,7 +40,7 @@ export default function Home() {
       <div className="content">
         <div className="search-bar-wrapper">
           <SearchBar
-            callback={searchHandler}
+            onSearch={searchHandler}
             defaultValue={searchTerm || ''} />
         </div>
         <div className="maps">
