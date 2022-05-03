@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-front": "REACT_APP_USE_PRODUCTION_API=true npm run start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "predeploy": "npm run build",
