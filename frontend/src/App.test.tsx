@@ -151,7 +151,7 @@ test('rendering & pages nav', async () => {
     expect(fetch.mock.calls[0][0]).toBe('http://localhost:8080/maps/count');
     expect(fetch.mock.calls[1][0]).toBe('http://localhost:8080/search/maps?q=&per_page=10&page=1');
 
-    let search = out.getByLabelText('search');
+    let search = out.getByLabelText('search term');
 
     fireEvent.change(search, { target: { value: 'some&info' } });
 
