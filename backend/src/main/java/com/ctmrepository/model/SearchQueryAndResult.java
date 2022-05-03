@@ -6,9 +6,9 @@ public class SearchQueryAndResult {
     public String q;
     public int max_pages;
     public boolean strict;
-    public List<MinecraftMap> maps;
+    public List<Long> maps;
 
-    public SearchQueryAndResult(String q, int max_pages, boolean strict, List<MinecraftMap> maps) {
+    public SearchQueryAndResult(String q, int max_pages, boolean strict, List<Long> maps) {
         this.q = q;
         this.max_pages = max_pages;
         this.strict = strict;

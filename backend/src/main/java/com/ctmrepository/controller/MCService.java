@@ -2,6 +2,7 @@ package com.ctmrepository.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ctmrepository.model.MinecraftMap;
 import com.ctmrepository.model.SearchQueryAndResult;
@@ -12,11 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MCService {
-    
+
     @Cacheable("search")
-    public SearchQueryAndResult sortByQuery(String q, int per_page, boolean strict, MinecraftMapRepository minecraftMapRepository) {
+    public SearchQueryAndResult sortByQuery(String q, int per_page, boolean strict,
+            MinecraftMapRepository minecraftMapRepository) {
         List<MinecraftMap> publishedMaps = minecraftMapRepository.findByPublished(true);
-        List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
+        List<Long> maps = new ArrayList<Long>();
 
         if (strict) {
             strictSearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
@@ -28,18 +30,18 @@ public class MCService {
         return new SearchQueryAndResult(q, max_pages, strict, maps);
     }
 
-    public List<MinecraftMap> strictSearchSort(List<MinecraftMap> maps, String search) {
-        List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
+    public List<Long> strictSearchSort(List<MinecraftMap> maps, String search) {
+        List<Long> relevantMaps = new ArrayList<Long>();
         for (MinecraftMap map : maps) {
             if (map.getName().toUpperCase().contains(search)
                     || map.getAuthor().toUpperCase().contains(search))
-                relevantMaps.add(map);
+                relevantMaps.add(map.getId());
             else {
                 String[] words = search.split(" ");
                 for (int i = 0; i < words.length; i++) {
                     if (map.getName().toUpperCase().contains(words[i])
                             || map.getAuthor().toUpperCase().contains(words[i])) {
-                        relevantMaps.add(map);
+                        relevantMaps.add(map.getId());
                         i = words.length;
                     }
                 }
@@ -50,13 +52,17 @@ public class MCService {
 
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
-    public List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
+    public List<Long> fuzzySearchSort(List<MinecraftMap> maps, String search) {
         List<Double> dists = new ArrayList<>();
         for (MinecraftMap map : maps) {
             dists.add(getLargestJWDist(map, search, search.split(" ")));
         }
         mergeSort(maps, dists, 0, dists.size() - 1);
-        return maps;
+        List<Long> out = new ArrayList<>();
+        for (MinecraftMap map: maps) {
+            out.add(map.getId());
+        }
+        return out;
     }
 
     public void mergeSort(List<MinecraftMap> maps, List<Double> dists, int low, int high) {
@@ -211,6 +217,17 @@ public class MCService {
         return (((double) matches / s_len) +
                 ((double) matches / t_len) +
                 (((double) matches - transpositions / 2.0) / matches)) / 3.0;
+    }
+
+    public List<MinecraftMap> convertList(MinecraftMapRepository repo, List<Long> lst) {
+        List<MinecraftMap> out = new ArrayList<>();
+        for (Long id : lst) {
+            Optional<MinecraftMap> mapData = repo.findById(id);
+            if (mapData.isPresent()) {
+                out.add(mapData.get());
+            }
+        }
+        return out;
     }
 
 }

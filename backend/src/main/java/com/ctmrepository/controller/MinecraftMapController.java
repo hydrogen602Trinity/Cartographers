@@ -106,7 +106,8 @@ public class MinecraftMapController {
 
             SearchQueryAndResult maps;
             maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository);
-            List<MinecraftMap> outMaps = paginateList(maps.maps, page, per_page);
+            List<MinecraftMap> outMaps = service.convertList(minecraftMapRepository, 
+                    paginateList(maps.maps, page, per_page));
 
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
