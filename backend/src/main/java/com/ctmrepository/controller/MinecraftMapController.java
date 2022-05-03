@@ -14,10 +14,12 @@ import com.ctmrepository.model.SearchQueryAndResult;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,9 @@ public class MinecraftMapController {
 
     @Autowired
     MCService service;
+
+    @Autowired
+    CacheManager cacheManager;
 
     @GetMapping("/")
     public String index() {
@@ -191,6 +196,16 @@ public class MinecraftMapController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public void evictAllcaches() {
+        cacheManager.getCacheNames().stream()
+                .forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void evictAllcachesAtIntervals() {
+        evictAllcaches();
     }
 
     /*
