@@ -6,8 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Paper from '@mui/material/Paper';
 import React, { useState } from 'react';
-
 import "./SearchBar.scss";
+
 
 /**
  * Properties used by SearchBar
@@ -39,7 +39,7 @@ export default function SearchBar({ onSearch, defaultValue }: ISearchProps) {
                     sx={{ ml: 1, flex: 1 }}
                     className='input-base'
                     placeholder="Search"
-                    inputProps={{ 'aria-label': 'search' }}
+                    inputProps={{ 'aria-label': 'search term' }}
                 />
             </FormControl >
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

@@ -1,5 +1,4 @@
 /**
- * @module
  * Testing utility module. DO NOT USE THIS CODE OUTSIDE OF UNIT TESTING
  */
 import { render, waitFor } from '@testing-library/react';
@@ -8,7 +7,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 
 /**
  * Test-only: Wrapper component to ensure that children live as descents of a Router element
- * so that nav works
+ * so that useNavigate works
  * @param children the components to wrap
  * @returns the view
  */

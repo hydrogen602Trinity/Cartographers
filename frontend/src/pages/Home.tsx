@@ -1,14 +1,14 @@
 import { Grid, Pagination } from "@mui/material";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-
 import MapCard from "components/MapCard";
 import SearchBar from "components/SearchBar";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useGetMapsCount, useGetMapsSearch } from "utilities/api";
 import { getPublicPath } from 'utilities/env';
 import { computePageCount } from "utilities/paging";
-
 import "./Home.scss";
+
+
 
 /**
  * View of home page
@@ -52,7 +52,7 @@ export default function Home() {
                   <div>Loading...</div> :
                   <div>Error Loading Page</div>
               ) :
-              <div>
+              <div data-testid='home-map-display'>
                 <Grid container spacing={2}>
                   {maps.map((map, index) => (
                     <Grid item key={map.id} xs={12} sm={6} md={6} lg={4} xl={3}>
