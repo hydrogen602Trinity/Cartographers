@@ -106,7 +106,7 @@ public class MinecraftMapController {
 
             SearchQueryAndResult maps;
             maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository);
-            List<MinecraftMap> outMaps = service.convertList(minecraftMapRepository, 
+            List<MinecraftMap> outMaps = service.convertList(minecraftMapRepository,
                     paginateList(maps.maps, page, per_page));
 
             return ResponseEntity.ok()
@@ -118,7 +118,7 @@ public class MinecraftMapController {
         }
     }
 
-    private static <T> List<T> paginateList(List<T> list, Integer page, Integer resultsPerPage) {
+    public static <T> List<T> paginateList(List<T> list, Integer page, Integer resultsPerPage) {
         Integer fromIndex = (page - 1) * resultsPerPage;
         Integer toIndex = fromIndex + resultsPerPage;
 
@@ -153,6 +153,16 @@ public class MinecraftMapController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<List<MinecraftMap>>> getHomePageInfo() {
+        int count = 20;
+        List<List<MinecraftMap>> maps = new ArrayList<List<MinecraftMap>>();
+        maps = service.getHomepageMaps(count, minecraftMapRepository);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
+                .body(maps);
     }
 
     @GetMapping("admin/publishing/publish-map")
@@ -208,94 +218,4 @@ public class MinecraftMapController {
     public void evictAllcachesAtIntervals() {
         evictAllcaches();
     }
-
-    /*
-     * @GetMapping("/maps")
-     * public ResponseEntity<List<MinecraftMap>> getAllMaps(@RequestParam(required =
-     * false) String name) {
-     * try {
-     * List<MinecraftMap> maps = new ArrayList<MinecraftMap>();
-     * 
-     * if (name == null)
-     * minecraftMapRepository.findAll().forEach(maps::add);
-     * else
-     * // Search for Name of Map
-     * minecraftMapRepository.findAll().forEach(maps::add);
-     * // minecraftMapRepository.findByNameContaining(name).forEach(maps::add);
-     * 
-     * if (maps.isEmpty()) {
-     * return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-     * }
-     * 
-     * return new ResponseEntity<>(maps, HttpStatus.OK);
-     * } catch (Exception e) {
-     * return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * }
-     */
-
-    // @PostMapping("/maps")
-    // public ResponseEntity<MinecraftMap> createMap(@RequestBody MinecraftMap map)
-    // {
-    // try {
-    // MinecraftMap _map = minecraftMapRepository
-    // .save(new MinecraftMap(map.getName(), map.getMinecraftVersion(), 0, false));
-    // return new ResponseEntity<>(_map, HttpStatus.CREATED);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
-    // @PutMapping("/maps/{id}")
-    // public ResponseEntity<MinecraftMap> updateMap(@PathVariable("id") long id,
-    // @RequestBody MinecraftMap map) {
-    // Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
-
-    // if (mapData.isPresent()) {
-    // MinecraftMap _map = mapData.get();
-    // _map.setName(map.getName());
-    // _map.setMinecraftVersion(map.getMinecraftVersion());
-    // _map.setDownloadCount(map.getDownloadCount());
-    // return new ResponseEntity<>(minecraftMapRepository.save(_map),
-    // HttpStatus.OK);
-    // } else {
-    // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    // }
-    // }
-
-    // @DeleteMapping("/maps/{id}")
-    // public ResponseEntity<HttpStatus> deleteMap(@PathVariable("id") long id) {
-    // try {
-    // minecraftMapRepository.deleteById(id);
-    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
-    // @DeleteMapping("/maps")
-    // public ResponseEntity<HttpStatus> deleteAllMaps() {
-    // try {
-    // minecraftMapRepository.deleteAll();
-    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-
-    // }
-
-    // @GetMapping("/maps/verified")
-    // public ResponseEntity<List<MinecraftMap>> findByVerified() {
-    // try {
-    // List<MinecraftMap> maps = minecraftMapRepository.findByVerified(true);
-
-    // if (maps.isEmpty()) {
-    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    // }
-    // return new ResponseEntity<>(maps, HttpStatus.OK);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
 }

@@ -59,7 +59,7 @@ public class MCService {
         }
         mergeSort(maps, dists, 0, dists.size() - 1);
         List<Long> out = new ArrayList<>();
-        for (MinecraftMap map: maps) {
+        for (MinecraftMap map : maps) {
             out.add(map.getId());
         }
         return out;
@@ -228,6 +228,42 @@ public class MCService {
             }
         }
         return out;
+    }
+
+    @Cacheable("home")
+    public List<List<MinecraftMap>> getHomepageMaps(int count, MinecraftMapRepository repo) {
+        List<List<MinecraftMap>> maps = new ArrayList<List<MinecraftMap>>();
+        maps.add(topPopularMaps(count, repo));
+        maps.add(newestMaps(count, repo));
+        maps.add(bestEasyMaps(count, repo));
+        maps.add(bestMediumMaps(count, repo));
+        maps.add(bestHardMaps(count, repo));
+        return maps;
+    }
+
+    public List<MinecraftMap> topPopularMaps(int count, MinecraftMapRepository repo) {
+        return MinecraftMapController.paginateList(
+                repo.findByOrderByDownloadCountDesc(), 1, count);
+    }
+
+    public List<MinecraftMap> newestMaps(int count, MinecraftMapRepository repo) {
+        return MinecraftMapController.paginateList(
+                repo.findByOrderByUploadDateDesc(), 1, count);
+    }
+
+    public List<MinecraftMap> bestEasyMaps(int count, MinecraftMapRepository repo) {
+        return MinecraftMapController.paginateList(
+                repo.findByDifficultyOrderByDownloadCountDesc("Easy"), 1, count);
+    }
+
+    public List<MinecraftMap> bestMediumMaps(int count, MinecraftMapRepository repo) {
+        return MinecraftMapController.paginateList(
+                repo.findByDifficultyOrderByDownloadCountDesc("Medium"), 1, count);
+    }
+
+    public List<MinecraftMap> bestHardMaps(int count, MinecraftMapRepository repo) {
+        return MinecraftMapController.paginateList(
+                repo.findByDifficultyOrderByDownloadCountDesc("Hard"), 1, count);
     }
 
 }
