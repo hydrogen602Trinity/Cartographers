@@ -1,18 +1,26 @@
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DownloadIcon from '@mui/icons-material/Download';
-import HistoryIcon from '@mui/icons-material/History';
 import PersonIcon from '@mui/icons-material/Person';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { MinecraftMap } from 'utilities/api';
 import { getPublicPath } from 'utilities/env';
-import "./MapCard.scss";
 
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
+  paddingLeft: theme.spacing(0.5),
+  paddingRight: theme.spacing(0.5),
+  textAlign: 'center',
+  color: theme.palette.text.secondary
+}));
 
 /**
  * Properties used by MapCard
@@ -46,36 +54,30 @@ export default function MapCard({ map }: IMapCardProps): JSX.Element {
           alt="Map Image"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" fontWeight="bold" marginBottom="0vh" marginTop="-1vh">
             {map.name}
           </Typography>
-          <div className='info-group'>
-            <InfoPiece key='author' text={map.author}><PersonIcon /></InfoPiece>
-            <InfoPiece key='mc_version' text={map.mc_version}><HistoryIcon /></InfoPiece>
-            <InfoPiece key='length' text={map.length}><AccessTimeIcon /></InfoPiece>
-            <InfoPiece key='download_count' text={map.download_count + ''}><DownloadIcon /></InfoPiece>
-          </div>
+          <Divider />
+          <Stack direction="row" alignItems="left" gap={1} marginBottom="1vh" marginTop="1vh">
+            <Stack direction="row" alignItems="left" gap={1}>
+              <PersonIcon fontSize="small" />
+              <Typography className='author' variant="subtitle2">{map.author} </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="left" gap={1}>
+              <DownloadIcon fontSize="small" />
+              <Typography className='download_count' variant="subtitle2">{map.download_count}</Typography>
+            </Stack>
+          </Stack>
+          <Stack direction="row" alignItems="left" gap={1}>
+            <Item elevation={0} variant="outlined">
+              <Typography className='mc_version' variant="caption">Minecraft {map.mc_version}</Typography>
+            </Item>
+            <Item elevation={0} variant="outlined">
+              <Typography className='length' variant="caption">{map.length} Map</Typography>
+            </Item>
+          </Stack>
         </CardContent>
       </CardActionArea>
     </Card >
   );
-}
-
-interface InfoPieceProps {
-  text: string,
-  children: JSX.Element
-}
-
-/**
- * A helper function for MapCard
- * @param {{ text: String, children: JSX.Element }} props the text and other content to display
- * @returns the view
- */
-function InfoPiece({ text, children }: InfoPieceProps) {
-  return <div className="info">
-    {children}
-    <Typography variant="subtitle1" className='info-text'>
-      {text}
-    </Typography>
-  </div>;
 }
