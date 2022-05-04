@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-api-remote": "export REACT_APP_USE_PRODUCTION_API=true || cmd /V /C \"set REACT_APP_USE_PRODUCTION_API=true&& npm run start\"",
+    "start-api-remote": "export REACT_APP_USE_PRODUCTION_API=true && npm run start || cmd /V /C \"set REACT_APP_USE_PRODUCTION_API=true&& npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "predeploy": "npm run build",
