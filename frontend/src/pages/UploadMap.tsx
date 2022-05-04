@@ -35,8 +35,6 @@ export default function UploadMap() {
   const [imgSrc, setImgSrc] = useState('');
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
-  const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0);
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
 
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -59,29 +57,6 @@ export default function UploadMap() {
     <div className="App">
       <div className="Crop-Controls">
         <input type="file" accept="image/*" onChange={onSelectFile} />
-        <div>
-          <label htmlFor="scale-input">Scale: </label>
-          <input
-            id="scale-input"
-            type="number"
-            step="0.1"
-            value={scale}
-            disabled={!imgSrc}
-            onChange={(e) => setScale(Number(e.target.value))}
-          />
-        </div>
-        <div>
-          <label htmlFor="rotate-input">Rotate: </label>
-          <input
-            id="rotate-input"
-            type="number"
-            value={rotate}
-            disabled={!imgSrc}
-            onChange={(e) =>
-              setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
-            }
-          />
-        </div>
       </div>
       {Boolean(imgSrc) && (
         <ReactCrop
@@ -96,7 +71,6 @@ export default function UploadMap() {
             ref={imgRef}
             alt="Crop me"
             src={imgSrc}
-            style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
             onLoad={onImageLoad}
           />
         </ReactCrop>

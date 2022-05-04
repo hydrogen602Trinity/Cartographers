@@ -59,7 +59,27 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
         <Button autoFocus onClick={() => onClose(false)}>
           Cancel
         </Button>
-        <Button onClick={() => onClose(true)}>Ok</Button>
+        <Button onClick={() => {
+          if (previewCanvasRef.current) {
+            previewCanvasRef.current.toBlob(function (blob) {
+              if (blob === null) {
+                throw new Error('Image was null');
+              }
+
+              let newImg = document.createElement('img');
+              let url = URL.createObjectURL(blob);
+
+              // newImg.onload = function () {
+              //   // no longer need to read the blob so it's revoked
+              //   URL.revokeObjectURL(url);
+              // };
+
+              newImg.src = url;
+              document.body.appendChild(newImg);
+            }, "image/webp", 0.75);
+          }
+          onClose(true);
+        }}>Ok</Button>
       </DialogActions>
     </Dialog>
   );
