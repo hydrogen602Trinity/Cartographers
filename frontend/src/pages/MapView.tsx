@@ -2,13 +2,13 @@ import {
   Card, CardActionArea, CardContent, CardMedia,
   Grid, List, ListItem, ListItemText, Skeleton, Typography
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-
 import ErrorPage from "pages/ErrorPage";
+import "pages/MapView.scss";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetMap } from "utilities/api";
 import { getPublicPath } from "utilities/env";
 
-import "pages/MapView.scss";
+
 
 /**
  * Display information about a single map
@@ -39,7 +39,7 @@ export default function MapView() {
         >
           <Grid item xs={6}>
             <Card className="map-card">
-              <CardActionArea onClick={_ => navigate("/")}>
+              <CardActionArea onClick={() => navigate("/")} aria-label="Home">
                 <CardMedia
                   component="img"
                   image={getPublicPath(map.image_url)}

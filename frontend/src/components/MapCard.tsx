@@ -8,11 +8,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
-
 import { MinecraftMap } from 'utilities/api';
 import { getPublicPath } from 'utilities/env';
-
 import "./MapCard.scss";
+
+
 
 /**
  * Properties used by MapCard
@@ -39,7 +39,7 @@ export default function MapCard({ map }: IMapCardProps): JSX.Element {
 
   return (
     <Card className="map-card">
-      <CardActionArea onClick={expand}>
+      <CardActionArea onClick={expand} aria-label='map card'>
         <CardMedia
           component="img"
           image={getPublicPath(map.image_url)}
@@ -57,7 +57,7 @@ export default function MapCard({ map }: IMapCardProps): JSX.Element {
           </div>
         </CardContent>
       </CardActionArea>
-    </Card>
+    </Card >
   );
 }
 
