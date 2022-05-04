@@ -68,7 +68,7 @@ export default function MapView() {
                   <Skeleton variant="text" />
                 </CardContent>
               ) : (
-                <CardContent>
+                <CardContent aria-label="Map Information">
                   <Typography gutterBottom variant="h5" component="div">
                     {map.name}
                   </Typography>

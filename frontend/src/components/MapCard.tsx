@@ -54,7 +54,7 @@ export default function MapCard({ map }: IMapCardProps): JSX.Element {
           alt="Map Image"
         />
         <CardContent>
-          <Typography gutterBottom variant="h6" fontWeight="bold" marginBottom="0vh" marginTop="-1vh">
+          <Typography variant="h6" fontWeight="bold" marginTop="-1vh">
             {map.name}
           </Typography>
           <Divider />

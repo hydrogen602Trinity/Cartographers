@@ -44,13 +44,14 @@ export default function Home() {
   }
   else {
     return (
-      <Grid container alignItems="center" justifyContent="center" spacing={1}>
+      <Grid container className="home-page-layout" alignItems="center" justifyContent="center" spacing={1}>
         <Grid item xs={12}>
           <Grid container alignItems="center" justifyContent="center">
             <Grid item>
               <Box
                 component="img"
-                src={getPublicPath('/logo.webp')}
+                className="ctm-repository-banner"
+                src={getPublicPath('/banner.webp')}
                 alt="CTM Repository"
               />
             </Grid>
@@ -63,24 +64,25 @@ export default function Home() {
           />
         </Grid>
         <Grid item xs={12} margin="1em">
-          <Paper sx={{ p: 2 }}>
+          <Paper className="search-results-display" sx={{ p: 2 }}>
             <Stack
               alignItems="center"
               justifyContent="center"
               divider={<Divider orientation="horizontal" flexItem />}
               spacing={2}
             >
-              <Pagination count={pageCount} page={page} onChange={(_, e) => { setPage(e) }} />
               {(isLoading || isMapCountLoading) ? (
                 <div>Loading...</div>
               ) : (
-                <Grid container spacing={2}>
-                  {maps.map((map, index) => (
-                    <Grid item key={map.id} xs={12} sm={12} md={6} lg={4} xl={3} width="100%">
-                      <MapCard map={map} key={index} />
-                    </Grid>
-                  ))}
-                </Grid>
+                <div data-testid='home-map-display'>
+                  <Grid container spacing={2}>
+                    {maps.map((map, index) => (
+                      <Grid item key={map.id} xs={12} sm={12} md={6} lg={4} xl={3} width="100%">
+                        <MapCard map={map} key={index} />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </div>
               )}
               <Pagination count={pageCount} page={page} onChange={(_, e) => { setPage(e) }} sx={{ marginTop: '1em' }} />
             </Stack>
