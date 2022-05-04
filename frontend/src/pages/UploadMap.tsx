@@ -1,16 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react'
-
+import React, { useRef, useState } from 'react';
 import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-} from 'react-image-crop'
-import { canvasPreview } from './preview'
+  centerCrop, Crop, makeAspectCrop, PixelCrop
+} from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import ConfirmationDialog from '../components/UploadConfirmation';
 
 
-import 'react-image-crop/dist/ReactCrop.css'
-import ConfirmationDialog from './UploadConfirmation';
+
 
 const ASPECT_RATIO = 1;
 

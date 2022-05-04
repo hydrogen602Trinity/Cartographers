@@ -1,11 +1,11 @@
-import { useRef, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useEffect, useRef, useState } from 'react';
 import { PixelCrop } from 'react-image-crop';
-import { canvasPreview } from './preview';
+import { canvasPreview } from '../utilities/preview';
 
 
 export interface ConfirmationDialogRawProps {
@@ -20,18 +20,12 @@ export interface ConfirmationDialogRawProps {
 function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
   const { onClose, open, image, completedCrop, ...other } = props;
 
-  const handleCancel = () => {
-    onClose(false);
-  };
-
-  const handleOk = () => {
-    onClose(true);
-  };
-
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+
     if (open && previewCanvasRef.current && completedCrop) {
+      console.log(previewCanvasRef.current?.width)
       canvasPreview(
         image,
         previewCanvasRef.current,
@@ -42,33 +36,36 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
 
   return (
     <Dialog
-      sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+      sx={{ '& .MuiDialog-paper': { width: '80%' } }}
       maxWidth="xs"
       // TransitionProps={{ onEntering: handleEntering }}
       open={open}
       {...other}
     >
       <DialogTitle>Image to Upload</DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers sx={{
+        overflowY: 'unset'
+      }}>
         <canvas
-          width={completedCrop.width}
-          height={completedCrop.height}
           ref={previewCanvasRef}
           style={{
             border: '1px solid black',
             objectFit: 'contain',
+            width: '100%'
           }}
         />
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleCancel}>
+        <Button autoFocus onClick={() => onClose(false)}>
           Cancel
         </Button>
-        <Button onClick={handleOk}>Ok</Button>
+        <Button onClick={() => onClose(true)}>Ok</Button>
       </DialogActions>
     </Dialog>
   );
 }
+
+
 
 interface IProps {
   image: HTMLImageElement,
