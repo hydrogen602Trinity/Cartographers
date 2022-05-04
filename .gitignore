@@ -1,4 +1,5 @@
 ### macOS ###
 *.DS_Store
 
+### Miscellaneous ###
 maplisttable.sql

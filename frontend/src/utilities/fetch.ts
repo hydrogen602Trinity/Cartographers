@@ -1,8 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import useFetch from "react-fetch-hook";
+import { useSnackbar } from "components/Snackbar";
 import { useEffect } from "react";
-import { useSnackbar } from "../components/Snackbar";
-import { getRestAPI } from "./env";
+import useFetch from "react-fetch-hook";
+import { useNavigate } from "react-router-dom";
+import { getRestAPI } from "utilities/env";
+import { joinPaths } from "utilities/path";
+
 
 
 /**
@@ -38,7 +40,7 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null, dat
         if (error) {
             if (error.status === 401) {
                 dispatchMsg({ type: 'error', text: 'Authentication Required' });
-                nav('/Cartographers');
+                nav('/');
             }
             else {
                 dispatchMsg({ type: 'error', text: error.message })
@@ -56,6 +58,5 @@ export function useFetchAPI(path: string, dependsArray: any[] | null = null, dat
  * @returns {string} path with http and the api path added
  */
 function getFetchPath(path: string): string {
-    return getRestAPI() + path
+    return joinPaths(getRestAPI(), path)
 }
-

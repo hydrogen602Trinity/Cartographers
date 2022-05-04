@@ -65,6 +65,6 @@ for i, m in enumerate(regex.finditer(content)):
             String image_url, String series, String mc_version)
     '''
 
-    imageURL = f'"/Cartographers/images/{imageURL}"'
+    imageURL = f'"/images/{imageURL}"'
 
     print(f'repo.save(new MinecraftMap({name}, {addedDate}, {author}, {length}, {objectives}, {bonusObjectives}, {difficulty}, {shortDescription}, {downloadCount}, {mapType}, {imageURL}, {series}, {minecraftVersion}));')
