@@ -25,9 +25,9 @@ public class MCService {
         } else {
             fuzzySearchSort(publishedMaps, q.toUpperCase()).forEach(maps::add);
         }
-        int max_pages = (int) Math.ceil(maps.size() / (.0 + per_page));
+        int max_page = (int) Math.ceil(maps.size() / (.0 + per_page));
 
-        return new SearchQueryAndResult(q, max_pages, strict, maps);
+        return new SearchQueryAndResult(q, max_page, strict, maps);
     }
 
     public List<Long> strictSearchSort(List<MinecraftMap> maps, String search) {
@@ -59,7 +59,7 @@ public class MCService {
         }
         mergeSort(maps, dists, 0, dists.size() - 1);
         List<Long> out = new ArrayList<>();
-        for (MinecraftMap map: maps) {
+        for (MinecraftMap map : maps) {
             out.add(map.getId());
         }
         return out;

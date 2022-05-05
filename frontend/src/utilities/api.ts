@@ -49,14 +49,26 @@ export interface MinecraftMap {
     mc_version: string
 }
 
+export interface SearchResult {
+    max_page: number,
+    data: MinecraftMap[]
+}
+
 /**
  * Get all maps from the backend. A react hook
  * @param {any[] | null} dependsArray re-request data when the values in the array change.
  * Set to [] (the default) to never reload data
  * @return {[boolean, MinecraftMap, any]} [whether its still loading, the data, error]
  */
-export function useAllMaps(dependsArray: any[] | null = []): [boolean, MinecraftMap[], useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: '' }), dependsArray, []);
+export function useAllMaps(
+    dependsArray: any[] | null = []
+): [boolean, MinecraftMap[], useFetch.UseFetchError | undefined] {
+
+    return useFetchAPI(
+        API_ENDPOINTS.ALL_MAPS({ q: '' }),
+        dependsArray,
+        []
+    );
 }
 
 const ENTRIES_PER_PAGE: number = 12;
@@ -67,10 +79,20 @@ const ENTRIES_PER_PAGE: number = 12;
  * @param {page} page the page number
  * @param {any[] | null} dependsArray re-request data when the values in the array change.
  * Set to [] (the default) to never reload data
- * @return {[boolean, MinecraftMap, any]} [whether its still loading, the data, error]
+ * @return {[boolean, SearchResult, any]} [whether its still loading, the data, error]
  */
-export function useGetMapsSearch(query: string, page: number = 0, dependsArray: any[] | null = [], per_page: number = ENTRIES_PER_PAGE): [boolean, MinecraftMap[], useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: query, per_page: per_page, page: page }), dependsArray, []);
+export function useGetMapsSearch(
+    query: string,
+    page: number = 0,
+    dependsArray: any[] | null = [],
+    per_page: number = ENTRIES_PER_PAGE
+): [boolean, SearchResult, useFetch.UseFetchError | undefined] {
+
+    return useFetchAPI(
+        API_ENDPOINTS.ALL_MAPS({ q: query, per_page: per_page, page: page }),
+        dependsArray,
+        { max_page: 0, data: [] }
+    );
 }
 
 /**
@@ -80,11 +102,26 @@ export function useGetMapsSearch(query: string, page: number = 0, dependsArray: 
  * Set to [] (the default) to never reload data
  * @return {[boolean, MinecraftMap | null, any]} [whether its still loading, the data, error]
  */
-export function useGetMap(id: number, dependsArray: any[] | null = []): [boolean, MinecraftMap | null, useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ONE_MAP(id), dependsArray, null);
+export function useGetMap(
+    id: number,
+    dependsArray: any[] | null = []
+): [boolean, MinecraftMap | null, useFetch.UseFetchError | undefined] {
+
+    return useFetchAPI(
+        API_ENDPOINTS.ONE_MAP(id),
+        dependsArray,
+        null
+    );
 }
 
 
-export function useGetMapsCount(dependsArray: any[] | null = []): [boolean, number, useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.COUNT_MAPS, dependsArray, 0);
+export function useGetMapsCount(
+    dependsArray: any[] | null = []
+): [boolean, number, useFetch.UseFetchError | undefined] {
+
+    return useFetchAPI(
+        API_ENDPOINTS.COUNT_MAPS,
+        dependsArray,
+        0
+    );
 }
