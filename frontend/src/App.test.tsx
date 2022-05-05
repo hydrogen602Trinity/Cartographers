@@ -177,7 +177,7 @@ test('error page', async () => {
     })));
 
     let out = render(<App></App>);
-    let parts = await waitFor(() => out.getByText('Error Loading Page'));
+    let parts = await waitFor(() => out.getByText('Fetch error'));
     expect(parts).toBeVisible();
     expect(out.queryByText('404')).toBeNull();
 });
