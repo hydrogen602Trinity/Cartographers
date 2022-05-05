@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Paper from '@mui/material/Paper';
 import React, { useState } from 'react';
+import "./SearchBar.scss";
 
 
 /**

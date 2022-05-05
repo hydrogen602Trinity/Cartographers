@@ -7,7 +7,7 @@ import { MinecraftMap } from 'utilities/api';
 
 fetch.enableMocks();
 
-const minecraftMap: MinecraftMap = {
+const m: MinecraftMap = {
     id: 1,
     name: "a name",
     upload_date: -10,
@@ -32,11 +32,11 @@ beforeEach(() => {
         const url = new URL(req.url);
         switch (url.pathname) {
             case '/search/maps':
-                return JSON.stringify([minecraftMap]);
+                return JSON.stringify([m]);
             case '/maps/count':
                 return '1'
             case '/maps/1':
-                return JSON.stringify(minecraftMap);
+                return JSON.stringify(m);
             default:
                 return {
                     status: 404,
@@ -51,16 +51,16 @@ it('CI test', () => {
 });
 
 /**
- * Ensures the App renders and the banner is defined
+ * Ensures the App renders and the logo is defined
  */
-test('rendering & banner', async () => {
+test('rendering & logo', async () => {
     let out = render(<App></App>);
-    let banner = await waitFor(() => out.getByAltText('CTM Repository'));
+    let logo = await waitFor(() => out.getByAltText('CTM Repository'));
     await waitFor(() => out.getByTestId('home-map-display')); // to wait until things load
-    expect(banner).toBeInTheDocument();
-    expect(banner).toBeVisible();
+    expect(logo).toBeInTheDocument();
+    expect(logo).toBeVisible();
     // @ts-ignore
-    expect(banner.src).toBe("http://localhost/banner.webp");
+    expect(logo.src).toBe("http://localhost/logo.webp");
 });
 
 /**
@@ -77,7 +77,7 @@ test('rendering & loading maps', async () => {
     expect(parts.getElementsByTagName('img')[0]).toBeVisible();
     expect(out.getByText("an author")).toBeVisible();
     expect(out.getByText("a name")).toBeVisible();
-    expect(out.getByText("Minecraft 1.0.0")).toBeVisible();
+    expect(out.getByText("1.0.0")).toBeVisible();
 });
 
 /**
@@ -115,7 +115,7 @@ test('navigation to map', async () => {
         useEffect(() => map.click(), []);
     })
 
-    let panel = await out.findByLabelText('Map Information');
+    let panel = await out.findByLabelText('Home');
 
     expect(panel).toBeVisible();
     expect(out.queryByText('a name')).toBeTruthy();
@@ -149,7 +149,7 @@ test('rendering & pages nav', async () => {
 
     expect(fetch.mock.calls.length).toBe(2);
     expect(fetch.mock.calls[0][0]).toBe('http://localhost:8080/maps/count');
-    expect(fetch.mock.calls[1][0]).toBe('http://localhost:8080/search/maps?q=&per_page=12&page=1');
+    expect(fetch.mock.calls[1][0]).toBe('http://localhost:8080/search/maps?q=&per_page=10&page=1');
 
     let search = out.getByLabelText('search term');
 
@@ -163,5 +163,5 @@ test('rendering & pages nav', async () => {
     await out.findByTestId('home-map-display');
 
     expect(fetch.mock.calls.length).toBe(3);
-    expect(fetch.mock.calls[2][0]).toBe('http://localhost:8080/search/maps?q=some%26info&per_page=12&page=1');
+    expect(fetch.mock.calls[2][0]).toBe('http://localhost:8080/search/maps?q=some%26info&per_page=10&page=1');
 });
