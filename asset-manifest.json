@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "https://hydrogen602Trinity.github.io/Cartographers/static/css/main.491a429d.css",
-    "main.js": "https://hydrogen602Trinity.github.io/Cartographers/static/js/main.078f8a3b.js",
+    "main.css": "https://hydrogen602Trinity.github.io/Cartographers/static/css/main.27a8fa25.css",
+    "main.js": "https://hydrogen602Trinity.github.io/Cartographers/static/js/main.1cd70e63.js",
     "index.html": "https://hydrogen602Trinity.github.io/Cartographers/index.html",
-    "main.491a429d.css.map": "https://hydrogen602Trinity.github.io/Cartographers/static/css/main.491a429d.css.map",
-    "main.078f8a3b.js.map": "https://hydrogen602Trinity.github.io/Cartographers/static/js/main.078f8a3b.js.map"
+    "main.27a8fa25.css.map": "https://hydrogen602Trinity.github.io/Cartographers/static/css/main.27a8fa25.css.map",
+    "main.1cd70e63.js.map": "https://hydrogen602Trinity.github.io/Cartographers/static/js/main.1cd70e63.js.map"
   },
   "entrypoints": [
-    "static/css/main.491a429d.css",
-    "static/js/main.078f8a3b.js"
+    "static/css/main.27a8fa25.css",
+    "static/js/main.1cd70e63.js"
   ]
 }
