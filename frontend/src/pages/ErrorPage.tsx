@@ -18,7 +18,7 @@ export default function ErrorPage({ error }: IErrorProps): JSX.Element {
     return (
         <div style={{ padding: '1em' }}>
             <h1>{error.status}</h1>
-            <button onClick={() => {
+            <button aria-label="Home" onClick={() => {
                 navigate('/');
             }}>Home</button>
         </div>

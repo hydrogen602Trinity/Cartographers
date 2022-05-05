@@ -140,6 +140,7 @@ test('navigation to map', async () => {
     expect(out.queryByLabelText('Home')).toBeNull();
 });
 
+
 /**
  * Tests the search bar
  */
@@ -164,4 +165,19 @@ test('rendering & pages nav', async () => {
 
     expect(fetch.mock.calls.length).toBe(3);
     expect(fetch.mock.calls[2][0]).toBe('http://localhost:8080/search/maps?q=some%26info&per_page=12&page=1');
+});
+
+/**
+ * Renders the error page
+ */
+test('error page', async () => {
+    fetchMock.mockIf(/localhost:8080/, req => Promise.resolve(({
+        status: 500,
+        body: 'Internal Server Error'
+    })));
+
+    let out = render(<App></App>);
+    let parts = await waitFor(() => out.getByText('Fetch error'));
+    expect(parts).toBeVisible();
+    expect(out.queryByText('404')).toBeNull();
 });
