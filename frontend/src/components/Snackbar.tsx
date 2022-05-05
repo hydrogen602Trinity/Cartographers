@@ -68,10 +68,8 @@ function getAutoHideDuration(state: ISnackbarMsg): number | null {
             return 12000; // 12 sec
         case 'success':
             return 6000; // 6 sec
-        case null:
-            return null;
         default:
-            throw new TypeError(`SnackBar: Unexpected value for type, got ${state.type}`);
+            return null;
     }
 }
 

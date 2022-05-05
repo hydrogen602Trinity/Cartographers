@@ -60,7 +60,18 @@
         "functions": 90,
         "lines": 90,
         "statements": 90
+      },
+      "./src/*/": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
       }
-    }
+    },
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/node_modules/**",
+      "!src/index.tsx"
+    ]
   }
 }
