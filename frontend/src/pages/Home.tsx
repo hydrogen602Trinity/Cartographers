@@ -3,10 +3,11 @@ import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/system/Box";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
 import MapCard from "components/MapCard";
 import SearchBar from "components/SearchBar";
 import ErrorPage from "pages/ErrorPage";
@@ -45,17 +46,14 @@ export default function Home() {
   else {
     return (
       <Grid container className="home-page-layout" alignItems="center" justifyContent="center" spacing={1}>
-        <Grid item xs={12}>
-          <Grid container alignItems="center" justifyContent="center">
-            <Grid item>
-              <Box
-                component="img"
-                className="ctm-repository-banner"
-                src={getPublicPath('/banner.webp')}
-                alt="CTM Repository"
-              />
-            </Grid>
-          </Grid>
+        <Grid item xs={12} md={8}>
+          <Card className="map-card" elevation={0} style={{ backgroundColor: "transparent" }}>
+            <CardMedia
+              component="img"
+              image={getPublicPath('/banner.webp')}
+              alt="CTM Repository Banner"
+            />
+          </Card>
         </Grid>
         <Grid item xs={12} sm={10} md={8} marginLeft="1em" marginRight="1em">
           <SearchBar

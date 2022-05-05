@@ -55,7 +55,7 @@ it('CI test', () => {
  */
 test('rendering & banner', async () => {
     let out = render(<App></App>);
-    let banner = await waitFor(() => out.getByAltText('CTM Repository'));
+    let banner = await waitFor(() => out.getByAltText('CTM Repository Banner'));
     await waitFor(() => out.getByTestId('home-map-display')); // to wait until things load
     expect(banner).toBeInTheDocument();
     expect(banner).toBeVisible();
