@@ -61,6 +61,7 @@ test("Check onSearch event", async () => {
     renderHook(() => {
         useEffect(() => searchButton.click(), []);
     })
+    await waitFor(() => searchBar.findByTestId("search-bar-base"));
     expect(searchResult).toBe("test");
 
     let clearSearchField = searchBar.getByLabelText("Clear search field");
@@ -69,5 +70,6 @@ test("Check onSearch event", async () => {
     renderHook(() => {
         useEffect(() => clearSearchField.click(), []);
     })
+    await waitFor(() => searchBar.findByTestId("search-bar-base"));
     expect(searchResult).toBe("");
 });
