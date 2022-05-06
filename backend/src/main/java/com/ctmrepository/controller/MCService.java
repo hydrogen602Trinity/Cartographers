@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ctmrepository.model.MinecraftMap;
+import com.ctmrepository.model.SearchFilter;
+import com.ctmrepository.model.SearchFilterLong;
 import com.ctmrepository.model.SearchQueryAndResult;
 import com.ctmrepository.repository.MinecraftMapRepository;
 
@@ -14,10 +16,74 @@ import org.springframework.stereotype.Service;
 @Service
 public class MCService {
 
+    public List<MinecraftMap> filter(List<MinecraftMap> start, SearchFilter[] filters) {
+        List<MinecraftMap> out = new ArrayList<>();
+        for (MinecraftMap map : start) {
+            boolean clears = true;
+            for (SearchFilter filter : filters) {
+                if (filter.getSearch_filter().equals("UploadDate")) {
+                    SearchFilterLong recastFilter = (SearchFilterLong) filter;
+                    if (!recastFilter.isInBounds(map.getUpload_date())) {
+                        clears = false;
+                        break;
+                    }
+                }
+                if (filter.getSearch_filter().equals("Length") && !filter.isInBounds(map.getLength())) {
+                    clears = false;
+                    break;
+                }
+                if (filter.getSearch_filter().equals("Objective Main")) {
+                    SearchFilterLong recastFilter = (SearchFilterLong) filter;
+                    if (!recastFilter.isInBounds(map.getObjective_main())) {
+                        clears = false;
+                        break;
+                    }
+                }
+                if (filter.getSearch_filter().equals("Objective Bonus")) {
+                    SearchFilterLong recastFilter = (SearchFilterLong) filter;
+                    if (!recastFilter.isInBounds(map.getObjective_bonus())) {
+                        clears = false;
+                        break;
+                    }
+                }
+                if (filter.getSearch_filter().equals("Difficulty") && !filter.isInBounds(map.getDifficulty())) {
+                    clears = false;
+                    break;
+                }
+                if (filter.getSearch_filter().equals("Download Count")) {
+                    SearchFilterLong recastFilter = (SearchFilterLong) filter;
+                    if (!recastFilter.isInBounds(map.getDownload_count())) {
+                        clears = false;
+                        break;
+                    }
+                }
+                if (filter.getSearch_filter().equals("Type") && !filter.isInBounds(map.getType())) {
+                    clears = false;
+                    break;
+                }
+                if (filter.getSearch_filter().equals("Series") && !filter.isInBounds(map.getSeries())) {
+                    clears = false;
+                    break;
+                }
+                if (filter.getSearch_filter().equals("Mc Version") && !filter.isInBounds(map.getMc_version())) {
+                    clears = false;
+                    break;
+                }
+            }
+            if (clears) {
+                start.add(map);
+            }
+        }
+        return out;
+    }
+
     @Cacheable("search")
     public SearchQueryAndResult sortByQuery(String q, int per_page, boolean strict,
-            MinecraftMapRepository minecraftMapRepository) {
+            MinecraftMapRepository minecraftMapRepository, SearchFilter[] filters) {
         List<MinecraftMap> publishedMaps = minecraftMapRepository.findByPublished(true);
+        if (filters.length != 0) {
+            publishedMaps = filter(publishedMaps, filters);
+        }
         List<Long> maps = new ArrayList<Long>();
 
         if (strict) {
@@ -233,37 +299,44 @@ public class MCService {
     @Cacheable("home")
     public List<List<MinecraftMap>> getHomepageMaps(int count, MinecraftMapRepository repo) {
         List<List<MinecraftMap>> maps = new ArrayList<List<MinecraftMap>>();
-        maps.add(topPopularMaps(count, repo));
-        maps.add(newestMaps(count, repo));
-        maps.add(bestEasyMaps(count, repo));
-        maps.add(bestMediumMaps(count, repo));
-        maps.add(bestHardMaps(count, repo));
+        /*
+         * maps.add(topPopularMaps(count, repo));
+         * maps.add(newestMaps(count, repo));
+         * maps.add(bestEasyMaps(count, repo));
+         * maps.add(bestMediumMaps(count, repo));
+         * maps.add(bestHardMaps(count, repo));
+         */
         return maps;
     }
-
-    public List<MinecraftMap> topPopularMaps(int count, MinecraftMapRepository repo) {
-        return MinecraftMapController.paginateList(
-                repo.findByOrderByDownloadCountDesc(), 1, count);
-    }
-
-    public List<MinecraftMap> newestMaps(int count, MinecraftMapRepository repo) {
-        return MinecraftMapController.paginateList(
-                repo.findByOrderByUploadDateDesc(), 1, count);
-    }
-
-    public List<MinecraftMap> bestEasyMaps(int count, MinecraftMapRepository repo) {
-        return MinecraftMapController.paginateList(
-                repo.findByDifficultyOrderByDownloadCountDesc("Easy"), 1, count);
-    }
-
-    public List<MinecraftMap> bestMediumMaps(int count, MinecraftMapRepository repo) {
-        return MinecraftMapController.paginateList(
-                repo.findByDifficultyOrderByDownloadCountDesc("Medium"), 1, count);
-    }
-
-    public List<MinecraftMap> bestHardMaps(int count, MinecraftMapRepository repo) {
-        return MinecraftMapController.paginateList(
-                repo.findByDifficultyOrderByDownloadCountDesc("Hard"), 1, count);
-    }
-
 }
+/*
+ * public List<MinecraftMap> topPopularMaps(int count, MinecraftMapRepository
+ * repo) {
+ * return MinecraftMapController.paginateList(
+ * repo.findByOrderByDownload_countDesc(), 1, count);
+ * }
+ * 
+ * public List<MinecraftMap> newestMaps(int count, MinecraftMapRepository repo)
+ * {
+ * return MinecraftMapController.paginateList(
+ * repo.findByOrderByUploadDateDesc(), 1, count);
+ * }
+ * 
+ * public List<MinecraftMap> bestEasyMaps(int count, MinecraftMapRepository
+ * repo) {
+ * return MinecraftMapController.paginateList(
+ * repo.findByDifficultyOrderByDownload_countDesc("Easy"), 1, count);
+ * }
+ * 
+ * public List<MinecraftMap> bestMediumMaps(int count, MinecraftMapRepository
+ * repo) {
+ * return MinecraftMapController.paginateList(
+ * repo.findByDifficultyOrderByDownload_countDesc("Medium"), 1, count);
+ * }
+ * 
+ * public List<MinecraftMap> bestHardMaps(int count, MinecraftMapRepository
+ * repo) {
+ * return MinecraftMapController.paginateList(
+ * repo.findByDifficultyOrderByDownload_countDesc("Hard"), 1, count);
+ * }
+ */

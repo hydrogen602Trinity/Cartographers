@@ -8,16 +8,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MinecraftMapRepository extends JpaRepository<MinecraftMap, Long> {
     List<MinecraftMap> findByPublished(boolean published);
+/*
+    List<MinecraftMap> findByOrderByDownload_countAsc();
 
-    List<MinecraftMap> findByOrderByDownloadCountAsc();
-
-    List<MinecraftMap> findByOrderByDownloadCountDesc();
+    List<MinecraftMap> findByOrderByDownload_countDesc();
 
     List<MinecraftMap> findByOrderByUploadDateDesc();
     
-    List<MinecraftMap> findByDifficultyOrderByDownloadCountDesc(String difficulty);
+    List<MinecraftMap> findByDifficultyOrderByDownload_countDesc(String difficulty);
 
-    List<MinecraftMap> findByTypeOrderByDownloadCountDesc(String type);
-
+    List<MinecraftMap> findByTypeOrderByDownload_countDesc(String type);
+*/
     List<MinecraftMap> findByNameContaining(String name);
 }

@@ -9,6 +9,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.ctmrepository.model.MinecraftMap;
+import com.ctmrepository.model.SearchFilter;
 import com.ctmrepository.model.SearchPage;
 import com.ctmrepository.model.SearchQueryAndResult;
 import com.ctmrepository.repository.MinecraftMapRepository;
@@ -94,8 +95,32 @@ public class MinecraftMapController {
      * @param per_page maximum number of results to return per page
      * @param strict   if true, search will only return results with exact query
      *                 matches
+     * @param filters  An Array of search filters for advanced searching
      */
     @GetMapping("/search/maps")
+    public ResponseEntity<SearchPage> getMapSearch(
+            @RequestParam() String q,
+            @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
+            @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
+            @RequestParam(required = false, defaultValue = "true") boolean strict,
+            @RequestParam(required = false, defaultValue = "[]") SearchFilter[] filters) {
+        try {
+            q = q.toUpperCase().replaceAll("_", " ").trim();
+
+            SearchQueryAndResult maps;
+            maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository, filters);
+            List<MinecraftMap> outMaps = service.convertList(minecraftMapRepository,
+                    paginateList(maps.maps, page, per_page));
+
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(new SearchPage(maps.max_pages, outMaps));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public ResponseEntity<SearchPage> getMapSearch(
             @RequestParam() String q,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
@@ -105,7 +130,7 @@ public class MinecraftMapController {
             q = q.toUpperCase().replaceAll("_", " ").trim();
 
             SearchQueryAndResult maps;
-            maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository);
+            maps = service.sortByQuery(q, per_page, strict, minecraftMapRepository, new SearchFilter[0]);
             List<MinecraftMap> outMaps = service.convertList(minecraftMapRepository,
                     paginateList(maps.maps, page, per_page));
 
@@ -155,7 +180,7 @@ public class MinecraftMapController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public ResponseEntity<List<List<MinecraftMap>>> getHomePageInfo() {
         int count = 20;
         List<List<MinecraftMap>> maps = new ArrayList<List<MinecraftMap>>();
@@ -209,13 +234,13 @@ public class MinecraftMapController {
         }
     }
 
-    public void evictAllcaches() {
-        cacheManager.getCacheNames().stream()
-                .forEach(cacheName -> cacheManager.getCache(cacheName).clear());
-    }
-
     @Scheduled(fixedRate = 60000)
     public void evictAllcachesAtIntervals() {
         evictAllcaches();
+    }
+
+    public void evictAllcaches() {
+        cacheManager.getCacheNames().stream()
+                .forEach(cacheName -> cacheManager.getCache(cacheName).clear());
     }
 }
