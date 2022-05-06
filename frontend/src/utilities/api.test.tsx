@@ -1,5 +1,5 @@
 import fetch from 'jest-fetch-mock';
-import { MinecraftMap, useAllMaps, useGetMap, useGetMapsCount, useGetMapsSearch } from 'utilities/api';
+import { MinecraftMap, useGetMap, useGetMapsSearch } from 'utilities/api';
 import { APITest, ExpectedResult } from 'utilities/testUtilities';
 
 
@@ -27,17 +27,6 @@ const m: MinecraftMap = {
     series: "the test case series",
     mc_version: "1.0.0"
 };
-
-test("useAllMaps", async () => {
-    fetch.mockResponseOnce(JSON.stringify([m]));
-
-    let x = await APITest(ExpectedResult.Success, useAllMaps);
-    expect(x).toBe(JSON.stringify([m]));
-
-    expect(fetch.mock.calls.length).toEqual(1);
-
-    expect(fetch.mock.calls[0][0]).toBe("http://localhost:8080/search/maps?q=");
-});
 
 test("useGetMapsSearch", async () => {
     fetch.mockResponseOnce(JSON.stringify([m]));
@@ -70,17 +59,6 @@ test("useGetMapsSearch", async () => {
     expect(fetch.mock.calls.length).toEqual(1);
 
     expect(fetch.mock.calls[0][0]).toBe("http://localhost:8080/search/maps?q=some%2Fquery&per_page=1&page=42");
-});
-
-test("useGetMapsCount", async () => {
-    fetch.mockResponseOnce(JSON.stringify(42));
-
-    let x = await APITest(ExpectedResult.Success, useGetMapsCount);
-    expect(x).toBe(JSON.stringify(42));
-
-    expect(fetch.mock.calls.length).toEqual(1);
-
-    expect(fetch.mock.calls[0][0]).toBe("http://localhost:8080/maps/count");
 });
 
 test("useGetMap", async () => {

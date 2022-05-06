@@ -27,12 +27,12 @@ export default function Home() {
   let searchTerm = searchParams.get('q');
   const searchHandler = (term: string) => {
     setSearchParams({ q: term });
+    setPage(1);
   };
 
   // useFetch has a bug where an empty string makes it not fetch data but pretend it did, so if searchTerm is empty,
   // it will use Infinity instead. An object cannot be used because React will complain
   const [isLoading, searchResult, searchError] = useGetMapsSearch(searchTerm || '', page, [searchTerm || Infinity], mapsPerPage);
-  console.log(searchResult);
 
   if (searchError) {
     return <ErrorPage error={searchError} />;

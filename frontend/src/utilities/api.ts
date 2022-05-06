@@ -23,9 +23,8 @@ function search_param_helper(obj: any): string {
  * Specify API Paths here
  */
 const API_ENDPOINTS = {
-    ALL_MAPS: (params: { q: string, page?: number, per_page?: number }) => '/search/maps?' + search_param_helper(params),
-    ONE_MAP: (id: number) => `/maps/${id}`,
-    COUNT_MAPS: '/maps/count'
+    SEARCH_MAPS: (params: { q: string, page?: number, per_page?: number }) => '/search/maps?' + search_param_helper(params),
+    MAPS_ID: (id: number) => `/maps/${id}`
 }
 
 
@@ -54,23 +53,6 @@ export interface SearchResult {
     data: MinecraftMap[]
 }
 
-/**
- * Get all maps from the backend. A react hook
- * @param {any[] | null} dependsArray re-request data when the values in the array change.
- * Set to [] (the default) to never reload data
- * @return {[boolean, MinecraftMap, any]} [whether its still loading, the data, error]
- */
-export function useAllMaps(
-    dependsArray: any[] | null = []
-): [boolean, MinecraftMap[], useFetch.UseFetchError | undefined] {
-
-    return useFetchAPI(
-        API_ENDPOINTS.ALL_MAPS({ q: '' }),
-        dependsArray,
-        []
-    );
-}
-
 const ENTRIES_PER_PAGE: number = 12;
 
 /**
@@ -89,7 +71,7 @@ export function useGetMapsSearch(
 ): [boolean, SearchResult, useFetch.UseFetchError | undefined] {
 
     return useFetchAPI(
-        API_ENDPOINTS.ALL_MAPS({ q: query, per_page: per_page, page: page }),
+        API_ENDPOINTS.SEARCH_MAPS({ q: query, per_page: per_page, page: page }),
         dependsArray,
         { max_page: 0, data: [] }
     );
@@ -108,20 +90,8 @@ export function useGetMap(
 ): [boolean, MinecraftMap | null, useFetch.UseFetchError | undefined] {
 
     return useFetchAPI(
-        API_ENDPOINTS.ONE_MAP(id),
+        API_ENDPOINTS.MAPS_ID(id),
         dependsArray,
         null
-    );
-}
-
-
-export function useGetMapsCount(
-    dependsArray: any[] | null = []
-): [boolean, number, useFetch.UseFetchError | undefined] {
-
-    return useFetchAPI(
-        API_ENDPOINTS.COUNT_MAPS,
-        dependsArray,
-        0
     );
 }
