@@ -18,18 +18,27 @@ class ApplicationTests {
     @Autowired
     private MinecraftMapController controller;
 
+    /**
+     * @throws Exception
+     */
     @Test
     void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
         assertThat(controller.index().equals("Greetings from Spring Boot!")).isTrue();
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void mapsLoad() throws Exception {
         assertThat(controller.getMapCount()).isNotNull();
         assertThat(controller.getMapCount().getBody() > 0).isTrue();
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void mapsAreAccessible() throws Exception {
         assertThat(controller.getMapCount().getStatusCodeValue() > 0).isTrue();
@@ -40,6 +49,9 @@ class ApplicationTests {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void mapsAreStrictSearchable() throws Exception {
         // Test that Maps are searchable
@@ -62,6 +74,9 @@ class ApplicationTests {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void mapsAreFuzzySearchable() throws Exception {
         // Test that Maps are searchable
@@ -85,6 +100,9 @@ class ApplicationTests {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void searchHasMaxPages() {
         assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
@@ -97,6 +115,9 @@ class ApplicationTests {
         assertThat(controller.getUnpublishedMaps().getStatusCode().equals(HttpStatus.OK)).isTrue();
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void canPublishMaps() throws Exception {
         // Try and publish already published maps, prove you can't
@@ -129,6 +150,9 @@ class ApplicationTests {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     @Test
     void canRetractMaps() throws Exception {
         // Try and retract not-published maps, prove you can't

@@ -57,6 +57,9 @@ public class MinecraftMap {
     @Column(name = "published")
     private boolean published;
 
+    /**
+     * @return
+     */
     public boolean isPublished() {
         return published;
     }
@@ -69,114 +72,198 @@ public class MinecraftMap {
         published = false;
     }
 
+    /**
+     * @return
+     */
     public long getId() {
         return this.id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return
+     */
     public long getUpload_date() {
         return this.upload_date;
     }
 
+    /**
+     * @param upload_date
+     */
     public void setUpload_date(long upload_date) {
         this.upload_date = upload_date;
     }
 
+    /**
+     * @return
+     */
     public String getAuthor() {
         return this.author;
     }
 
+    /**
+     * @param author
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     * @return
+     */
     public String getLength() {
         return this.length;
     }
 
+    /**
+     * @param length
+     */
     public void setLength(String length) {
         this.length = length;
     }
 
+    /**
+     * @return
+     */
     public int getObjective_main() {
         return this.objective_main;
     }
 
+    /**
+     * @param objective_main
+     */
     public void setObjective_main(int objective_main) {
         this.objective_main = objective_main;
     }
 
+    /**
+     * @return
+     */
     public int getObjective_bonus() {
         return this.objective_bonus;
     }
 
+    /**
+     * @param objective_bonus
+     */
     public void setObjective_bonus(int objective_bonus) {
         this.objective_bonus = objective_bonus;
     }
 
+    /**
+     * @return
+     */
     public String getDifficulty() {
         return this.difficulty;
     }
 
+    /**
+     * @param difficulty
+     */
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
 
+    /**
+     * @return
+     */
     public String getDescription_short() {
         return this.description_short;
     }
 
+    /**
+     * @param description_short
+     */
     public void setDescription_short(String description_short) {
         this.description_short = description_short;
     }
 
+    /**
+     * @return
+     */
     public long getDownload_count() {
         return this.download_count;
     }
 
+    /**
+     * @param download_count
+     */
     public void setDownload_count(long download_count) {
         this.download_count = download_count;
     }
 
+    /**
+     * @return
+     */
     public String getType() {
         return this.type;
     }
 
+    /**
+     * @param type
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * @return
+     */
     public String getImage_url() {
         return this.image_url;
     }
 
+    /**
+     * @param image_url
+     */
     public void setImage_url(String image_url) {
         this.image_url = image_url;
     }
 
+    /**
+     * @return
+     */
     public String getSeries() {
         return this.series;
     }
 
+    /**
+     * @param series
+     */
     public void setSeries(String series) {
         this.series = series;
     }
 
+    /**
+     * @return
+     */
     public String getMc_version() {
         return this.mc_version;
     }
 
+    /**
+     * @param mc_version
+     */
     public void setMc_version(String mc_version) {
         this.mc_version = mc_version;
     }
