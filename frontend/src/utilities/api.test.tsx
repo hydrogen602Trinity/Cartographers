@@ -1,5 +1,5 @@
 import fetch from 'jest-fetch-mock';
-import { search_param_helper, useAllMaps, useGetMap, useGetMapsCount, useGetMapsSearch } from 'utilities/api';
+import { search_param_helper, useGetMap, useGetMapsSearch } from 'utilities/api';
 import { APITest, ExpectedResult, minecraftMap } from 'utilities/testUtilities';
 
 
@@ -11,16 +11,6 @@ beforeEach(() => {
     process.env.REACT_APP_DEVELOPMENT_API = "http://localhost:8080";
 });
 
-test("useAllMaps", async () => {
-    fetch.mockResponseOnce(JSON.stringify([minecraftMap]));
-
-    let x = await APITest(ExpectedResult.Success, useAllMaps);
-    expect(x).toBe(JSON.stringify([minecraftMap]));
-
-    expect(fetch.mock.calls.length).toEqual(1);
-
-    expect(fetch.mock.calls[0][0]).toBe("http://localhost:8080/search/maps?q=");
-});
 
 test("useGetMapsSearch", async () => {
     fetch.mockResponseOnce(JSON.stringify([minecraftMap]));
@@ -53,17 +43,6 @@ test("useGetMapsSearch with pages", async () => {
     expect(fetch.mock.calls.length).toEqual(1);
 
     expect(fetch.mock.calls[0][0]).toBe("http://localhost:8080/search/maps?q=some%2Fquery&per_page=1&page=42");
-});
-
-test("useGetMapsCount", async () => {
-    fetch.mockResponseOnce(JSON.stringify(42));
-
-    let x = await APITest(ExpectedResult.Success, useGetMapsCount);
-    expect(x).toBe(JSON.stringify(42));
-
-    expect(fetch.mock.calls.length).toEqual(1);
-
-    expect(fetch.mock.calls[0][0]).toBe("http://localhost:8080/maps/count");
 });
 
 test("useGetMap", async () => {

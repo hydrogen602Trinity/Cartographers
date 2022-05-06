@@ -48,7 +48,7 @@ class ApplicationTests {
         // General Case
         int max_test_map_size = Math.min(controller.getMapCount().getBody() / 2, 25);
         MinecraftMap[] testMaps = new MinecraftMap[max_test_map_size];
-        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
+        List<MinecraftMap> pubMaps = controller.publishedMaps();
         for (int i = 0; i < testMaps.length; i++) {
             int rand = (int) (Math.random() * pubMaps.size());
             testMaps[i] = pubMaps.get(rand);
@@ -56,7 +56,7 @@ class ApplicationTests {
         }
         for (MinecraftMap map : testMaps) {
             List<MinecraftMap> searchMap = controller
-                    .getMapSearch(map.getName(), 1, 20, true).getBody();
+                    .getMapSearch(map.getName(), 1, 20, true).getBody().data;
             assertThat(searchMap.stream().filter(o -> o.getId() == map.getId())
                     .findFirst().isPresent()).isTrue();
         }
@@ -71,7 +71,7 @@ class ApplicationTests {
         // General Case
         int max_test_map_size = Math.min(controller.getMapCount().getBody() / 2, 25);
         MinecraftMap[] testMaps = new MinecraftMap[max_test_map_size];
-        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
+        List<MinecraftMap> pubMaps = controller.publishedMaps();
         for (int i = 0; i < testMaps.length; i++) {
             int rand = (int) (Math.random() * pubMaps.size());
             testMaps[i] = pubMaps.get(rand);
@@ -79,10 +79,16 @@ class ApplicationTests {
         }
         for (MinecraftMap map : testMaps) {
             List<MinecraftMap> searchMap = controller
-                    .getMapSearch(map.getName(), 1, 20, false).getBody();
+                    .getMapSearch(map.getName(), 1, 20, false).getBody().data;
             assertThat(searchMap.stream().filter(o -> o.getId() == map.getId())
                     .findFirst().isPresent()).isTrue();
         }
+    }
+
+    @Test
+    void searchHasMaxPages() {
+        assertThat(controller.getMapSearch("", 1, 20, true)).isNotNull();
+        assertThat(controller.getMapSearch("", 1, 20, true).getBody().max_page > 0).isTrue();
     }
 
     @Test
@@ -94,12 +100,12 @@ class ApplicationTests {
     @Test
     void canPublishMaps() throws Exception {
         // Try and publish already published maps, prove you can't
-        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
-        for (int i = 0; i < Math.min(controller.getMapCount().getBody() / 2, 25); i++) {
+        List<MinecraftMap> pubMaps = controller.publishedMaps();
+        for (int i = 0; i < 5; i++) {
             MinecraftMap testMap = pubMaps.get(
                     (int) (Math.random() * pubMaps.size()));
             assertThat(controller.publishMap(testMap.getId())
-                    .getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)).isTrue();
+                    .getStatusCode().equals(HttpStatus.BAD_REQUEST)).isTrue();
         }
 
         // Try and publish not-published maps, prove you can
@@ -113,7 +119,7 @@ class ApplicationTests {
         }
 
         // Try and mess it up, prove internal server error
-        pubMaps = controller.getPublishedMaps().getBody();
+        pubMaps = controller.publishedMaps();
         for (int i = 0; i < Math.min(15, pubMaps.size()); i++) {
             int rand = (int) Math.random() * pubMaps.size();
             MinecraftMap pubMap = pubMaps.get(rand);
@@ -131,11 +137,11 @@ class ApplicationTests {
             MinecraftMap testMap = unPubMaps.get(
                     (int) (Math.random() * unPubMaps.size()));
             assertThat(controller.retractMap(testMap.getId())
-                    .getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)).isTrue();
+                    .getStatusCode().equals(HttpStatus.BAD_REQUEST)).isTrue();
         }
 
         // Try and retract published maps, prove you can
-        List<MinecraftMap> pubMaps = controller.getPublishedMaps().getBody();
+        List<MinecraftMap> pubMaps = controller.publishedMaps();
         int j = Math.min(15, pubMaps.size());
         for (int i = 0; i < j; i++) {
             int rand = (int) (Math.random() * unPubMaps.size());

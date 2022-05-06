@@ -32,7 +32,7 @@ beforeEach(() => {
         const url = new URL(req.url);
         switch (url.pathname) {
             case '/search/maps':
-                return JSON.stringify([minecraftMap]);
+                return JSON.stringify({ max_page: 1, data: [minecraftMap] });
             case '/maps/count':
                 return '1'
             case '/maps/1':
@@ -148,9 +148,8 @@ test('rendering & pages nav', async () => {
     let out = render(<App></App>);
     let parts = await waitFor(() => out.getByTestId('home-map-display'));
 
-    expect(fetch.mock.calls.length).toBe(2);
-    expect(fetch.mock.calls[0][0]).toBe('http://localhost:8080/maps/count');
-    expect(fetch.mock.calls[1][0]).toBe('http://localhost:8080/search/maps?q=&per_page=12&page=1');
+    expect(fetch.mock.calls.length).toBe(1);
+    expect(fetch.mock.calls[0][0]).toBe('http://localhost:8080/search/maps?q=&per_page=12&page=1');
 
     let search = out.getByLabelText('search term');
 
@@ -163,8 +162,8 @@ test('rendering & pages nav', async () => {
 
     await out.findByTestId('home-map-display');
 
-    expect(fetch.mock.calls.length).toBe(3);
-    expect(fetch.mock.calls[2][0]).toBe('http://localhost:8080/search/maps?q=some%26info&per_page=12&page=1');
+    expect(fetch.mock.calls.length).toBe(2);
+    expect(fetch.mock.calls[1][0]).toBe('http://localhost:8080/search/maps?q=some%26info&per_page=12&page=1');
 });
 
 /**
