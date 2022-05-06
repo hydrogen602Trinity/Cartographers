@@ -390,19 +390,52 @@ public class MinecraftMapController {
      * 
      * By: Austin
      * 
-     * Updated: 5/2/22
+     * Updated: 5/5/22
      * 
-     * @param map the map to be added from the frontend
+     * @param newMap the map to be added from the frontend
      * 
      */
     @PostMapping("/maps/upload") // New API Endpoint
-    public ResponseEntity<Void> addMap(ResponseEntity<MinecraftMap> map) {
-
+    public ResponseEntity<Void> addMap(
+        @RequestParam(required = true) MinecraftMap newMap) {
+            
         try {
 
-            MinecraftMap newMap = map.getBody();
+            //MinecraftMap newMap = map.getBody();
 
             // Do I need to set default values for other variables?
+            // String name, String author, String length, int objective_main,
+            // int objective_bonus, String difficulty, String description_short,
+            // String type,
+            // String image_url, String series, String mc_version
+            // 418
+
+            // How does Springboot handle data verification?
+            // Does it convert blank fields to null or ""?
+            // Don't even know if the stuff below is needed or is covered by the @NotNull and other stuff in MinecraftMap.java
+
+            if(newMap.getName().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getAuthor().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getLength().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getObjective_main() < 1)
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getDifficulty().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getDescription_short().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getType().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getImage_url().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getSeries().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            else if(newMap.getMc_version().equals(null))
+                return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
+            
+
 
             // Upload date (string): newMap.setUpload_date(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
             newMap.setUpload_date(System.currentTimeMillis());
@@ -423,18 +456,23 @@ public class MinecraftMapController {
 
     /*
      * AUSTIN STUFF
-     *
+     * 
+     * Example:
+     * @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
+     * 
+     * 
      * 1) Convert Data into MinecraftMap Object
      * - If given MinecraftMap object, then just add object
      *
      * Am I making a frontend function to send the params to the backend?\
-     * How will the data be sent to the backend? As a list of strings or a
+     * How will the data be sent to the backend? As a list of strings/nums or a
      * MinecraftMap object
      *
      * New:
      * 1) CHECK FOR CASES TO REJECT MAP
      * 
      */
+
 
     /*
      * @GetMapping("/maps")

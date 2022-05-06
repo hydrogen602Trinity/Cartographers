@@ -157,13 +157,33 @@ class ApplicationTests {
         }
     }
 
+    //Austin 5/5/2022
     @Test
     void canAddMap() throws Exception {
         //Try and add a map to the existing database, prove you can
 
-        assertThat(controller.addMap(getSampleMap()).getStatusCode().equals(HttpStatus.OK)).isTrue();
+        assertThat(controller.addMap(sampleMap).getStatusCode().equals(HttpStatus.OK)).isTrue();
     }
 
+    MinecraftMap sampleMap = new MinecraftMap("Test", 0, "The CTMC", "Long", 17, 54, "Medium",
+        "Moonlight is the lovechild of the Rookiewreck mapping event, featuring dozens of builders creating full-length areas over the span of a single month!",
+        899, "Linear Branching", "/images/5886020644119590.webp",
+        "Rookiewreck", "1.17.1", true);
+
+    
+    @Test
+    void cantAddBadMap() throws Exception {
+
+        MinecraftMap sampleFailMap = sampleMap;
+        sampleFailMap.setName(null);
+
+        assertThat(controller.addMap(sampleFailMap).getStatusCode().equals(HttpStatus.OK)).isFalse();
+    }
+
+    //TO ADD:
+    //  - Other cases where map gets rejected
+
+    /*
     public ResponseEntity<MinecraftMap> getSampleMap() {
 
         MinecraftMap sampleMap = new MinecraftMap("Test", 0, "The CTMC", "Long", 17, 54, "Medium",
@@ -175,5 +195,5 @@ class ApplicationTests {
         headers.add("Responded", "MyController");
 
         return ResponseEntity.accepted().headers(headers).body(sampleMap);
-    }
+    } */
 }

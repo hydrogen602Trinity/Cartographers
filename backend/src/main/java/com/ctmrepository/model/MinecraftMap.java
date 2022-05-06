@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "ctm_maps")
@@ -15,24 +17,30 @@ public class MinecraftMap {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull
     @Column(name = "name")
     private String name;
 
     @Column(name = "upload_date")
     private long upload_date;
 
+    @NotNull
     @Column(name = "author")
     private String author;
 
+    @NotNull
     @Column(name = "length")
     private String length;
 
+    @NotNull
+    @Min(1)
     @Column(name = "objective_main")
     private int objective_main;
 
     @Column(name = "objective_bonus")
     private int objective_bonus;
 
+    @NotNull
     @Column(name = "difficulty")
     private String difficulty;
 
@@ -42,15 +50,18 @@ public class MinecraftMap {
     @Column(name = "download_count")
     private long download_count;
 
+    @NotNull
     @Column(name = "type")
     private String type;
 
     @Column(name = "image_url")
     private String image_url;
 
+    @NotNull
     @Column(name = "series")
     private String series;
 
+    @NotNull
     @Column(name = "mc_version")
     private String mc_version;
 
@@ -210,4 +221,6 @@ public class MinecraftMap {
     // + downloadCount + ", verified=" + verified + "]";
     // }
 
+    // Austin 5/5/2022
+    // Added @NotNull to some variables in map
 }
