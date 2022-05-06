@@ -32,8 +32,8 @@ export default function SearchBar({ onSearch, defaultValue }: ISearchProps) {
     };
 
     return (
-        <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
-            <IconButton sx={{ p: '10px' }} aria-label="Search" onClick={() => onSearch(searchQuery)}>
+        <Paper data-testid="search-bar-base" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
+            <IconButton sx={{ p: '10px' }} aria-label="Submit search query" onClick={() => onSearch(searchQuery)}>
                 <SearchIcon />
             </IconButton>
             <FormControl component="form" fullWidth onSubmit={handleFormSubmit}>
@@ -42,17 +42,18 @@ export default function SearchBar({ onSearch, defaultValue }: ISearchProps) {
                     value={searchQuery}
                     sx={{ ml: 1, flex: 1 }}
                     className='input-base'
+                    aria-label="Search for CTM maps"
                     placeholder="Search"
                     inputProps={{ 'aria-label': 'search term' }}
                 />
             </FormControl >
             {searchQuery !== "" &&
-                <IconButton sx={{ p: '10px' }} aria-label="Clear Search" onClick={() => handleSearchClear()}>
+                <IconButton sx={{ p: '10px' }} aria-label="Clear search field" onClick={() => handleSearchClear()}>
                     <CloseIcon />
                 </IconButton>
             }
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-            <IconButton sx={{ p: '10px' }} aria-label="Menu">
+            <IconButton sx={{ p: '10px' }} aria-label="Open search options menu">
                 <MenuIcon />
             </IconButton>
         </Paper>
