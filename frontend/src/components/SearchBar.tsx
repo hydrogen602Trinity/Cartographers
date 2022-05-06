@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Divider from '@mui/material/Divider';
@@ -18,20 +19,24 @@ export interface ISearchProps {
 
 
 export default function SearchBar({ onSearch, defaultValue }: ISearchProps) {
-    const [searchTerm, setSearchTerm] = useState(defaultValue);
+    const [searchTerm, setSearchTerm] = useState(defaultValue)
 
+    const handleSearchClear = () => {
+        setSearchTerm("");
+        onSearch("");
+    }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         onSearch(searchTerm);
-    }
+    };
 
     return (
         <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
-            <IconButton sx={{ p: '10px' }} aria-label="search" onClick={() => onSearch(searchTerm)}>
+            <IconButton sx={{ p: '10px' }} aria-label="Search" onClick={() => onSearch(searchTerm)}>
                 <SearchIcon />
             </IconButton>
-            <FormControl component="form" fullWidth onSubmit={handleSubmit}>
+            <FormControl component="form" fullWidth onSubmit={handleFormSubmit}>
                 <InputBase
                     onChange={e => setSearchTerm(e.target.value)}
                     value={searchTerm}
@@ -41,8 +46,13 @@ export default function SearchBar({ onSearch, defaultValue }: ISearchProps) {
                     inputProps={{ 'aria-label': 'search term' }}
                 />
             </FormControl >
+            {searchTerm !== "" &&
+                <IconButton sx={{ p: '10px' }} aria-label="Clear Search" onClick={() => handleSearchClear()}>
+                    <CloseIcon />
+                </IconButton>
+            }
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-            <IconButton sx={{ p: '10px' }} aria-label="menu">
+            <IconButton sx={{ p: '10px' }} aria-label="Menu">
                 <MenuIcon />
             </IconButton>
         </Paper>
