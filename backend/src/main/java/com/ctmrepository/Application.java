@@ -8,6 +8,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class Application {
 
+    /**
+     * @param args Command line args
+     */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

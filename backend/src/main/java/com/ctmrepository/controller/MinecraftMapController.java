@@ -75,6 +75,10 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @GetMapping("/admin/unpublished-maps/{id}")
     public ResponseEntity<MinecraftMap> getUnpublishedMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
@@ -119,6 +123,9 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @return
+     */
     @GetMapping("/admin/publishing/new-maps")
     public ResponseEntity<List<MinecraftMap>> getUnpublishedMaps() {
         try {
@@ -131,6 +138,10 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @GetMapping("admin/publishing/publish-map")
     public ResponseEntity<MinecraftMap> publishMap(
             @RequestParam() long id) {
@@ -153,6 +164,10 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @GetMapping("admin/publishing/retract-map")
     public ResponseEntity<MinecraftMap> retractMap(
             @RequestParam() long id) {
