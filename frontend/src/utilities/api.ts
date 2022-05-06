@@ -1,6 +1,6 @@
 import useFetch from "react-fetch-hook";
-
 import { useFetchAPI } from "utilities/fetch";
+
 
 /**
  * Utility function
@@ -9,7 +9,7 @@ import { useFetchAPI } from "utilities/fetch";
  * @param {any} obj the parameters to format
  * @returns {string} the formatted search parameter, ready to be put into a URL
  */
-function search_param_helper(obj: any): string {
+export function search_param_helper(obj: any): string {
     Object.keys(obj).forEach(k => {
         if (obj[k] === undefined) {
             delete obj[k];
