@@ -396,7 +396,7 @@ public class MinecraftMapController {
      * 
      */
     @PostMapping("/maps/upload") // New API Endpoint
-    public ResponseEntity<Void> addMap(MinecraftMapRepository repo, ResponseEntity<MinecraftMap> map) {
+    public ResponseEntity<Void> addMap(ResponseEntity<MinecraftMap> map) {
 
         try {
 
@@ -409,7 +409,7 @@ public class MinecraftMapController {
             newMap.setDownload_count(0);
             newMap.retract();
 
-            repo.saveAndFlush(newMap);
+            minecraftMapRepository.saveAndFlush(newMap);
 
             return new ResponseEntity<Void>(HttpStatus.OK);
 
@@ -432,8 +432,7 @@ public class MinecraftMapController {
      * MinecraftMap object
      *
      * New:
-     * 1) Do I need to give the map its ID or will it have it?
-     * 2) If it has an ID, then does API endpoint need to change?
+     * 1) CHECK FOR CASES TO REJECT MAP
      * 
      */
 

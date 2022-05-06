@@ -10,7 +10,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
 class ApplicationTests {
@@ -153,5 +155,25 @@ class ApplicationTests {
             assertThat(controller.retractMap(unPubMap.getId())
                     .getStatusCode().equals(HttpStatus.OK)).isFalse();
         }
+    }
+
+    @Test
+    void canAddMap() throws Exception {
+        //Try and add a map to the existing database, prove you can
+
+        assertThat(controller.addMap(getSampleMap()).getStatusCode().equals(HttpStatus.OK)).isTrue();
+    }
+
+    public ResponseEntity<MinecraftMap> getSampleMap() {
+
+        MinecraftMap sampleMap = new MinecraftMap("Test", 0, "The CTMC", "Long", 17, 54, "Medium",
+        "Moonlight is the lovechild of the Rookiewreck mapping event, featuring dozens of builders creating full-length areas over the span of a single month!",
+        899, "Linear Branching", "/images/5886020644119590.webp",
+        "Rookiewreck", "1.17.1", true);
+
+        var headers = new HttpHeaders();
+        headers.add("Responded", "MyController");
+
+        return ResponseEntity.accepted().headers(headers).body(sampleMap);
     }
 }
