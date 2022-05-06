@@ -388,28 +388,53 @@ public class MinecraftMapController {
     /**
      * Add one map to the list
      * 
+     * By: Austin
+     * 
+     * Updated: 5/2/22
+     * 
      * @param map the map to be added from the frontend
      * 
      */
     @PostMapping("/maps/upload") // New API Endpoint
-    public void addMap(List<MinecraftMap> maps, MinecraftMap map) {
+    public ResponseEntity<Void> addMap(MinecraftMapRepository repo, ResponseEntity<MinecraftMap> map) {
 
-        maps.add(map);
+        try {
 
-        return;
+            MinecraftMap newMap = map.getBody();
+
+            // Do I need to set default values for other variables?
+
+            // Upload date (string): newMap.setUpload_date(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+            newMap.setUpload_date(System.currentTimeMillis());
+            newMap.setDownload_count(0);
+            newMap.retract();
+
+            repo.saveAndFlush(newMap);
+
+            return new ResponseEntity<Void>(HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
     }
 
     /*
      * AUSTIN STUFF
-     * //
-     * // 1) Convert Data into MinecraftMap Object
-     * // - If given MinecraftMap object, then just add object
-     * //
-     * // Am I making a frontend function to send the params to the backend?\
-     * // How will the data be sent to the backend? As a list of strings or a
-     * // MinecraftMap object
-     * //
-     * // How do I get params from frontend, and get an object from the params
+     *
+     * 1) Convert Data into MinecraftMap Object
+     * - If given MinecraftMap object, then just add object
+     *
+     * Am I making a frontend function to send the params to the backend?\
+     * How will the data be sent to the backend? As a list of strings or a
+     * MinecraftMap object
+     *
+     * New:
+     * 1) Do I need to give the map its ID or will it have it?
+     * 2) If it has an ID, then does API endpoint need to change?
+     * 
      */
 
     /*
