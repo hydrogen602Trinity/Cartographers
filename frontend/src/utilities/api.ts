@@ -23,9 +23,8 @@ export function search_param_helper(obj: any): string {
  * Specify API Paths here
  */
 const API_ENDPOINTS = {
-    ALL_MAPS: (params: { q: string, page?: number, per_page?: number }) => '/search/maps?' + search_param_helper(params),
-    ONE_MAP: (id: number) => `/maps/${id}`,
-    COUNT_MAPS: '/maps/count'
+    SEARCH_MAPS: (params: { q: string, page?: number, per_page?: number }) => '/search/maps?' + search_param_helper(params),
+    MAPS_ID: (id: number) => `/maps/${id}`
 }
 
 
@@ -49,14 +48,9 @@ export interface MinecraftMap {
     mc_version: string
 }
 
-/**
- * Get all maps from the backend. A react hook
- * @param {any[] | null} dependsArray re-request data when the values in the array change.
- * Set to [] (the default) to never reload data
- * @return {[boolean, MinecraftMap, any]} [whether its still loading, the data, error]
- */
-export function useAllMaps(dependsArray: any[] | null = []): [boolean, MinecraftMap[], useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: '' }), dependsArray, []);
+export interface SearchResult {
+    max_page: number,
+    data: MinecraftMap[]
 }
 
 const ENTRIES_PER_PAGE: number = 12;
@@ -67,10 +61,20 @@ const ENTRIES_PER_PAGE: number = 12;
  * @param {page} page the page number
  * @param {any[] | null} dependsArray re-request data when the values in the array change.
  * Set to [] (the default) to never reload data
- * @return {[boolean, MinecraftMap, any]} [whether its still loading, the data, error]
+ * @return {[boolean, SearchResult, any]} [whether its still loading, the data, error]
  */
-export function useGetMapsSearch(query: string, page: number = 0, dependsArray: any[] | null = [], per_page: number = ENTRIES_PER_PAGE): [boolean, MinecraftMap[], useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ALL_MAPS({ q: query, per_page: per_page, page: page }), dependsArray, []);
+export function useGetMapsSearch(
+    query: string,
+    page: number = 0,
+    dependsArray: any[] | null = [],
+    per_page: number = ENTRIES_PER_PAGE
+): [boolean, SearchResult, useFetch.UseFetchError | undefined] {
+
+    return useFetchAPI(
+        API_ENDPOINTS.SEARCH_MAPS({ q: query, per_page: per_page, page: page }),
+        dependsArray,
+        { max_page: 0, data: [] }
+    );
 }
 
 /**
@@ -80,11 +84,14 @@ export function useGetMapsSearch(query: string, page: number = 0, dependsArray: 
  * Set to [] (the default) to never reload data
  * @return {[boolean, MinecraftMap | null, any]} [whether its still loading, the data, error]
  */
-export function useGetMap(id: number, dependsArray: any[] | null = []): [boolean, MinecraftMap | null, useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.ONE_MAP(id), dependsArray, null);
-}
+export function useGetMap(
+    id: number,
+    dependsArray: any[] | null = []
+): [boolean, MinecraftMap | null, useFetch.UseFetchError | undefined] {
 
-
-export function useGetMapsCount(dependsArray: any[] | null = []): [boolean, number, useFetch.UseFetchError | undefined] {
-    return useFetchAPI(API_ENDPOINTS.COUNT_MAPS, dependsArray, 0);
+    return useFetchAPI(
+        API_ENDPOINTS.MAPS_ID(id),
+        dependsArray,
+        null
+    );
 }
