@@ -19,34 +19,34 @@ export interface ISearchProps {
 
 
 export default function SearchBar({ onSearch, defaultValue }: ISearchProps) {
-    const [searchTerm, setSearchTerm] = useState(defaultValue)
+    const [searchQuery, setSearchQuery] = useState(defaultValue);
 
     const handleSearchClear = () => {
-        setSearchTerm("");
+        setSearchQuery("");
         onSearch("");
     }
 
     const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        onSearch(searchTerm);
+        onSearch(searchQuery);
     };
 
     return (
         <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}>
-            <IconButton sx={{ p: '10px' }} aria-label="Search" onClick={() => onSearch(searchTerm)}>
+            <IconButton sx={{ p: '10px' }} aria-label="Search" onClick={() => onSearch(searchQuery)}>
                 <SearchIcon />
             </IconButton>
             <FormControl component="form" fullWidth onSubmit={handleFormSubmit}>
                 <InputBase
-                    onChange={e => setSearchTerm(e.target.value)}
-                    value={searchTerm}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    value={searchQuery}
                     sx={{ ml: 1, flex: 1 }}
                     className='input-base'
                     placeholder="Search"
                     inputProps={{ 'aria-label': 'search term' }}
                 />
             </FormControl >
-            {searchTerm !== "" &&
+            {searchQuery !== "" &&
                 <IconButton sx={{ p: '10px' }} aria-label="Clear Search" onClick={() => handleSearchClear()}>
                     <CloseIcon />
                 </IconButton>
