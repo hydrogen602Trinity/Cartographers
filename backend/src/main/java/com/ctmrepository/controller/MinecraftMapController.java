@@ -9,9 +9,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.ctmrepository.model.MinecraftMap;
-import com.ctmrepository.model.SearchResult;
 import com.ctmrepository.model.SearchQueryAndResult;
 import com.ctmrepository.repository.MinecraftMapRepository;
+import com.ctmrepository.response.SearchResponseEntity;
+import com.ctmrepository.service.MinecraftService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -39,7 +40,7 @@ public class MinecraftMapController {
     MinecraftMapRepository minecraftMapRepository;
 
     @Autowired
-    MCService service;
+    MinecraftService service;
 
     @Autowired
     CacheManager cacheManager;
@@ -96,7 +97,7 @@ public class MinecraftMapController {
      *                 matches
      */
     @GetMapping("/search/maps")
-    public ResponseEntity<SearchResult> getMapSearch(
+    public ResponseEntity<SearchResponseEntity> getMapSearch(
             @RequestParam() String q,
             @RequestParam(required = false, defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false, defaultValue = "20") @Min(1) @Max(100) int per_page,
@@ -111,7 +112,7 @@ public class MinecraftMapController {
 
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
-                    .body(new SearchResult(maps.max_page, outMaps));
+                    .body(new SearchResponseEntity(maps.max_page, outMaps));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

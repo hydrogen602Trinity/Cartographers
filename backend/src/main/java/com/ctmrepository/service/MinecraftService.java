@@ -1,4 +1,4 @@
-package com.ctmrepository.controller;
+package com.ctmrepository.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MCService {
+public class MinecraftService {
 
     @Cacheable("search")
     public SearchQueryAndResult sortByQuery(String q, int per_page, boolean strict,
