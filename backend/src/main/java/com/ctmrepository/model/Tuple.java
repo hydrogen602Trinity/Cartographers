@@ -17,7 +17,7 @@ public class Tuple<X, Y> {
     }
 
     /**
-     * @return X
+     * @return
      */
     public X head() {
         return x;
@@ -31,14 +31,14 @@ public class Tuple<X, Y> {
     }
 
     /**
-     * @return Y
+     * @return
      */
     public Y tail() {
         return y;
     }
 
     /**
-     * @return String
+     * @return
      */
     public String toString() {
         return "(" + x.toString() + ", " + y.toString() + ")";

@@ -58,7 +58,7 @@ public class MinecraftMap {
     private boolean published;
 
     /**
-     * @return boolean
+     * @return
      */
     public boolean isPublished() {
         return published;
@@ -73,7 +73,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return long
+     * @return
      */
     public long getId() {
         return this.id;
@@ -87,7 +87,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getName() {
         return this.name;
@@ -101,7 +101,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return long
+     * @return
      */
     public long getUpload_date() {
         return this.upload_date;
@@ -115,7 +115,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getAuthor() {
         return this.author;
@@ -129,7 +129,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getLength() {
         return this.length;
@@ -143,7 +143,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return int
+     * @return
      */
     public int getObjective_main() {
         return this.objective_main;
@@ -157,7 +157,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return int
+     * @return
      */
     public int getObjective_bonus() {
         return this.objective_bonus;
@@ -171,7 +171,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getDifficulty() {
         return this.difficulty;
@@ -185,7 +185,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getDescription_short() {
         return this.description_short;
@@ -199,7 +199,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return long
+     * @return
      */
     public long getDownload_count() {
         return this.download_count;
@@ -213,7 +213,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getType() {
         return this.type;
@@ -227,7 +227,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getImage_url() {
         return this.image_url;
@@ -241,7 +241,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getSeries() {
         return this.series;
@@ -255,7 +255,7 @@ public class MinecraftMap {
     }
 
     /**
-     * @return String
+     * @return
      */
     public String getMc_version() {
         return this.mc_version;

@@ -80,6 +80,25 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<show>private</show>
+					<outputDirectory>${project.reporting.outputDirectory}/</outputDirectory>
+					<reportOutputDirectory>${project.reporting.outputDirectory}/</reportOutputDirectory>
+					<destDir>../../../docs/backend</destDir>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc</report>
+							<report>test-javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 		</plugins>
 	</reporting>
 </project>
