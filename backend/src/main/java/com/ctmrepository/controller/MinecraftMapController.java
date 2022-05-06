@@ -32,6 +32,9 @@ public class MinecraftMapController {
     @Autowired
     MinecraftMapRepository minecraftMapRepository;
 
+    /**
+     * @return String
+     */
     @GetMapping("/")
     public String index() {
         return "Greetings from Spring Boot!";
@@ -62,6 +65,10 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param id
+     * @return ResponseEntity<MinecraftMap>
+     */
     @GetMapping("/admin/unpublished-maps/{id}")
     public ResponseEntity<MinecraftMap> getUnpublishedMapById(@PathVariable("id") long id) {
         Optional<MinecraftMap> mapData = minecraftMapRepository.findById(id);
@@ -112,6 +119,12 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param list
+     * @param page
+     * @param resultsPerPage
+     * @return List<T>
+     */
     private static <T> List<T> paginateList(List<T> list, Integer page, Integer resultsPerPage) {
         Integer fromIndex = (page - 1) * resultsPerPage;
         Integer toIndex = fromIndex + resultsPerPage;
@@ -125,6 +138,11 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param maps
+     * @param search
+     * @return List<MinecraftMap>
+     */
     private List<MinecraftMap> strictSearchSort(List<MinecraftMap> maps, String search) {
         List<MinecraftMap> relevantMaps = new ArrayList<MinecraftMap>();
         for (MinecraftMap map : maps) {
@@ -145,6 +163,11 @@ public class MinecraftMapController {
         return relevantMaps;
     }
 
+    /**
+     * @param maps
+     * @param search
+     * @return List<MinecraftMap>
+     */
     // Next, given a list of maps and the search string,
     // sort the list of maps by the Levenshtein Distances and Return
     private List<MinecraftMap> fuzzySearchSort(List<MinecraftMap> maps, String search) {
@@ -156,12 +179,22 @@ public class MinecraftMapController {
         return maps;
     }
 
+    /**
+     * @param maps
+     * @param dists
+     */
     private void mergeSort(List<MinecraftMap> maps, List<Double> dists) {
         int start = 0;
         int end = dists.size() - 1;
         mergeSort(maps, dists, start, end);
     }
 
+    /**
+     * @param maps
+     * @param dists
+     * @param low
+     * @param high
+     */
     private void mergeSort(List<MinecraftMap> maps, List<Double> dists, int low, int high) {
         if (low < high) {
             int mid = (low + high) / 2;
@@ -173,6 +206,13 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param maps
+     * @param dists
+     * @param low
+     * @param mid
+     * @param high
+     */
     private void merge(List<MinecraftMap> maps, List<Double> dists, int low, int mid, int high) {
         int i = low,
                 j = mid + 1,
@@ -213,6 +253,12 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param map
+     * @param search
+     * @param words
+     * @return double
+     */
     double getLargestJWDist(MinecraftMap map, String search, String[] words) {
         double largestTitleSearch = getJaroWinklerDistance(map.getName().toUpperCase(), search);
         String largestTitle = search;
@@ -239,6 +285,11 @@ public class MinecraftMapController {
         return largestTitleSearch + largestAuthorSearch;
     }
 
+    /**
+     * @param s1
+     * @param s2
+     * @return double
+     */
     double getJaroWinklerDistance(String s1, String s2) {
         double jaro_dist = getJaroDistance(s1, s2);
         // If the jaro Similarity is above a threshold
@@ -260,6 +311,11 @@ public class MinecraftMapController {
         return jaro_dist;
     }
 
+    /**
+     * @param s1
+     * @param s2
+     * @return double
+     */
     double getJaroDistance(String s1, String s2) {
         if (s1.equals(s2))
             return 1.0;
@@ -316,6 +372,9 @@ public class MinecraftMapController {
                 (((double) matches - transpositions / 2.0) / matches)) / 3.0;
     }
 
+    /**
+     * @return ResponseEntity<List<MinecraftMap>>
+     */
     @GetMapping("/maps/all-maps")
     public ResponseEntity<List<MinecraftMap>> getPublishedMaps() {
         try {
@@ -328,6 +387,9 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @return ResponseEntity<List<MinecraftMap>>
+     */
     @GetMapping("/admin/publishing/new-maps")
     public ResponseEntity<List<MinecraftMap>> getUnpublishedMaps() {
         try {
@@ -340,6 +402,10 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param publishMap(
+     * @return ResponseEntity<MinecraftMap>
+     */
     @GetMapping("admin/publishing/publish-map")
     public ResponseEntity<MinecraftMap> publishMap(
             @RequestParam() long id) {
@@ -362,6 +428,10 @@ public class MinecraftMapController {
         }
     }
 
+    /**
+     * @param retractMap(
+     * @return ResponseEntity<MinecraftMap>
+     */
     @GetMapping("admin/publishing/retract-map")
     public ResponseEntity<MinecraftMap> retractMap(
             @RequestParam() long id) {
