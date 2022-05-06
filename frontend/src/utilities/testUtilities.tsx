@@ -1,14 +1,33 @@
 /**
- * @module
  * Testing utility module. DO NOT USE THIS CODE OUTSIDE OF UNIT TESTING
  */
 import { render, waitFor } from '@testing-library/react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import { MinecraftMap } from 'utilities/api';
 
+/**
+ * A map for example
+ */
+export const minecraftMap: MinecraftMap = {
+    id: 1,
+    name: "a name",
+    upload_date: -10,
+    author: "an author",
+    length: "1 meter",
+    objective_main: 1,
+    objective_bonus: 2,
+    difficulty: "yes",
+    description_short: "a map",
+    download_count: 42,
+    type: "example",
+    image_url: "example.png",
+    series: "the test case series",
+    mc_version: "1.0.0"
+};
 
 /**
  * Test-only: Wrapper component to ensure that children live as descents of a Router element
- * so that nav works
+ * so that useNavigate works
  * @param children the components to wrap
  * @returns the view
  */
