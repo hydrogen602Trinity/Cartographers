@@ -25,8 +25,8 @@ export default function Home() {
 
   const mapsPerPage = 12;
   let searchTerm = searchParams.get('q');
-  const searchHandler = (term: string) => {
-    setSearchParams({ q: term });
+  const handleSearch = (query: string) => {
+    setSearchParams({ q: query });
     setPage(1);
   };
 
@@ -51,7 +51,7 @@ export default function Home() {
         </Grid>
         <Grid item xs={12} sm={10} md={8} marginLeft="1em" marginRight="1em">
           <SearchBar
-            onSearch={searchHandler}
+            onSearch={handleSearch}
             defaultValue={searchTerm || ''}
           />
         </Grid>
@@ -63,6 +63,13 @@ export default function Home() {
               divider={<Divider orientation="horizontal" flexItem />}
               spacing={2}
             >
+              <Pagination
+                count={searchResult.max_page}
+                page={page}
+                onChange={(_, e) => { setPage(e) }}
+                variant="outlined"
+                shape="rounded"
+              />
               {(isLoading || searchResult == null) ? (
                 <div>Loading...</div>
               ) : (
@@ -76,7 +83,14 @@ export default function Home() {
                   </Grid>
                 </div>
               )}
-              <Pagination count={searchResult.max_page} page={page} onChange={(_, e) => { setPage(e) }} sx={{ marginTop: '1em' }} />
+              <Pagination
+                count={searchResult.max_page}
+                page={page}
+                onChange={(_, e) => { setPage(e) }}
+                variant="outlined"
+                shape="rounded"
+                sx={{ marginTop: '1em' }}
+              />
             </Stack>
           </Paper>
         </Grid>
