@@ -8,7 +8,7 @@ import SearchBar from 'components/SearchBar';
  * Ensures SearchBar renders default components when provided
  * with an empty string for the 'defaultValue' parameter
  */
-test("Check default SearchBar component visibility", async () => {
+test("Default SearchBar component visibility", async () => {
     const searchBar = render(
         <SearchBar
             onSearch={() => { }}
@@ -34,6 +34,10 @@ test("Check default SearchBar component visibility", async () => {
     expect(searchOptionMenu).toBeVisible();
 });
 
+/**
+ * Check that the onSearch callback triggers when form is submitted
+ * or when search button is pressed
+ */
 test("Check onSearch event", async () => {
     const callback = jest.fn();
 
@@ -47,16 +51,41 @@ test("Check onSearch event", async () => {
     await waitFor(() => searchBar.findByTestId("search-bar-base"));
 
     const searchInput = searchBar.getByRole("textbox");
-    fireEvent.change(searchInput, { target: { value: 'test' } });
+    fireEvent.change(searchInput, { target: { value: "test" } });
     expect(searchInput).toHaveValue("test");
 
     const searchButton = searchBar.getByLabelText("Submit search query");
     user.click(searchButton);
-    await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith("test");
+
+    const clearSearchField = searchBar.getByLabelText("Clear search field");
+    user.click(clearSearchField);
+    expect(callback).toHaveBeenCalledTimes(2);
+    expect(callback).toHaveBeenCalledWith("");
+});
+
+/**
+ * Check the text can be typed and cleared from search bar
+ */
+test("Clear search field", async () => {
+    const callback = jest.fn();
+
+    const searchBar = render(
+        <SearchBar
+            onSearch={callback}
+            defaultValue={""}
+        />
+    );
+
+    await waitFor(() => searchBar.findByTestId("search-bar-base"));
+
+    const searchInput = searchBar.getByRole("textbox");
+    fireEvent.change(searchInput, { target: { value: "test" } });
     expect(searchInput).toHaveValue("test");
 
     const clearSearchField = searchBar.getByLabelText("Clear search field");
     user.click(clearSearchField);
-    await waitFor(() => expect(callback).toHaveBeenCalledTimes(2));
+    expect(callback).toHaveBeenCalledTimes(1);
     expect(searchInput).toHaveValue("");
 });
