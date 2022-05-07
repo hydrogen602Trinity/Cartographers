@@ -3,13 +3,13 @@
 - [Table of Contents](#table-of-contents)
 - [Source Code](#source-code)
   - [Windows](#windows)
-  - [MacOS](#macos)
+  - [macOS](#macos)
 - [Dependencies](#dependencies)
   - [Windows](#windows-1)
-  - [MacOS](#macos-1)
+  - [macOS](#macos-1)
 - [PostgreSQL Setup](#postgresql-setup)
   - [Windows](#windows-2)
-  - [MacOS](#macos-2)
+  - [macOS](#macos-2)
 - [Database Setup](#database-setup)
 
 # Source Code
@@ -26,7 +26,7 @@ git clone https://github.com/hydrogen602Trinity/Cartographers.git
 >
 >\* *If following this guide on Windows, it is recommended to download winget if it is not already on your system, as the following instructions assume that winget is installed.*
 
-## MacOS
+## macOS
 
 >If git is not installed, it can be installed it with either Xcode or [Homebrew](https://brew.sh/)* using one of the following commands:
 >```
@@ -35,7 +35,7 @@ git clone https://github.com/hydrogen602Trinity/Cartographers.git
 >```
 >brew install git
 >```
->\* *If following this guide on MacOS, it is recommended to download homebrew if it is not already installed on your system, as the following instructions assume that homebrew is installed.*
+>\* *If following this guide on macOS, it is recommended to download homebrew if it is not already installed on your system, as the following instructions assume that homebrew is installed.*
 
 # Dependencies
 To run this project, there are several third-party applications that will need be installed on your system. These are listed below in addition to some optional applications which make development of the project easier.
@@ -72,7 +72,7 @@ To run this project, there are several third-party applications that will need b
 > winget install -e --id Postman.Postman
 > ```
 
-## MacOS
+## macOS
 > The following is a list of terminal commands for installing required and recommended applications using Homebrew.
 >
 > **Required**
@@ -117,7 +117,7 @@ To run this project, there are several third-party applications that will need b
 > ```
 > To finish applying these changes, a system restart will likely be required.
 
-## MacOS
+## macOS
 > Setting `PGUSER` can be accomplished by running the following command, where the default user is `postgres`:
 > ```bash
 > echo "export PGUSER=postgres" >> ~/.bash_profile
@@ -137,10 +137,9 @@ CREATE ROLE ctmadmin WITH CREATEDB LOGIN PASSWORD 's$cret';
 CREATE DATABASE ctmdb OWNER ctmadmin;
 ```
 
-> If these commands fail, then there might be another postgres account that the necessary permissions. In this case, use the alternate account to sign into postgres and then run the above commands from there. 
-> 
-> Note: Often the admin postgres account is your username on your computer. On Linux or MacOS, run
-> ```
-> whoami
-> ```
-> to get your username.
+If these commands fail, then there might be another postgres account that has the necessary permissions. In this case, the admin postgres account is often set as your username on your computer.
+
+With Linux or macOS, you can find the current username by running the following command in a terminal:
+```
+whoami
+```
