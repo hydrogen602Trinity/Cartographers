@@ -46,17 +46,14 @@ beforeEach(() => {
     })()));
 });
 
-it('CI test', () => {
-    expect(42).toEqual(42);
-});
-
 /**
  * Ensures the App renders and the banner is defined
  */
 test('rendering & banner', async () => {
     let out = render(<App></App>);
-    let banner = await waitFor(() => out.getByAltText('CTM Repository Banner'));
     await waitFor(() => out.getByTestId('home-map-display')); // to wait until things load
+
+    let banner = await waitFor(() => out.getByAltText('CTM Repository Banner'));
     expect(banner).toBeInTheDocument();
     expect(banner).toBeVisible();
     // @ts-ignore
@@ -69,6 +66,7 @@ test('rendering & banner', async () => {
 test('rendering & loading maps', async () => {
     let out = render(<App></App>);
     let parts = await waitFor(() => out.getByTestId('home-map-display'));
+
     let images = out.getAllByAltText('Map Image');
     expect(images.length).toBe(1);
     // @ts-ignore
@@ -85,21 +83,22 @@ test('rendering & loading maps', async () => {
  */
 test('rendering & pages nav', async () => {
     let out = render(<App></App>);
-    let parts = await waitFor(() => out.getByTestId('home-map-display'));
-    let nav = out.getByLabelText('pagination navigation');
-    expect(nav).toBeVisible();
-    expect(queryByText(nav, '1')).toBeVisible();
+    await waitFor(() => out.getByTestId('home-map-display'));
+
+    let nav = out.getAllByLabelText('pagination navigation');
+    expect(nav[0]).toBeVisible();
+    expect(queryByText(nav[0], '1')).toBeVisible();
     // only one page -> only one map
-    expect(queryByText(nav, '2')).toBeFalsy();
+    expect(queryByText(nav[0], '2')).toBeFalsy();
 
     // one page, so both back and forth should be disabled
-    let prev = out.getByLabelText('Go to previous page');
-    expect(prev).toBeVisible();
-    expect(prev).toBeDisabled();
+    let prev = out.getAllByLabelText('Go to previous page');
+    expect(prev[0]).toBeVisible();
+    expect(prev[0]).toBeDisabled();
 
-    let next = out.getByLabelText('Go to next page');
-    expect(next).toBeVisible();
-    expect(next).toBeDisabled();
+    let next = out.getAllByLabelText('Go to next page');
+    expect(next[1]).toBeVisible();
+    expect(next[1]).toBeDisabled();
 });
 
 /**
@@ -107,7 +106,7 @@ test('rendering & pages nav', async () => {
  */
 test('navigation to map', async () => {
     let out = render(<App></App>);
-    let parts = await waitFor(() => out.getByTestId('home-map-display'));
+    await waitFor(() => out.getByTestId('home-map-display'));
 
     let map = out.getByLabelText('map card');
 
@@ -132,7 +131,7 @@ test('navigation to map', async () => {
         useEffect(() => panel.click(), []);
     });
 
-    let map2 = await out.findByLabelText('map card');
+    await out.findByLabelText('map card');
 
     expect(out.queryByLabelText('map card')).toBeTruthy();
     expect(out.queryByTestId('home-map-display')).toBeTruthy();
@@ -146,7 +145,7 @@ test('navigation to map', async () => {
  */
 test('rendering & pages nav', async () => {
     let out = render(<App></App>);
-    let parts = await waitFor(() => out.getByTestId('home-map-display'));
+    await waitFor(() => out.getByTestId('home-map-display'));
 
     expect(fetch.mock.calls.length).toBe(1);
     expect(fetch.mock.calls[0][0]).toBe('http://localhost:8080/search/maps?q=&per_page=12&page=1');
