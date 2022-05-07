@@ -40,7 +40,7 @@ test("Check default SearchBar component visibility", async () => {
 
 test("Check onSearch event", async () => {
     let searchResult = "";
-    const handleSearch = (query: string) => { searchResult = query };
+    const handleSearch = (query: string) => { searchResult = query; };
 
     let searchBar = render(
         <SearchBar
@@ -58,11 +58,9 @@ test("Check onSearch event", async () => {
 
     let searchButton = searchBar.getByLabelText("Submit search query");
     user.click(searchButton);
-    expect(searchResult).toBe("test");
+    await waitFor(() => expect(searchResult).toBe("test"));
 
     let clearSearchField = searchBar.getByLabelText("Clear search field");
-    expect(clearSearchField).toBeInTheDocument();
-    expect(clearSearchField).toBeVisible();
     user.click(clearSearchField);
-    expect(searchResult).toBe("");
+    await waitFor(() => expect(searchResult).toBe(""));
 });
