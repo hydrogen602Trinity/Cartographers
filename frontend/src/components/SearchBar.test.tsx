@@ -40,7 +40,11 @@ test("Check default SearchBar component visibility", async () => {
 
 test("Check onSearch event", async () => {
     let searchResult = "";
-    const handleSearch = (query: string) => { searchResult = query; };
+    const callback = jest.fn()
+    const handleSearch = (query: string) => {
+        callback();
+        searchResult = query;
+    };
 
     let searchBar = render(
         <SearchBar
@@ -58,9 +62,11 @@ test("Check onSearch event", async () => {
 
     let searchButton = searchBar.getByLabelText("Submit search query");
     user.click(searchButton);
-    await waitFor(() => expect(searchResult).toBe("test"));
+    await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
+    expect(searchResult).toBe("test")
 
     let clearSearchField = searchBar.getByLabelText("Clear search field");
     user.click(clearSearchField);
-    await waitFor(() => expect(searchResult).toBe(""));
+    await waitFor(() => expect(callback).toHaveBeenCalledTimes(2));
+    expect(searchResult).toBe("")
 });
