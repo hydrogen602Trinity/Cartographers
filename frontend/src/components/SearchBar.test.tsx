@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
-
 import SearchBar from 'components/SearchBar';
+
 
 /**
  * Ensures SearchBar renders default components when provided
@@ -47,7 +47,7 @@ test("Check onSearch event", async () => {
     await waitFor(() => searchBar.findByTestId("search-bar-base"));
 
     const searchInput = searchBar.getByRole("textbox");
-    user.type(searchInput, "test");
+    fireEvent.change(searchInput, { target: { value: 'test' } });
     expect(searchInput).toHaveValue("test");
 
     const searchButton = searchBar.getByLabelText("Submit search query");
