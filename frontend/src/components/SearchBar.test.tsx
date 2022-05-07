@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom';
-import { render, renderHook, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 
 import SearchBar from 'components/SearchBar';
-import { useEffect } from 'react';
 
 /**
  * Ensures SearchBar renders default components when provided
@@ -58,18 +57,12 @@ test("Check onSearch event", async () => {
     expect(searchResult).toBe("");
 
     let searchButton = searchBar.getByLabelText("Submit search query");
-    renderHook(() => {
-        useEffect(() => searchButton.click(), []);
-    })
-    await waitFor(() => searchBar.findByTestId("search-bar-base"));
+    user.click(searchButton);
     expect(searchResult).toBe("test");
 
     let clearSearchField = searchBar.getByLabelText("Clear search field");
     expect(clearSearchField).toBeInTheDocument();
     expect(clearSearchField).toBeVisible();
-    renderHook(() => {
-        useEffect(() => clearSearchField.click(), []);
-    })
-    await waitFor(() => searchBar.findByTestId("search-bar-base"));
+    user.click(clearSearchField);
     expect(searchResult).toBe("");
 });
