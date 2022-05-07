@@ -136,3 +136,11 @@ CREATE ROLE ctmadmin WITH CREATEDB LOGIN PASSWORD 's$cret';
 ```
 CREATE DATABASE ctmdb OWNER ctmadmin;
 ```
+
+> If these commands fail, then there might be another postgres account that the necessary permissions. In this case, use the alternate account to sign into postgres and then run the above commands from there. 
+> 
+> Note: Often the admin postgres account is your username on your computer. On Linux or MacOS, run
+> ```
+> whoami
+> ```
+> to get your username.
