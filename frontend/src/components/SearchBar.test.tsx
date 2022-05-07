@@ -56,12 +56,12 @@ test("Check onSearch event", async () => {
 
     const searchButton = searchBar.getByLabelText("Submit search query");
     user.click(searchButton);
-    expect(callback).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
     expect(callback).toHaveBeenCalledWith("test");
 
     const clearSearchField = searchBar.getByLabelText("Clear search field");
     user.click(clearSearchField);
-    expect(callback).toHaveBeenCalledTimes(2);
+    await waitFor(() => expect(callback).toHaveBeenCalledTimes(2));
     expect(callback).toHaveBeenCalledWith("");
 });
 
@@ -86,6 +86,6 @@ test("Clear search field", async () => {
 
     const clearSearchField = searchBar.getByLabelText("Clear search field");
     user.click(clearSearchField);
-    expect(callback).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
     expect(searchInput).toHaveValue("");
 });
