@@ -9,64 +9,54 @@ import SearchBar from 'components/SearchBar';
  * with an empty string for the 'defaultValue' parameter
  */
 test("Check default SearchBar component visibility", async () => {
-    let searchResult = "";
-    const handleSearch = (query: string) => { searchResult = query };
-
-    let searchBar = render(
+    const searchBar = render(
         <SearchBar
-            onSearch={handleSearch}
+            onSearch={() => { }}
             defaultValue={""}
         />
     );
-    expect(searchResult).toBe("");
 
     await waitFor(() => searchBar.findByTestId("search-bar-base"));
 
-    let searchButton = searchBar.getByLabelText("Submit search query");
+    const searchButton = searchBar.getByLabelText("Submit search query");
     expect(searchButton).toBeInTheDocument();
     expect(searchButton).toBeVisible();
 
-    let searchField = searchBar.getByLabelText("Search for CTM maps");
+    const searchField = searchBar.getByLabelText("Search for CTM maps");
     expect(searchField).toBeInTheDocument();
     expect(searchField).toBeVisible();
 
-    let clearSearchField = searchBar.queryByLabelText("Clear search field");
+    const clearSearchField = searchBar.queryByLabelText("Clear search field");
     expect(clearSearchField).toBeNull();
 
-    let searchOptionMenu = searchBar.getByLabelText("Open search options menu");
+    const searchOptionMenu = searchBar.getByLabelText("Open search options menu");
     expect(searchOptionMenu).toBeInTheDocument();
     expect(searchOptionMenu).toBeVisible();
 });
 
 test("Check onSearch event", async () => {
-    let searchResult = "";
-    const callback = jest.fn()
-    const handleSearch = (query: string) => {
-        callback();
-        searchResult = query;
-    };
+    const callback = jest.fn();
 
-    let searchBar = render(
+    const searchBar = render(
         <SearchBar
-            onSearch={handleSearch}
+            onSearch={callback}
             defaultValue={""}
         />
     );
-    expect(searchResult).toBe("");
 
     await waitFor(() => searchBar.findByTestId("search-bar-base"));
 
-    const input = searchBar.getByLabelText("Search for CTM maps")
-    user.type(input, "test")
-    expect(searchResult).toBe("");
+    const searchInput = searchBar.getByRole("textbox");
+    user.type(searchInput, "test");
+    expect(searchInput).toHaveValue("test");
 
-    let searchButton = searchBar.getByLabelText("Submit search query");
+    const searchButton = searchBar.getByLabelText("Submit search query");
     user.click(searchButton);
     await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-    expect(searchResult).toBe("test")
+    expect(searchInput).toHaveValue("test");
 
-    let clearSearchField = searchBar.getByLabelText("Clear search field");
+    const clearSearchField = searchBar.getByLabelText("Clear search field");
     user.click(clearSearchField);
     await waitFor(() => expect(callback).toHaveBeenCalledTimes(2));
-    expect(searchResult).toBe("")
+    expect(searchInput).toHaveValue("");
 });
