@@ -1,6 +1,9 @@
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
+- [Initial Setup](#initial-setup)
+  - [Opening in VSCode](#opening-in-vscode)
+  - [Installing VSCode Extensions](#installing-vscode-extensions)
 - [Basic Layout of the Project & Running it](#basic-layout-of-the-project--running-it)
   - [Running the Frontend](#running-the-frontend)
   - [Running the Backend](#running-the-backend)
@@ -9,6 +12,16 @@
   - [Windows](#windows)
   - [macOS/Linux](#macoslinux)
   
+# Initial Setup
+
+## Opening in VSCode
+
+Open VSCode, then go to `File` > `Open Workspace from File...` and select `cartographers.code-workspace` in the root folder of the repository.
+
+## Installing VSCode Extensions
+
+On the left side of VSCode, open the `Extensions` tab and then enter `@recommended` in the extension search bar and install the listed dependencies. This list of dependencies should include things like `npm`, `Spring Boot Extension`, and `Extension Pack for Java`.
+
 # Basic Layout of the Project & Running it
 
 The project consists of three systems: the frontend, backend, and database. All three of these need to be running for the project to fully run locally, but it is possible to run the frontend alone locally and use the production backend and database.
@@ -20,6 +33,12 @@ The frontend is launched with
 npm start
 ```
 After starting, it should automatically open a browser tab, but if not, navigate to `http://localhost:3000` in your browser.
+
+To run the project without having to run the backend and database locally, it is possible to use the deployed backend by running
+```bash
+npm start-api-remote
+```
+instead.
 
 ## Running the Backend
 
