@@ -12,6 +12,10 @@
   - [macOS](#macos-2)
 - [Database Setup](#database-setup)
 
+Note: Install dependencies before setting up VSCode. 
+
+Note: See `docs/ContributorsGuide.md` for troubleshooting tips and VSCode setup. 
+
 # Source Code
 To get started, you can clone the repository using the following command:
 ```

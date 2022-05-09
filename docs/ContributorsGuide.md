@@ -2,6 +2,7 @@
 
 - [Table of Contents](#table-of-contents)
 - [Initial Setup](#initial-setup)
+  - [Install Java 17](#install-java-17)
   - [Opening in VSCode](#opening-in-vscode)
   - [Installing VSCode Extensions](#installing-vscode-extensions)
 - [Basic Layout of the Project & Running it](#basic-layout-of-the-project--running-it)
@@ -11,8 +12,13 @@
 - [Javadoc or Java not found](#javadoc-or-java-not-found)
   - [Windows](#windows)
   - [macOS/Linux](#macoslinux)
+- [npm Conflicting dependencies](#npm-conflicting-dependencies)
   
 # Initial Setup
+
+## Install Java 17
+
+**Install Java 17 before doing anything for best results**. See `INSTALL.md` for more information on how to install everything.
 
 ## Opening in VSCode
 
@@ -94,3 +100,7 @@ If there is an error that `javadoc` or `java` cannot be found, then it might be 
 > ```bash
 > ps -p $$
 > ```
+
+# npm Conflicting dependencies
+
+The current frontend has conflicting dependencies due to projects using outdated versions of React. Newer versions of `npm` may complain about this, so add the `--legacy-peer-deps` flag to the end of the `npm` install commands.
