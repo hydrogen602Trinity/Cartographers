@@ -3,13 +3,62 @@
     "command": "npm",
     "tasks": [
         {
-            "group": "build",
-            "label": "GitHub Pages Deployment",
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": [],
+            "label": "Start React",
+            "detail": "Use local backend"
+        },
+        {
             "type": "shell",
+            "problemMatcher": [],
+            "label": "Start React",
+            "detail": "Use remote backend",
+            "options": {
+                "env": {
+                    "REACT_APP_USE_PRODUCTION_API": "true"
+                }
+            },
+            "args": [
+                "run",
+                "start"
+            ]
+        },
+        {
+            "type": "shell",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "Frontend Deployment Build",
+            "detail": "Build with gh-pages configuration",
             "args": [
                 "run",
                 "deploy"
             ]
+        },
+        {
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [],
+            "label": "Frontend Test Coverage",
+            "detail": "React testing with coverage report",
+            "options": {
+                "env": {
+                    "CI": "true"
+                }
+            },
+            "args": [
+                "test",
+                "--",
+                "--coverage"
+            ]
+        },
+        {
+            "type": "npm",
+            "script": "test",
+            "group": "test",
+            "problemMatcher": [],
+            "label": "Frontend Test",
+            "detail": "React default testing"
         }
     ]
 }
