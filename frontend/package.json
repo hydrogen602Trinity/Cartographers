@@ -20,10 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-api-remote": "export REACT_APP_USE_PRODUCTION_API=true && npm run start || cmd /V /C \"set REACT_APP_USE_PRODUCTION_API=true&& npm run start\"",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test-coverage": "export CI=true && npm test -- --coverage || cmd /V /C \"set CI=true&& npm test -- --coverage\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "doc": "npx typedoc"

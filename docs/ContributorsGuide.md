@@ -5,16 +5,15 @@
   - [Running the Frontend](#running-the-frontend)
   - [Running the Backend](#running-the-backend)
   - [Running the Database](#running-the-database)
+- [Documentation](#documentation)
 - [Javadoc or Java not found](#javadoc-or-java-not-found)
   - [Windows](#windows)
   - [macOS/Linux](#macoslinux)
   
 # Basic Layout of the Project & Running it
-
 The project consists of three systems: the frontend, backend, and database. All three of these need to be running for the project to fully run locally, but it is possible to run the frontend alone locally and use the production backend and database.
 
 ## Running the Frontend
-
 The frontend is launched with
 ```bash
 npm start
@@ -22,15 +21,15 @@ npm start
 After starting, it should automatically open a browser tab, but if not, navigate to `http://localhost:3000` in your browser.
 
 ## Running the Backend
-
 To run the backend, open the `Java Projects` > `Java: Spring Boot Dashboard` tab in VS Code and click the play button on `ctmrepository-backend`. It should (after loading up) display the message in the debug console: `Started Application`
 
 ## Running the Database
-
 After installing postgres, it should always be running in the background.
 
-# Javadoc or Java not found
+# Documentation
 
+
+# Javadoc or Java not found
 If there is an error that `javadoc` or `java` cannot be found, then it might be the case that the `JAVA_HOME` environment variable is not set or is pointing to the wrong location.
 
 ## Windows
