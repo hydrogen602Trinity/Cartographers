@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardMedia from "@mui/material/CardMedia";
@@ -97,25 +98,18 @@ export default function Home() {
             </Stack>
           </Paper>
         </Grid>
-        <Grid item xs={2}>
-          <Stack
-            alignItems="center"
-            justifyContent="center"
-            divider={<Divider orientation="horizontal" flexItem />}
-            spacing={2}
-          >
-            <Card className="banner" elevation={0} style={{ backgroundColor: "#CCCCCC" }}>
-              <CardActions>
-                <Link href="https://ctm.community/">
-                  Discord
-                </Link>
-                <Link href="https://www.patreon.com/14er">
-                  Patreon
-                </Link>
-              </CardActions>
-            </Card>
-          </Stack>
-        </Grid>
+        <Box sx={{ mx: "auto", width: 250 }}>
+          <Card className="banner" elevation={0} style={{ backgroundColor: "#CCCCCC", justifyContent: "center", display: "flex" }}>
+            <CardActions >
+              <Link href="https://ctm.community/">
+                Discord
+              </Link>
+              <Link href="https://www.patreon.com/14er">
+                Patreon
+              </Link>
+            </CardActions>
+          </Card>
+        </Box>
       </Grid>
     );
   }
