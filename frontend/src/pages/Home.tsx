@@ -98,7 +98,7 @@ export default function Home() {
             </Stack>
           </Paper>
         </Grid>
-        <Box sx={{ mx: "auto", width: 250 }}>
+        <Box sx={{ mx: "auto", width: 175 }}>
           <Card className="banner" elevation={0} style={{ backgroundColor: "#CCCCCC", justifyContent: "center", display: "flex" }}>
             <CardActions >
               <Link href="https://ctm.community/">
