@@ -3,6 +3,7 @@
 - [Table of Contents](#table-of-contents)
 - [Initial Setup](#initial-setup)
   - [Install Java 17](#install-java-17)
+  - [Installation](#installation)
   - [Opening in VSCode](#opening-in-vscode)
   - [Installing VSCode Extensions](#installing-vscode-extensions)
 - [Basic Layout of the Project & Running it](#basic-layout-of-the-project--running-it)
@@ -19,7 +20,11 @@
 
 ## Install Java 17
 
-**Install Java 17 before doing anything for best results**. See `INSTALL.md` for more information on how to install everything.
+**Install Java 17 before doing anything for best results**
+
+## Installation
+
+**See `INSTALL.md` for more information on how to install everything.**
 
 ## Opening in VSCode
 
@@ -41,7 +46,7 @@ After starting, it should automatically open a browser tab, but if not, navigate
 
 To run the project without having to run the backend and database locally, it is possible to use the deployed backend by running
 ```bash
-npm start-api-remote
+npm run start-api-remote
 ```
 instead.
 
