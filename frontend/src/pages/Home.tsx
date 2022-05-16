@@ -1,18 +1,21 @@
+import Box from '@mui/material/Box';
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import Link from '@mui/material/Link';
 import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import MapCard from "components/MapCard";
 import SearchBar from "components/SearchBar";
 import ErrorPage from "pages/ErrorPage";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useGetMapsSearch } from "utilities/api";
 import { getPublicPath } from 'utilities/env';
+
 
 
 /**
@@ -90,10 +93,23 @@ export default function Home() {
                 variant="outlined"
                 shape="rounded"
                 sx={{ marginTop: '1em' }}
+
               />
             </Stack>
           </Paper>
         </Grid>
+        <Box sx={{ mx: "auto", width: 250 }}>
+          <Card className="banner" elevation={0} style={{ backgroundColor: "#CCCCCC", justifyContent: "center", display: "flex" }}>
+            <CardActions >
+              <Link href="https://ctm.community/">
+                Discord
+              </Link>
+              <Link href="https://www.patreon.com/14er">
+                Patreon
+              </Link>
+            </CardActions>
+          </Card>
+        </Box>
       </Grid>
     );
   }
