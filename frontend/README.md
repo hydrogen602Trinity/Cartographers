@@ -19,7 +19,7 @@ You may also see any lint errors in the console.
 
 When running in development, the project attempts to connect to the development server hosted locally. To avoid having to launch the backend and use the production server instead, run 
 ```
-REACT_APP_FORCE_URL_PRODUCTION=true npm start
+npm run start-api-remote
 ```
 
 
@@ -28,10 +28,14 @@ REACT_APP_FORCE_URL_PRODUCTION=true npm start
 npm test
 ```
 
-Currently testing is not set up. 
+Launches the test runner in the interactive watch mode.
 
-Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+For coverage report, run
+```
+npm run test-coverage
+```
 
 ### Building for Deployment
 ```
